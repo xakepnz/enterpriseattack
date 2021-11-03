@@ -10,7 +10,7 @@ with open('README.md', 'r', encoding='utf-8') as fp:
     readme = fp.read()
 
 setup(
-    name = 'enterpriseattck',
+    name = 'enterpriseattack',
     author = 'xakepnz',
     author_email = 'xakepnz@protonmail.com',
     version=VERSION,
