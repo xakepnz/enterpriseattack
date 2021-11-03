@@ -1,0 +1,36 @@
+# Prevent unintended commits
+.env
+Pipfile*
+__pycache__/
+venv/
+.vscode
+enterpriseattack/data
+enterprise-attack.json
+
+# Temp files
+*.swp
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Tests / Coverage
+report.xml
+coverage.xml
+.coverage
+.tox/
+.testmondata
