@@ -5,7 +5,7 @@
 
 ## enterpriseattack - Mitre's Enterprise Att&ck
 
-A lightweight Python module to interact with the [Mitre Att&ck](https://attack.mitre.org/) Enterprise dataset. Built to be used in production applications due to it's speed and minimal depedancies. [Read the docs](https://github.com/xakepnz/enterpriseattack/docs/tree/main/docs) for more info.
+A lightweight Python module to interact with the [Mitre Att&ck](https://attack.mitre.org/) Enterprise dataset. Built to be used in production applications due to it's speed and minimal depedancies. [Read the docs](https://github.com/xakepnz/enterpriseattack/tree/main/docs) for more info.
 
 ## Mitre Att&ck
 
@@ -56,6 +56,6 @@ for software in attack.software:
             print(software.name, technique.name, sub_technique.name)
 ```
 
-For more examples, please refer to the [Documentation](docs)
+For more examples, please refer to the [Documentation](https://github.com/xakepnz/enterpriseattack/tree/main/docs)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
