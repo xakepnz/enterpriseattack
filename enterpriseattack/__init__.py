@@ -13,7 +13,7 @@ from os import path
 
 #---------------------------------------------------------------------------------#
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 #---------------------------------------------------------------------------------#
 # Mitre Enterprise Attack class:
@@ -41,7 +41,7 @@ class Attack:
 
         # Set the relationships of all objects, and create a dict sorted by ID's:
         self.relationships, self.id_lookup = utils.set_relationships(self.attack_objects)
-    
+
     #---------------------------------------------------------------------------------#
     # Return all enterprise attack tactics:
     #---------------------------------------------------------------------------------#
