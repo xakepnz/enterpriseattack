@@ -34,3 +34,5 @@ coverage.xml
 .coverage
 .tox/
 .testmondata
+tests/*.json
+tests/debug.py
