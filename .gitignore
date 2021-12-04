@@ -6,6 +6,7 @@ venv/
 .vscode
 enterpriseattack/data
 enterprise-attack.json
+.DS_Store
 
 # Temp files
 *.swp
