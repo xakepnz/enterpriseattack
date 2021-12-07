@@ -1,6 +1,6 @@
 ## Table of Contents
 
-- [What is Mitre Att&ck?](#what-is-mitre-attck)
+- [What is MITRE ATT&CK?](#what-is-mitre-attck)
     - [What is enterpriseattack?](#what-is-enterpriseattack)
 - [Getting Started](#getting-started)
     - [Install via pip](#install-via-pip)
@@ -19,11 +19,11 @@ MITRE ATT&CK® is a globally-accessible knowledge base of adversary tactics and 
 
 ## What is enterpriseattack?
 
-A lightweight Python module to interact with the [Mitre Att&ck](https://attack.mitre.org/) Enterprise dataset. Built to be used in production applications due to it's speed and minimal depedancies. This module does not cover ICS or Mobile.
+A lightweight Python module to interact with the [MITRE ATT&CK](https://attack.mitre.org/) Enterprise dataset. Built to be used in production applications due to it's speed and minimal depedancies. This module does not cover ICS or Mobile.
 
 # Getting Started
 
-If network access restrictions apply to your situation, you can download the [Mitre Att&ck Enterprise Json file](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json) and package it into a local directory. For example with Docker packaging with your application, and transferring the json file into the container. The only network connections occur when there's either no file to leverage locally, or if you wish to overwrite the existing file.
+If network access restrictions apply to your situation, you can download the [MITRE ATT&CK Enterprise Json file](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json) and package it into a local directory. For example with Docker packaging with your application, and transferring the json file into the container. The only network connections occur when there's either no file to leverage locally, or if you wish to overwrite the existing file.
 
 ## Install via Pip:
 

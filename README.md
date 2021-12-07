@@ -3,11 +3,11 @@
 [![image](https://img.shields.io/pypi/pyversions/enterpriseattack.svg)](https://pypi.org/project/enterpriseattack/)
 
 
-## enterpriseattack - Mitre's Enterprise Att&ck
+## enterpriseattack - MITRE's Enterprise Att&ck
 
-A lightweight Python module to interact with the [Mitre Att&ck](https://attack.mitre.org/) Enterprise dataset. Built to be used in production applications due to it's speed and minimal depedancies. [Read the docs](https://github.com/xakepnz/enterpriseattack/tree/main/docs) for more info.
+A lightweight Python module to interact with the [MITRE ATT&CK](https://attack.mitre.org/) Enterprise dataset. Built to be used in production applications due to it's speed and minimal depedancies. [Read the docs](https://github.com/xakepnz/enterpriseattack/tree/main/docs) for more info.
 
-## Mitre Att&ck
+## MITRE Att&ck
 
 MITRE ATT&CK® is a globally-accessible knowledge base of adversary tactics and techniques based on real-world observations. The ATT&CK knowledge base is used as a foundation for the development of specific threat models and methodologies in the private sector, in government, and in the cybersecurity product and service community.
 
