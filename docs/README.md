@@ -13,7 +13,7 @@
 - [Software (Tools/Malware)](Software.md)
 - [Datasources](Datasources.md)
 
-## What is Mitre Att&ck?
+## What is MITRE ATT&CK?
 
 MITRE ATT&CK® is a globally-accessible knowledge base of adversary tactics and techniques based on real-world observations. The ATT&CK knowledge base is used as a foundation for the development of specific threat models and methodologies in the private sector, in government, and in the cybersecurity product and service community. [Read more](https://attack.mitre.org/)
 
@@ -43,7 +43,7 @@ python3 setup.py install
 
 These are the default values when initializing the attack class:
 * `enterprise_json` - The full file-path to the local json.
-* `url` - The URL that hosts the json, defaults to the official Mitre Github.
+* `url` - The URL that hosts the json, defaults to the official MITRE ATT&CK® Github.
 * `include_deprecated` - Include old objects that mitre have removed from later versions.
 * `update` - Force a download of the url, and rewrite the enterprise_json file.
 
