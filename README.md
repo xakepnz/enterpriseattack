@@ -1,3 +1,4 @@
+[![Downloads](https://pepy.tech/badge/enterpriseattack)](https://pepy.tech/project/enterpriseattack)
 [![PyPI version](https://badge.fury.io/py/enterpriseattack.svg)](https://badge.fury.io/py/enterpriseattack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![image](https://img.shields.io/pypi/pyversions/enterpriseattack.svg)](https://pypi.org/project/enterpriseattack/)
