@@ -2,21 +2,24 @@
 
 import requests
 import ujson
+
 import logging
+
 import enterpriseattack
 
 #---------------------------------------------------------------------------------#
-# Download Enterprise JSON from Mitre Att&ck Github:
+# Download Enterprise Attack Json from Mitre Att&ck Github:
 #---------------------------------------------------------------------------------#
 
-def download(url, local_enterprise_json):
-    logging.debug('Downloading dataset: {}'.format(url))
+def download(url, local_enterprise_json, **kwargs):
+    logging.debug(f'Downloading dataset: {url}')
 
     r = requests.get(
         url,
         headers={
             'Content-Type': 'application/json'
-        }
+        },
+        proxies=kwargs.get('proxies')
     )
 
     if r.ok:
@@ -26,24 +29,26 @@ def download(url, local_enterprise_json):
                 return True
 
         except (AttributeError, ValueError, TypeError) as e:
-            logging.error('Did not receive json response from: {}, error was: {}'.format(url, e))
-            raise enterpriseattack.Error('Did not receive json response from: {}'.format(url))
+            logging.error(f'Did not receive json response from: {url}, error was: {e}')
+            raise enterpriseattack.Error(f'Did not receive json response from: {url}')
 
         except FileNotFoundError as e:
-            raise enterpriseattack.Error('File: "{}" was not found. - Unable to create file, change directory?'.format(local_enterprise_json))
+            raise enterpriseattack.Error(
+                f'File: "{local_enterprise_json}" was not found. - Unable to create file, change directory?'
+            )
 
-    raise enterpriseattack.Error('Failed to connect to: {}'.format(url))
+    raise enterpriseattack.Error(f'Failed to connect to: {url}')
 
 #---------------------------------------------------------------------------------#
 # Read local copy of Enterprise json or update the existing json:
 #---------------------------------------------------------------------------------#
 
-def read_json(enterprise_url, local_enterprise_json, update):
+def read_json(enterprise_url, local_enterprise_json, update, **kwargs):
     # Read local copy if we have one:
     if not update:
         try:
             if not update:
-                logging.debug('Attempting to read local json: {}'.format(local_enterprise_json))
+                logging.debug(f'Attempting to read local json: {local_enterprise_json}')
 
                 with open(local_enterprise_json,'r') as f:
                     attack_objects = ujson.load(f)
@@ -52,23 +57,32 @@ def read_json(enterprise_url, local_enterprise_json, update):
 
         # Try to download the file, if we cannot find it:
         except FileNotFoundError as e:
-            logging.warning('File: {} does not exist, attempting to download new dataset'.format(local_enterprise_json))
-            return read_json(enterprise_url, local_enterprise_json, update=True)
+            logging.warning(
+                f'File: {local_enterprise_json} does not exist, attempting to download new dataset'
+            )
+            return read_json(
+                enterprise_url,
+                local_enterprise_json,
+                update=True,
+                **kwargs
+            )
     
     # If update was true, re-download the json:
     downloaded = download(
         url=enterprise_url,
         local_enterprise_json=local_enterprise_json,
+        **kwargs
     )
 
     if downloaded:
         return read_json(
             enterprise_url,
             local_enterprise_json,
-            update=False
+            update=False,
+            **kwargs
         )
     
-    return None        
+    return None
 
 #---------------------------------------------------------------------------------#
 # Expand external:
@@ -116,7 +130,9 @@ def set_relationships(attack_objects):
 
     # Check for bogus json:
     if not attack_objects.get('objects'):
-        raise enterpriseattack.Error('Unable to find enterprise objects, json seems invalid.')
+        raise enterpriseattack.Error(
+            'Unable to find enterprise objects, json seems invalid.'
+        )
     
     # Map relationships from-to ID's:
     for attack_obj in attack_objects.get('objects'):

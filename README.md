@@ -43,6 +43,22 @@ import enterpriseattack
 attack = enterpriseattack.Attack()
 ```
 
+### Example: Passing custom args:
+In this example, you can choose where to download the official Mitre Att&ck json from, including proxies to pass through. Alternatively, if you want to save the json file in a separate location, you can alter the enterprise_json arg. By default this is saved within your default site-packages location.
+
+* update - boolean forces a refresh download (each time this is called), overwriting the previous file.
+* include_deprecated - boolean to include Mitre Att&ck deprecated objects (from previous Att&ck versions).
+
+```py
+attack = enterpriseattack.Attack(
+   enterprise_json=None,
+   url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
+   include_deprecated=False,
+   update=False,
+   proxies={'http':'http://127.0.0.1:1337'}
+)
+```
+
 ### Example: Iterate over tactics/techniques/sub_techniques:
 ```py
 for tactic in attack.tactics:
@@ -55,6 +71,17 @@ for software in attack.software:
     for technique in software.techniques:
         for sub_technique in technique.sub_techniques:
             print(software.name, technique.name, sub_technique.name)
+```
+
+### Example: Create a json object of any tactic/technique/sub_technique/group/software/datasource:
+```py
+for tactic in attack.tactics:
+   print(tactic.to_json())
+
+for group in attack.groups:
+   print(group.to_json())
+
+...
 ```
 
 For more examples, please refer to the [Documentation](https://github.com/xakepnz/enterpriseattack/tree/main/docs)
