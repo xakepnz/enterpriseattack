@@ -66,13 +66,13 @@ class Tactic:
                 "revoked": self.revoked
             }
         except Exception as e:
-            logging.error('Failed to jsonify object, error was: {}'.format(e))
-            raise enterpriseattack.Error('Failed to create json object, error was: {}'.format(e))
+            logging.error(f'Failed to jsonify object, error was: {e}')
+            raise enterpriseattack.Error(f'Failed to create json object, error was: {e}')
     
     #---------------------------------------------------------------------------------#
     
     def __str__(self):
-        return '{} Mitre Att&ck Tactic'.format(self.name)
+        return f'{self.name} Mitre Att&ck Tactic'
     
     def __repr__(self):
-        return '{} {}'.format(self.__class__, self.name)
+        return f'{self.__class__} {self.name}'

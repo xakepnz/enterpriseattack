@@ -13,10 +13,10 @@ from os import path
 
 #---------------------------------------------------------------------------------#
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 #---------------------------------------------------------------------------------#
-# Mitre Enterprise Attack class:
+# enterpriseattack Attack class:
 #---------------------------------------------------------------------------------#
 
 class Attack:
@@ -25,16 +25,17 @@ class Attack:
         enterprise_json=None,
         url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
         include_deprecated=False,
-        update=False
+        update=False,
+        **kwargs
         ):
 
         # Save the json dump to the same directory the script lives if none supplied:
         if not enterprise_json:
-            enterprise_json = '{}/enterprise-attack.json'.format(path.dirname(path.realpath(__file__)))
+            enterprise_json = f'{path.dirname(path.realpath(__file__))}/enterprise-attack.json'
             self.enterprise_json = enterprise_json
 
         # Parse the json:
-        self.attack_objects = utils.read_json(url, enterprise_json, update)
+        self.attack_objects = utils.read_json(url, enterprise_json, update, **kwargs)
 
         # Allow for including depreciated items Mitre has revoked:
         self.include_deprecated = include_deprecated
@@ -43,7 +44,7 @@ class Attack:
         self.relationships, self.id_lookup = utils.set_relationships(self.attack_objects)
 
     #---------------------------------------------------------------------------------#
-    # Return all enterprise attack tactics:
+    # Return all enterpriseattack tactics:
     #---------------------------------------------------------------------------------#
 
     @property
@@ -59,7 +60,7 @@ class Attack:
         return tactics_
 
     #---------------------------------------------------------------------------------#
-    # Return all enterprise attack techniques:
+    # Return all enterpriseattack techniques:
     #---------------------------------------------------------------------------------#
 
     @property
@@ -76,7 +77,7 @@ class Attack:
         return techniques_
 
     #---------------------------------------------------------------------------------#
-    # Return all enterprise attack Sub Techniques:
+    # Return all enterpriseattack sub_techniques:
     #---------------------------------------------------------------------------------#
 
     @property
@@ -93,7 +94,7 @@ class Attack:
         return sub_techniques_
 
     #---------------------------------------------------------------------------------#
-    # Return all enterprise attack Groups:
+    # Return all enterpriseattack groups:
     #---------------------------------------------------------------------------------#
 
     @property
@@ -109,7 +110,7 @@ class Attack:
         return groups_
 
     #---------------------------------------------------------------------------------#
-    # Return all enterprise attack Software:
+    # Return all enterpriseattack software:
     #---------------------------------------------------------------------------------#
 
     @property
@@ -125,7 +126,7 @@ class Attack:
         return software_
 
     #---------------------------------------------------------------------------------#
-    # Return all enterprise attack Mitigations:
+    # Return all enterpriseattack mitigations:
     #---------------------------------------------------------------------------------#
 
     @property
@@ -141,7 +142,7 @@ class Attack:
         return mitigations_
 
     #---------------------------------------------------------------------------------#
-    # Return all enterprise attack Data Sources:
+    # Return all enterpriseattack data_sources:
     #---------------------------------------------------------------------------------#
 
     @property
