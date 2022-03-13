@@ -1,12 +1,13 @@
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 import logging
 
 import enterpriseattack
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Component class:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
+
 
 class Component:
     def __init__(self, attack_objects, relationships, id_lookup, **kwargs):
@@ -37,10 +38,10 @@ class Component:
         )
         self.revoked = kwargs.get('revoked')
         self.deprecated = kwargs.get('x_mitre_deprecated')
-    
-    #---------------------------------------------------------------------------------#
+
+    # ----------------------------------------------------------------------------#
     # Access Techniques for each Component object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def techniques(self):
@@ -50,8 +51,8 @@ class Component:
 
         if self.relationships.get(self.mid):
             for r_ in self.relationships.get(self.mid):
-                if (r_.startswith('attack-pattern') and 
-                    self.id_lookup[r_].get('x_mitre_is_subtechnique') == False):
+                if (r_.startswith('attack-pattern') and
+                        not self.id_lookup[r_].get('x_mitre_is_subtechnique')):
                     techniques_.append(
                         Technique(
                             self.attack_objects,
@@ -60,12 +61,12 @@ class Component:
                             **self.id_lookup[r_]
                         )
                     )
-        
+
         return techniques_
-    
-    #---------------------------------------------------------------------------------#
+
+    # ----------------------------------------------------------------------------#
     # Access Sub Techniques for each Component object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def sub_techniques(self):
@@ -75,8 +76,8 @@ class Component:
 
         if self.relationships.get(self.mid):
             for r_ in self.relationships.get(self.mid):
-                if (r_.startswith('attack-pattern') and 
-                    self.id_lookup[r_].get('x_mitre_is_subtechnique') == True):
+                if (r_.startswith('attack-pattern') and
+                        self.id_lookup[r_].get('x_mitre_is_subtechnique')):
                     sub_techniques_.append(
                         SubTechnique(
                             self.attack_objects,
@@ -85,12 +86,12 @@ class Component:
                             **self.id_lookup[r_]
                         )
                     )
-        
+
         return sub_techniques_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Access Tactics for each Component object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def tactics(self):
@@ -103,9 +104,9 @@ class Component:
                     tactics_.append(tactic)
         return tactics_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Return a json dict of the object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     def to_json(self):
         try:
@@ -129,12 +130,14 @@ class Component:
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')
-            raise enterpriseattack.Error(f'Failed to create json object, error was: {e}')
+            raise enterpriseattack.Error(
+                f'Failed to create json object, error was: {e}'
+            )
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     def __str__(self):
         return f'{self.name} Mitre Att&ck Data Component'
-    
+
     def __repr__(self):
         return f'{self.__class__} {self.name}'
