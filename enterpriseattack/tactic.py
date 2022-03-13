@@ -1,7 +1,8 @@
 #---------------------------------------------------------------------------------#
 
-import enterpriseattack
 import logging
+
+import enterpriseattack
 
 #---------------------------------------------------------------------------------#
 # Tactic class:
@@ -13,7 +14,10 @@ class Tactic:
         self.id_lookup = id_lookup
         self.attack_objects = attack_objects
 
-        self.id = enterpriseattack.utils.expand_external(kwargs.get('external_references'), 'external_id')
+        self.id = enterpriseattack.utils.expand_external(
+            kwargs.get('external_references'),
+            'external_id'
+        )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
         self.modified = kwargs.get('modified')
@@ -22,7 +26,10 @@ class Tactic:
         self.name = kwargs.get('name')
         self.type = kwargs.get('type')
         self.description = kwargs.get('description')
-        self.url = enterpriseattack.utils.expand_external(kwargs.get('external_references'), 'url')
+        self.url = enterpriseattack.utils.expand_external(
+            kwargs.get('external_references'),
+            'url'
+        )
         self.short_name = kwargs.get('x_mitre_shortname')
         self.deprecated = kwargs.get('x_mitre_deprecated')
         self.revoked = kwargs.get('revoked')
@@ -38,10 +45,19 @@ class Tactic:
         techniques_ = []
 
         for attack_obj in self.attack_objects['objects']:
-            if attack_obj.get('type') == 'attack-pattern' and attack_obj.get('x_mitre_is_subtechnique') == False:
+            if (attack_obj.get('type') == 'attack-pattern' and 
+                attack_obj.get('x_mitre_is_subtechnique') == False):
                 kill_chains = attack_obj.get('kill_chain_phases')
+
                 if enterpriseattack.utils.match_tactics(self.short_name, kill_chains):
-                    techniques_.append(Technique(self.attack_objects, self.relationships, self.id_lookup, **attack_obj))
+                    techniques_.append(
+                        Technique(
+                            self.attack_objects,
+                            self.relationships,
+                            self.id_lookup,
+                            **attack_obj
+                        )
+                    )
         return techniques_
     
     #---------------------------------------------------------------------------------#

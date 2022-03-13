@@ -1,7 +1,8 @@
 #---------------------------------------------------------------------------------#
 
-import enterpriseattack
 import logging
+
+import enterpriseattack
 
 #---------------------------------------------------------------------------------#
 # Mitigation class:
@@ -13,7 +14,10 @@ class Mitigation:
         self.id_lookup = id_lookup
         self.attack_objects = attack_objects
         
-        self.id = enterpriseattack.utils.expand_external(kwargs.get('external_references'), 'external_id')
+        self.id = enterpriseattack.utils.expand_external(
+            kwargs.get('external_references'),
+            'external_id'
+        )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
         self.modified = kwargs.get('modified')
@@ -22,7 +26,10 @@ class Mitigation:
         self.name = kwargs.get('name')
         self.type = kwargs.get('type')
         self.description = kwargs.get('description')
-        self.url = enterpriseattack.utils.expand_external(kwargs.get('external_references'), 'url')
+        self.url = enterpriseattack.utils.expand_external(
+            kwargs.get('external_references'),
+            'url'
+        )
         self.revoked = kwargs.get('revoked')
         self.deprecated = kwargs.get('x_mitre_deprecated')
 
@@ -38,10 +45,34 @@ class Mitigation:
 
         if self.relationships.get(self.mid):
             for target_id in self.relationships.get(self.mid):
-                if target_id.startswith('attack-pattern') and self.id_lookup[target_id].get('x_mitre_is_subtechnique') == False:
+                if (target_id.startswith('attack-pattern') and 
+                    self.id_lookup[target_id].get('x_mitre_is_subtechnique') == False):
                     if self.id_lookup.get(target_id):
-                        techniques_.append(Technique(self.attack_objects, self.relationships, self.id_lookup, **self.id_lookup[target_id]))
+                        techniques_.append(
+                            Technique(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **self.id_lookup[target_id]
+                            )
+                        )
+        
         return techniques_
+    
+    #---------------------------------------------------------------------------------#
+    # Access Tactics for each Mitigation object:
+    #---------------------------------------------------------------------------------#
+
+    @property
+    def tactics(self):
+
+        tactics_ = []
+
+        for technique in self.techniques:
+            if technique.tactics:
+                for tactic in technique.tactics:
+                    tactics_.append(tactic)
+        return tactics_
 
     #---------------------------------------------------------------------------------#
     # Return a json dict of the object:
@@ -61,6 +92,7 @@ class Mitigation:
                 "description": self.description,
                 "url": self.url,
                 "techniques": [technique.name for technique in self.techniques],
+                "tactics": [tactic.name for tactic in self.tactics],
                 "deprecated": self.deprecated,
                 "revoked": self.revoked
             }

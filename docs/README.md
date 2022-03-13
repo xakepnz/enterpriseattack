@@ -12,6 +12,7 @@
 - [Mitigations](Mitigations.md)
 - [Software (Tools/Malware)](Software.md)
 - [Datasources](Datasources.md)
+- [Components](Components.md)
 
 ## What is MITRE ATT&CK?
 

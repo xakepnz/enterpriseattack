@@ -1,7 +1,8 @@
 #---------------------------------------------------------------------------------#
 
-import enterpriseattack
 import logging
+
+import enterpriseattack
 
 #---------------------------------------------------------------------------------#
 # Group class:
@@ -13,7 +14,10 @@ class Group:
         self.id_lookup = id_lookup
         self.attack_objects = attack_objects
 
-        self.id = enterpriseattack.utils.expand_external(kwargs.get('external_references'), 'external_id')
+        self.id = enterpriseattack.utils.expand_external(
+            kwargs.get('external_references'),
+            'external_id'
+        )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
         self.modified = kwargs.get('modified')
@@ -23,8 +27,13 @@ class Group:
         self.aliases = kwargs.get('aliases')
         self.created_by_ref = kwargs.get('created_by_ref')
         self.object_marking_ref = kwargs.get('object_marking_refs')
-        self.references = enterpriseattack.utils.obtain_sources(kwargs.get('external_references'))
-        self.url = enterpriseattack.utils.expand_external(kwargs.get('external_references'), 'url')
+        self.references = enterpriseattack.utils.obtain_sources(
+            kwargs.get('external_references')
+        )
+        self.url = enterpriseattack.utils.expand_external(
+            kwargs.get('external_references'),
+            'url'
+        )
         self.revoked = kwargs.get('revoked')
         self.deprecated = kwargs.get('x_mitre_deprecated')
 
@@ -40,11 +49,34 @@ class Group:
 
         if self.relationships.get(self.mid):
             for target_id in self.relationships.get(self.mid):
-                if target_id.startswith('attack-pattern') and self.id_lookup[target_id].get('x_mitre_is_subtechnique') == False:
+                if (target_id.startswith('attack-pattern') and
+                    self.id_lookup[target_id].get('x_mitre_is_subtechnique') == False):
                     if self.id_lookup.get(target_id):
-                        techniques_.append(Technique(self.attack_objects, self.relationships, self.id_lookup, **self.id_lookup[target_id]))
+                        techniques_.append(
+                            Technique(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **self.id_lookup[target_id]
+                            )
+                        )
         return techniques_
     
+    #---------------------------------------------------------------------------------#
+    # Access Tactics for each Group object:
+    #---------------------------------------------------------------------------------#
+
+    @property
+    def tactics(self):
+        tactics_ = []
+
+        for technique in self.techniques:
+            for tactic in technique.tactics:
+                if tactic not in tactics_:
+                    tactics_.append(tactic)
+
+        return tactics_
+
     #---------------------------------------------------------------------------------#
     # Access Software for each Group object:
     #---------------------------------------------------------------------------------#
@@ -59,8 +91,65 @@ class Group:
             for r_id in self.relationships.get(self.mid):
                 if self.id_lookup.get(r_id):
                     if self.id_lookup.get(r_id).get('type') in ['tool','malware']:
-                        softwares_.append(Software(self.attack_objects, self.relationships, self.id_lookup, **self.id_lookup[r_id]))
+                        softwares_.append(
+                            Software(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **self.id_lookup[r_id]
+                            )
+                        )
+
         return softwares_
+
+    #---------------------------------------------------------------------------------#
+    # Access Malware for each Group object:
+    #---------------------------------------------------------------------------------#
+
+    @property
+    def malware(self):
+        from .software import Software
+
+        malware_ = []
+
+        if self.relationships.get(self.mid):
+            for r_id in self.relationships.get(self.mid):
+                if self.id_lookup.get(r_id):
+                    if self.id_lookup.get(r_id).get('type') == 'malware':
+                        malware_.append(
+                            Software(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **self.id_lookup[r_id]
+                            )
+                        )
+        
+        return malware_
+
+    #---------------------------------------------------------------------------------#
+    # Access Tools for each Group object:
+    #---------------------------------------------------------------------------------#
+
+    @property
+    def tools(self):
+        from .software import Software
+
+        tools_ = []
+
+        if self.relationships.get(self.mid):
+            for r_id in self.relationships.get(self.mid):
+                if self.id_lookup.get(r_id):
+                    if self.id_lookup.get(r_id).get('type') == 'tool':
+                        tools_.append(
+                            Software(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **self.id_lookup[r_id]
+                            )
+                        )
+        return tools_
     
     #---------------------------------------------------------------------------------#
     # Return a json dict of the object:
@@ -80,8 +169,11 @@ class Group:
                 "description": self.description,
                 "url": self.url,
                 "aliases": self.aliases,
+                "tactics": [tactic.name for tactic in self.tactics],
                 "techniques": [technique.name for technique in self.techniques],
                 "software": [{tool.type:tool.name} for tool in self.software],
+                "malware": [malware.name for malware in self.malware],
+                "tools": [tool.name for tool in self.tools],
                 "references": self.references,
                 "deprecated": self.deprecated,
                 "revoked": self.revoked
