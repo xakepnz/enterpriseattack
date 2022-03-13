@@ -1,6 +1,6 @@
 language: python
 cache: pip
-dist: bionic
+dist: focal
 sudo: false
 
 matrix:
