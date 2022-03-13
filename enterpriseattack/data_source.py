@@ -1,19 +1,19 @@
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 import logging
 
 import enterpriseattack
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # DataSource class:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
+
 
 class DataSource:
     def __init__(self, attack_objects, relationships, id_lookup, **kwargs):
         self.relationships = relationships
         self.id_lookup = id_lookup
         self.attack_objects = attack_objects
-        
         self.id = enterpriseattack.utils.expand_external(
             kwargs.get('external_references'),
             'external_id'
@@ -39,9 +39,9 @@ class DataSource:
         self.revoked = kwargs.get('revoked')
         self.deprecated = kwargs.get('x_mitre_deprecated')
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Access Components for each Data Source object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def components(self):
@@ -60,12 +60,12 @@ class DataSource:
                             **self.id_lookup[r_]
                         )
                     )
-        
+
         return components_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Access Techniques for each Data Source object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def techniques(self):
@@ -79,8 +79,8 @@ class DataSource:
                     if self.relationships.get(component.id):
                         for r_id in self.relationships.get(component.id):
                             if self.id_lookup.get(r_id):
-                                if (self.id_lookup.get(r_id).get('type') == 'attack-pattern' and 
-                                    self.id_lookup.get(r_id).get('x_mitre_is_subtechnique') == False):
+                                if (self.id_lookup.get(r_id).get('type') == 'attack-pattern' and
+                                        not self.id_lookup.get(r_id).get('x_mitre_is_subtechnique')):
                                     techniques_.append(
                                         Technique(
                                             self.attack_objects,
@@ -92,9 +92,9 @@ class DataSource:
 
         return techniques_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Return a json dict of the object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     def to_json(self):
         try:
@@ -120,12 +120,14 @@ class DataSource:
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')
-            raise enterpriseattack.Error(f'Failed to create json object, error was: {e}')
-    
-    #---------------------------------------------------------------------------------#
+            raise enterpriseattack.Error(
+                f'Failed to create json object, error was: {e}'
+            )
+
+    # ----------------------------------------------------------------------------#
 
     def __str__(self):
         return f'{self.name} Mitre Att&ck Data Source'
-    
+
     def __repr__(self):
         return f'{self.__class__} {self.name}'

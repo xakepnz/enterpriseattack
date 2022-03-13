@@ -1,6 +1,6 @@
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Imports:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 # Imports:
 import logging
@@ -10,22 +10,27 @@ import time
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Import tests:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
-start = time.time()
-import enterpriseattack
-end = time.time()
-print(f'Loading import took: {end - start}')
 
-#---------------------------------------------------------------------------------#
+def i():
+    start = time.time()
+    import enterpriseattack
+    end = time.time()
+    print(f'Loading import took: {end - start}')
+    return enterpriseattack
+
+
+enterpriseattack = i()
+
+# ----------------------------------------------------------------------------#
 # Initialisation tests:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 start = time.time()
 attack = enterpriseattack.Attack(
-    #enterprise_json='enterpriseattack/data/enterprise-attack.json',
     url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
     include_deprecated=False,
     update=True
@@ -35,7 +40,6 @@ print(f'Initialise Attack object (fresh download json) took: {end - start}')
 
 start = time.time()
 attack = enterpriseattack.Attack(
-    #enterprise_json='enterpriseattack/data/enterprise-attack.json',
     url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
     include_deprecated=False,
     update=False
@@ -43,9 +47,9 @@ attack = enterpriseattack.Attack(
 end = time.time()
 print(f'Initialise Attack object (saved json) took: {end - start}')
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Relationship tests:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 start = time.time()
 for source, target in attack.relationships.items():
@@ -53,9 +57,9 @@ for source, target in attack.relationships.items():
 end = time.time()
 print(f'Iterate over each relationship object took: {end - start}')
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Software tests:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 start = time.time()
 for software in attack.software:
@@ -98,9 +102,9 @@ for software in attack.software:
 end = time.time()
 print(f'Iterate over each software group object took: {end - start}')
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Data Source tests:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 start = time.time()
 for datasource in attack.data_sources:
@@ -136,9 +140,9 @@ for datasource in attack.data_sources:
 end = time.time()
 print(f'Iterate over each data source object and component took: {end - start}')
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Group tests:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 start = time.time()
 for group in attack.groups:
@@ -166,9 +170,9 @@ for group in attack.groups:
 end = time.time()
 print(f'Iterate over every group technique object took: {end - start}')
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Technique tests:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 start = time.time()
 for technique in attack.techniques:
@@ -210,9 +214,9 @@ for technique in attack.techniques:
 end = time.time()
 print(f'Iterate over each technique object and jsonify it took: {end - start}')
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Tactic tests:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 start = time.time()
 for tactic in attack.tactics:
@@ -233,9 +237,9 @@ for tactic in attack.tactics:
 end = time.time()
 print(f'Iterate over each tactic and technique object took: {end - start}')
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Sub Technique tests:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 start = time.time()
 for sub_technique in attack.sub_techniques:
@@ -291,9 +295,9 @@ for sub_technique in attack.sub_techniques:
 end = time.time()
 print(f'Iterate over each sub_technique/mitigation object took: {end - start}')
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Mitigation tests:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 start = time.time()
 for mitigation in attack.mitigations:

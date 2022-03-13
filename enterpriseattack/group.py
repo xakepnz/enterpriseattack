@@ -1,12 +1,13 @@
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 import logging
 
 import enterpriseattack
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Group class:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
+
 
 class Group:
     def __init__(self, attack_objects, relationships, id_lookup, **kwargs):
@@ -37,9 +38,9 @@ class Group:
         self.revoked = kwargs.get('revoked')
         self.deprecated = kwargs.get('x_mitre_deprecated')
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Access Techniques for each Group object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def techniques(self):
@@ -50,7 +51,7 @@ class Group:
         if self.relationships.get(self.mid):
             for target_id in self.relationships.get(self.mid):
                 if (target_id.startswith('attack-pattern') and
-                    self.id_lookup[target_id].get('x_mitre_is_subtechnique') == False):
+                        not self.id_lookup[target_id].get('x_mitre_is_subtechnique')):
                     if self.id_lookup.get(target_id):
                         techniques_.append(
                             Technique(
@@ -60,11 +61,12 @@ class Group:
                                 **self.id_lookup[target_id]
                             )
                         )
+
         return techniques_
-    
-    #---------------------------------------------------------------------------------#
+
+    # ----------------------------------------------------------------------------#
     # Access Tactics for each Group object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def tactics(self):
@@ -77,9 +79,9 @@ class Group:
 
         return tactics_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Access Software for each Group object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def software(self):
@@ -90,7 +92,8 @@ class Group:
         if self.relationships.get(self.mid):
             for r_id in self.relationships.get(self.mid):
                 if self.id_lookup.get(r_id):
-                    if self.id_lookup.get(r_id).get('type') in ['tool','malware']:
+                    if (self.id_lookup.get(r_id).get('type') in
+                            ['tool', 'malware']):
                         softwares_.append(
                             Software(
                                 self.attack_objects,
@@ -102,9 +105,9 @@ class Group:
 
         return softwares_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Access Malware for each Group object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def malware(self):
@@ -124,12 +127,12 @@ class Group:
                                 **self.id_lookup[r_id]
                             )
                         )
-        
+
         return malware_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Access Tools for each Group object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def tools(self):
@@ -150,10 +153,10 @@ class Group:
                             )
                         )
         return tools_
-    
-    #---------------------------------------------------------------------------------#
+
+    # ----------------------------------------------------------------------------#
     # Return a json dict of the object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     def to_json(self):
         try:
@@ -171,7 +174,7 @@ class Group:
                 "aliases": self.aliases,
                 "tactics": [tactic.name for tactic in self.tactics],
                 "techniques": [technique.name for technique in self.techniques],
-                "software": [{tool.type:tool.name} for tool in self.software],
+                "software": [{tool.type: tool.name} for tool in self.software],
                 "malware": [malware.name for malware in self.malware],
                 "tools": [tool.name for tool in self.tools],
                 "references": self.references,
@@ -180,12 +183,14 @@ class Group:
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')
-            raise enterpriseattack.Error(f'Failed to create json object, error was: {e}')
+            raise enterpriseattack.Error(
+                f'Failed to create json object, error was: {e}'
+            )
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     def __str__(self):
         return f'{self.name} Mitre Att&ck Group'
-    
+
     def __repr__(self):
         return f'{self.__class__} {self.name}'

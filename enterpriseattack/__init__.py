@@ -1,4 +1,4 @@
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 from os import path
 
@@ -12,23 +12,23 @@ from enterpriseattack import tactic
 from enterpriseattack import technique
 from enterpriseattack import utils
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 __version__ = '0.1.4'
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # enterpriseattack Attack class:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
+
 
 class Attack:
     def __init__(
-        self,
-        enterprise_json=None,
-        url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
-        include_deprecated=False,
-        update=False,
-        **kwargs
-        ):
+            self,
+            enterprise_json=None,
+            url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
+            include_deprecated=False,
+            update=False,
+            **kwargs):
 
         # Save the json dump to the same directory the script lives if none supplied:
         if not enterprise_json:
@@ -44,9 +44,9 @@ class Attack:
         # Set the relationships of all objects, and create a dict sorted by ID's:
         self.relationships, self.id_lookup = utils.set_relationships(self.attack_objects)
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Return all enterpriseattack tactics:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def tactics(self):
@@ -54,7 +54,7 @@ class Attack:
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'x-mitre-tactic':
-                if self.include_deprecated == False:
+                if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
                         tactics_.append(
                             tactic.Tactic(
@@ -73,12 +73,12 @@ class Attack:
                             **attack_obj
                         )
                     )
-        
+
         return tactics_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Return all enterpriseattack techniques:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def techniques(self):
@@ -86,7 +86,7 @@ class Attack:
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'attack-pattern':
                 if not attack_obj.get('x_mitre_is_subtechnique'):
-                    if self.include_deprecated == False:
+                    if not self.include_deprecated:
                         if not attack_obj.get('x_mitre_deprecated'):
                             techniques_.append(
                                 technique.Technique(
@@ -107,9 +107,9 @@ class Attack:
                         )
         return techniques_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Return all enterpriseattack sub_techniques:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def sub_techniques(self):
@@ -118,7 +118,7 @@ class Attack:
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'attack-pattern':
                 if attack_obj.get('x_mitre_is_subtechnique'):
-                    if self.include_deprecated == False:
+                    if not self.include_deprecated:
                         if not attack_obj.get('x_mitre_deprecated'):
                             sub_techniques_.append(
                                 sub_technique.SubTechnique(
@@ -137,12 +137,12 @@ class Attack:
                                 **attack_obj
                             )
                         )
-        
+
         return sub_techniques_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Return all enterpriseattack groups:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def groups(self):
@@ -150,15 +150,16 @@ class Attack:
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'intrusion-set':
-                if self.include_deprecated == False:
+                if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
-                        groups_.append(group.Group(
-                            self.attack_objects,
-                            self.relationships,
-                            self.id_lookup,
-                            **attack_obj
+                        groups_.append(
+                            group.Group(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj
+                            )
                         )
-                    )
                 else:
                     groups_.append(
                         group.Group(
@@ -168,21 +169,20 @@ class Attack:
                             **attack_obj
                         )
                     )
-        
+
         return groups_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Return all enterpriseattack software:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def software(self):
         software_ = []
 
         for attack_obj in self.attack_objects.get('objects'):
-            if (attack_obj.get('type') == 'tool' or 
-                attack_obj.get('type') == 'malware'):
-                if self.include_deprecated == False:
+            if attack_obj.get('type') in ['tool', 'malware']:
+                if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
                         software_.append(
                             software.Software(
@@ -201,12 +201,12 @@ class Attack:
                             **attack_obj
                         )
                     )
-        
+
         return software_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Return all enterpriseattack software:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def malware(self):
@@ -214,7 +214,7 @@ class Attack:
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'malware':
-                if self.include_deprecated == False:
+                if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
                         malware_.append(
                             software.Software(
@@ -233,12 +233,12 @@ class Attack:
                             **attack_obj
                         )
                     )
-        
+
         return malware_
-    
-    #---------------------------------------------------------------------------------#
+
+    # ----------------------------------------------------------------------------#
     # Return all enterpriseattack tools:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def tools(self):
@@ -246,7 +246,7 @@ class Attack:
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'tool':
-                if self.include_deprecated == False:
+                if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
                         tools_.append(
                             software.Software(
@@ -265,12 +265,12 @@ class Attack:
                             **attack_obj
                         )
                     )
-        
+
         return tools_
-    
-    #---------------------------------------------------------------------------------#
+
+    # ----------------------------------------------------------------------------#
     # Return all enterpriseattack mitigations:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def mitigations(self):
@@ -278,7 +278,7 @@ class Attack:
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'course-of-action':
-                if self.include_deprecated == False:
+                if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
                         mitigations_.append(
                             mitigation.Mitigation(
@@ -297,12 +297,12 @@ class Attack:
                             **attack_obj
                         )
                     )
-        
+
         return mitigations_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Return all enterpriseattack data_sources:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def data_sources(self):
@@ -310,7 +310,7 @@ class Attack:
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'x-mitre-data-source':
-                if self.include_deprecated == False:
+                if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
                         data_sources_.append(
                             data_source.DataSource(
@@ -329,12 +329,12 @@ class Attack:
                             **attack_obj
                         )
                     )
-        
+
         return data_sources_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Return all enterpriseattack components:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def components(self):
@@ -342,7 +342,7 @@ class Attack:
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'x-mitre-data-component':
-                if self.include_deprecated == False:
+                if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
                         components_.append(
                             component.Component(
@@ -361,12 +361,13 @@ class Attack:
                             **attack_obj
                         )
                     )
-        
+
         return components_
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Exception class for errors:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
+
 
 class Error(Exception):
     def __init__(self, message):

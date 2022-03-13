@@ -1,19 +1,20 @@
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 import logging
 
 import enterpriseattack
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Mitigation class:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
+
 
 class Mitigation:
     def __init__(self, attack_objects, relationships, id_lookup, **kwargs):
         self.relationships = relationships
         self.id_lookup = id_lookup
         self.attack_objects = attack_objects
-        
+
         self.id = enterpriseattack.utils.expand_external(
             kwargs.get('external_references'),
             'external_id'
@@ -33,9 +34,9 @@ class Mitigation:
         self.revoked = kwargs.get('revoked')
         self.deprecated = kwargs.get('x_mitre_deprecated')
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Access Techniques for each Mitigation object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def techniques(self):
@@ -45,8 +46,8 @@ class Mitigation:
 
         if self.relationships.get(self.mid):
             for target_id in self.relationships.get(self.mid):
-                if (target_id.startswith('attack-pattern') and 
-                    self.id_lookup[target_id].get('x_mitre_is_subtechnique') == False):
+                if (target_id.startswith('attack-pattern') and
+                        not self.id_lookup[target_id].get('x_mitre_is_subtechnique')):
                     if self.id_lookup.get(target_id):
                         techniques_.append(
                             Technique(
@@ -56,12 +57,12 @@ class Mitigation:
                                 **self.id_lookup[target_id]
                             )
                         )
-        
+
         return techniques_
-    
-    #---------------------------------------------------------------------------------#
+
+    # ----------------------------------------------------------------------------#
     # Access Tactics for each Mitigation object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def tactics(self):
@@ -72,11 +73,12 @@ class Mitigation:
             if technique.tactics:
                 for tactic in technique.tactics:
                     tactics_.append(tactic)
+
         return tactics_
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Return a json dict of the object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     def to_json(self):
         try:
@@ -98,12 +100,14 @@ class Mitigation:
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')
-            raise enterpriseattack.Error(f'Failed to create json object, error was: {e}')
+            raise enterpriseattack.Error(
+                f'Failed to create json object, error was: {e}'
+            )
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     def __str__(self):
         return f'{self.name} Mitre Att&ck Mitigation'
-    
+
     def __repr__(self):
         return f'{self.__class__} {self.name}'

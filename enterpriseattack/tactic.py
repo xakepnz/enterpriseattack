@@ -1,12 +1,13 @@
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 
 import logging
 
 import enterpriseattack
 
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
 # Tactic class:
-#---------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------#
+
 
 class Tactic:
     def __init__(self, attack_objects, relationships, id_lookup, **kwargs):
@@ -34,9 +35,9 @@ class Tactic:
         self.deprecated = kwargs.get('x_mitre_deprecated')
         self.revoked = kwargs.get('revoked')
 
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
     # Return a list of techniques to every Tactic object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     @property
     def techniques(self):
@@ -45,8 +46,8 @@ class Tactic:
         techniques_ = []
 
         for attack_obj in self.attack_objects['objects']:
-            if (attack_obj.get('type') == 'attack-pattern' and 
-                attack_obj.get('x_mitre_is_subtechnique') == False):
+            if (attack_obj.get('type') == 'attack-pattern' and
+                    not attack_obj.get('x_mitre_is_subtechnique')):
                 kill_chains = attack_obj.get('kill_chain_phases')
 
                 if enterpriseattack.utils.match_tactics(self.short_name, kill_chains):
@@ -59,10 +60,10 @@ class Tactic:
                         )
                     )
         return techniques_
-    
-    #---------------------------------------------------------------------------------#
+
+    # ----------------------------------------------------------------------------#
     # Return a json dict of the object:
-    #---------------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------------#
 
     def to_json(self):
         try:
@@ -84,11 +85,11 @@ class Tactic:
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')
             raise enterpriseattack.Error(f'Failed to create json object, error was: {e}')
-    
-    #---------------------------------------------------------------------------------#
-    
+
+    # ----------------------------------------------------------------------------#
+
     def __str__(self):
         return f'{self.name} Mitre Att&ck Tactic'
-    
+
     def __repr__(self):
         return f'{self.__class__} {self.name}'
