@@ -14,30 +14,36 @@ import enterpriseattack
 def download(url, local_enterprise_json, **kwargs):
     logging.debug(f'Downloading dataset: {url}')
 
-    r = requests.get(
-        url,
-        headers={
-            'Content-Type': 'application/json'
-        },
-        proxies=kwargs.get('proxies')
-    )
+    try:
+        r = requests.get(
+            url,
+            headers={
+                'Content-Type': 'application/json'
+            },
+            proxies=kwargs.get('proxies')
+        )
 
-    if r.ok:
-        try:
-            with open(local_enterprise_json, 'w') as f:
-                ujson.dump(r.json(), f, indent=4)
-                return True
+        if r.ok:
+            try:
+                with open(local_enterprise_json, 'w') as f:
+                    ujson.dump(r.json(), f, indent=4)
+                    return True
 
-        except (AttributeError, ValueError, TypeError) as e:
-            logging.error(f'Did not receive json response from: {url}, error was: {e}')
-            raise enterpriseattack.Error(f'Did not receive json response from: {url}')
+            except (AttributeError, ValueError, TypeError) as e:
+                logging.error(f'Did not receive json response from: {url}, error was: {e}')
+                raise enterpriseattack.Error(f'Did not receive json response from: {url}')
 
-        except FileNotFoundError as e:
-            raise enterpriseattack.Error(
-                f'File: "{local_enterprise_json}" was not found. - Unable to create file, change directory?'
-            )
-
-    raise enterpriseattack.Error(f'Failed to connect to: {url}')
+            except FileNotFoundError as e:
+                raise enterpriseattack.Error(
+                    f'File: "{local_enterprise_json}" was not found. - Unable to create file, change directory?'
+                )
+        
+        logging.error(f'Failed to connect to: {url}')
+        raise enterpriseattack.Error(f'Failed to connect to: {url}')
+    
+    except Exception as e:
+        logging.error(f'Failed to connect to: {url}')
+        raise enterpriseattack.Error(f'Failed to connect to: {url}')
 
 #---------------------------------------------------------------------------------#
 # Read local copy of Enterprise json or update the existing json:
@@ -134,8 +140,14 @@ def set_relationships(attack_objects):
             'Unable to find enterprise objects, json seems invalid.'
         )
     
-    # Map relationships from-to ID's:
+    # Append to lookup & Map relationships from-to ID's:
     for attack_obj in attack_objects.get('objects'):
+        # Append objs to the lookup:
+        if (attack_obj.get('id') and not 
+            attack_obj.get('id') in [id_lookup_, 'relationship']):
+            id_lookup_[attack_obj.get('id')] = attack_obj
+
+        # Map relationships:
         if attack_obj.get('type') == 'relationship':
             if attack_obj.get('source_ref') not in relationships_:
                 relationships_[attack_obj.get('source_ref')] = [attack_obj.get('target_ref')]
@@ -146,22 +158,6 @@ def set_relationships(attack_objects):
                 relationships_[attack_obj.get('target_ref')] = [attack_obj.get('source_ref')]
             else:
                 relationships_[attack_obj.get('target_ref')].append(attack_obj.get('source_ref'))
-        
-        # Map techniques to their ID's:
-        if attack_obj.get('type') == 'attack-pattern':
-            id_lookup_[attack_obj.get('id')] = attack_obj
-
-        # Map software to their ID's:
-        if attack_obj.get('type') == 'tool' or attack_obj.get('type') == 'malware':
-            id_lookup_[attack_obj.get('id')] = attack_obj
-
-        # Map mitigations to their ID's:
-        if attack_obj.get('type') == 'course-of-action':
-            id_lookup_[attack_obj.get('id')] = attack_obj
-
-        # Map groups to their ID's:
-        if attack_obj.get('type') == 'intrusion-set':
-            id_lookup_[attack_obj.get('id')] = attack_obj
 
         # Map data components to their data source id's:
         if attack_obj.get('type') == 'x-mitre-data-component':
@@ -174,8 +170,5 @@ def set_relationships(attack_objects):
                 relationships_[attack_obj.get('x_mitre_data_source_ref')] = [attack_obj.get('id')]
             else:
                 relationships_[attack_obj.get('x_mitre_data_source_ref')].append(attack_obj.get('id'))
-
-            # Append it to the id lookup:
-            id_lookup_[attack_obj.get('id')] = attack_obj
 
     return relationships_, id_lookup_

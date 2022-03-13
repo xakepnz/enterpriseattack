@@ -1,7 +1,8 @@
 #---------------------------------------------------------------------------------#
 
-import enterpriseattack
 import logging
+
+import enterpriseattack
 
 #---------------------------------------------------------------------------------#
 # DataSource class:
@@ -13,7 +14,10 @@ class DataSource:
         self.id_lookup = id_lookup
         self.attack_objects = attack_objects
         
-        self.id = enterpriseattack.utils.expand_external(kwargs.get('external_references'), 'external_id')
+        self.id = enterpriseattack.utils.expand_external(
+            kwargs.get('external_references'),
+            'external_id'
+        )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
         self.modified = kwargs.get('modified')
@@ -24,8 +28,13 @@ class DataSource:
         self.description = kwargs.get('description')
         self.platforms = kwargs.get('x_mitre_platforms')
         self.collection_layers = kwargs.get('x_mitre_collection_layers')
-        self.references = enterpriseattack.utils.obtain_sources(kwargs.get('external_references'))
-        self.url = enterpriseattack.utils.expand_external(kwargs.get('external_references'), 'url')
+        self.references = enterpriseattack.utils.obtain_sources(
+            kwargs.get('external_references')
+        )
+        self.url = enterpriseattack.utils.expand_external(
+            kwargs.get('external_references'),
+            'url'
+        )
         self.contributors = kwargs.get('x_mitre_contributors')
         self.revoked = kwargs.get('revoked')
         self.deprecated = kwargs.get('x_mitre_deprecated')
@@ -36,14 +45,22 @@ class DataSource:
 
     @property
     def components(self):
+        from .component import Component
 
         components_ = []
 
         if self.relationships.get(self.mid):
-            for target_id in self.relationships.get(self.mid):
-                if target_id.startswith('x-mitre-data-component'):
-                    if self.id_lookup.get(target_id):
-                        components_.append(Component(self.id_lookup.get(target_id)))
+            for r_ in self.relationships.get(self.mid):
+                if self.id_lookup[r_].get('type') == 'x-mitre-data-component':
+                    components_.append(
+                        Component(
+                            self.attack_objects,
+                            self.relationships,
+                            self.id_lookup,
+                            **self.id_lookup[r_]
+                        )
+                    )
+        
         return components_
 
     #---------------------------------------------------------------------------------#
@@ -56,13 +73,23 @@ class DataSource:
 
         techniques_ = []
 
-        for component in self.components:
-            if component.data_source_ref == self.mid:
-                if self.relationships.get(component.id):
-                    for r_id in self.relationships.get(component.id):
-                        if self.id_lookup.get(r_id):
-                            if self.id_lookup.get(r_id).get('type') == 'attack-pattern' and self.id_lookup.get(r_id).get('x_mitre_is_subtechnique') == False:
-                                techniques_.append(Technique(self.attack_objects, self.relationships, self.id_lookup, **self.id_lookup[r_id]))
+        if self.components:
+            for component in self.components:
+                if component.data_source_ref == self.mid:
+                    if self.relationships.get(component.id):
+                        for r_id in self.relationships.get(component.id):
+                            if self.id_lookup.get(r_id):
+                                if (self.id_lookup.get(r_id).get('type') == 'attack-pattern' and 
+                                    self.id_lookup.get(r_id).get('x_mitre_is_subtechnique') == False):
+                                    techniques_.append(
+                                        Technique(
+                                            self.attack_objects,
+                                            self.relationships,
+                                            self.id_lookup,
+                                            **self.id_lookup[r_id]
+                                        )
+                                    )
+
         return techniques_
 
     #---------------------------------------------------------------------------------#
@@ -99,30 +126,6 @@ class DataSource:
 
     def __str__(self):
         return f'{self.name} Mitre Att&ck Data Source'
-    
-    def __repr__(self):
-        return f'{self.__class__} {self.name}'
-
-#---------------------------------------------------------------------------------#
-# Data Source Component class:
-#---------------------------------------------------------------------------------#
-
-class Component:
-    def __init__(self, component_obj):
-        self.id = component_obj.get('id')
-        self.created = component_obj.get('created')
-        self.modified = component_obj.get('modified')
-        self.created_by_ref = component_obj.get('created_by_ref')
-        self.object_marking_ref = component_obj.get('object_marking_refs')
-        self.name = component_obj.get('name')
-        self.description = component_obj.get('description')
-        self.type = component_obj.get('type')
-        self.data_source_ref = component_obj.get('x_mitre_data_source_ref')
-
-    #---------------------------------------------------------------------------------#
-
-    def __str__(self):
-        return f'{self.name} Mitre Att&ck Data Component'
     
     def __repr__(self):
         return f'{self.__class__} {self.name}'

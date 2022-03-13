@@ -1,7 +1,8 @@
 #---------------------------------------------------------------------------------#
 
-import enterpriseattack
 import logging
+
+import enterpriseattack
 
 #---------------------------------------------------------------------------------#
 # SubTechnique class:
@@ -13,7 +14,10 @@ class SubTechnique:
         self.id_lookup = id_lookup
         self.attack_objects = attack_objects
 
-        self.id = enterpriseattack.utils.expand_external(kwargs.get('external_references'), 'external_id')
+        self.id = enterpriseattack.utils.expand_external(
+            kwargs.get('external_references'),
+            'external_id'
+        )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
         self.modified = kwargs.get('modified')
@@ -22,10 +26,15 @@ class SubTechnique:
         self.description = kwargs.get('description')
         self.created_by_ref = kwargs.get('created_by_ref')
         self.object_marking_ref = kwargs.get('object_marking_refs')
-        self.url = enterpriseattack.utils.expand_external(kwargs.get('external_references'), 'url')
+        self.url = enterpriseattack.utils.expand_external(
+            kwargs.get('external_references'),
+            'url'
+        )
         self.permissions_required = kwargs.get('x_mitre_permissions_required')
         self.platforms = kwargs.get('x_mitre_platforms')
-        self.references = enterpriseattack.utils.obtain_sources(kwargs.get('external_references'))
+        self.references = enterpriseattack.utils.obtain_sources(
+            kwargs.get('external_references')
+        )
         self.revoked = kwargs.get('revoked')
         self.deprecated = kwargs.get('x_mitre_deprecated')
         self.x_mitre_data_sources = kwargs.get('x_mitre_data_sources')
@@ -46,9 +55,16 @@ class SubTechnique:
                 if attack_obj.get('type') == 'x-mitre-data-source':
                     ds_ = [d_ for d_ in self.x_mitre_data_sources if attack_obj.get('name') in d_]
                     if ds_:
-                        datasources_.append(DataSource(self.attack_objects, self.relationships, self.id_lookup, **attack_obj))
+                        datasources_.append(
+                            DataSource(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj
+                            )
+                        )
         return datasources_
-
+    
     #---------------------------------------------------------------------------------#
     # Return a list of Techniques to every Sub Technique object:
     #---------------------------------------------------------------------------------#
@@ -62,8 +78,16 @@ class SubTechnique:
         if self.relationships.get(self.mid):
             for r_id in self.relationships.get(self.mid):
                 if self.id_lookup.get(r_id):
-                    if self.id_lookup.get(r_id).get('type') == 'attack-pattern' and self.id_lookup.get(r_id).get('x_mitre_is_subtechnique') == False:
-                        techniques_.append(Technique(self.attack_objects, self.relationships, self.id_lookup, **self.id_lookup[r_id]))
+                    if (self.id_lookup.get(r_id).get('type') == 'attack-pattern' and 
+                        self.id_lookup.get(r_id).get('x_mitre_is_subtechnique') == False):
+                        techniques_.append(
+                            Technique(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **self.id_lookup[r_id]
+                            )
+                        )
         return techniques_
 
     #---------------------------------------------------------------------------------#
@@ -78,8 +102,16 @@ class SubTechnique:
 
         if self.relationships.get(self.mid):
             for r_id in self.relationships.get(self.mid):
-                if self.id_lookup.get(r_id) and self.id_lookup.get(r_id).get('type') == 'intrusion-set':
-                        groups_.append(Group(self.attack_objects, self.relationships, self.id_lookup, **self.id_lookup[r_id]))
+                if (self.id_lookup.get(r_id) and 
+                    self.id_lookup.get(r_id).get('type') == 'intrusion-set'):
+                        groups_.append(
+                            Group(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **self.id_lookup[r_id]
+                            )
+                        )
         return groups_
 
     #---------------------------------------------------------------------------------#
@@ -109,11 +141,111 @@ class SubTechnique:
 
         if self.relationships.get(self.mid):
             for r_id in self.relationships.get(self.mid):
-                if self.id_lookup.get(r_id) and self.id_lookup.get(r_id).get('type') == 'course-of-action':
-                    mitigations_.append(Mitigation(self.attack_objects, self.relationships, self.id_lookup, **self.id_lookup[r_id]))
+                if (self.id_lookup.get(r_id) and 
+                    self.id_lookup.get(r_id).get('type') == 'course-of-action'):
+                    mitigations_.append(
+                        Mitigation(
+                            self.attack_objects,
+                            self.relationships,
+                            self.id_lookup,
+                            **self.id_lookup[r_id]
+                        )
+                    )
 
         return mitigations_
+
+    #---------------------------------------------------------------------------------#
+    # Access Software for each Sub Technique object:
+    #---------------------------------------------------------------------------------#
+
+    @property
+    def software(self):
+        from .software import Software
+
+        software_ = []
+        
+        for r_ in self.relationships.get(self.mid):
+            if self.id_lookup[r_].get('type') in ['tool','malware']:
+                software_.append(
+                    Software(
+                        self.attack_objects,
+                        self.relationships,
+                        self.id_lookup,
+                        **self.id_lookup[r_]
+                    )
+                ) 
+        
+        return software_
     
+    #---------------------------------------------------------------------------------#
+    # Access Tools for each Sub Technique object:
+    #---------------------------------------------------------------------------------#
+
+    @property
+    def tools(self):
+        from .software import Software
+
+        tools_ = []
+        
+        for r_ in self.relationships.get(self.mid):
+            if self.id_lookup[r_].get('type') == 'tool':
+                tools_.append(
+                    Software(
+                        self.attack_objects,
+                        self.relationships,
+                        self.id_lookup,
+                        **self.id_lookup[r_]
+                    )
+                ) 
+        
+        return tools_
+    
+    #---------------------------------------------------------------------------------#
+    # Access Malware for each Sub Technique object:
+    #---------------------------------------------------------------------------------#
+
+    @property
+    def malware(self):
+        from .software import Software
+
+        malware_ = []
+        
+        for r_ in self.relationships.get(self.mid):
+            if self.id_lookup[r_].get('type') == 'malware':
+                malware_.append(
+                    Software(
+                        self.attack_objects,
+                        self.relationships,
+                        self.id_lookup,
+                        **self.id_lookup[r_]
+                    )
+                ) 
+        
+        return malware_
+
+    #---------------------------------------------------------------------------------#
+    # Access Components for each Sub Technique object:
+    #---------------------------------------------------------------------------------#
+
+    @property
+    def components(self):
+        from .component import Component
+
+        components_ = []
+        
+        for r_ in self.relationships.get(self.mid):
+            if self.id_lookup[r_].get('type') == 'x-mitre-data-component':
+                components_.append(
+                    Component(
+                        self.attack_objects,
+                        self.relationships,
+                        self.id_lookup,
+                        **self.id_lookup[r_]
+                    )
+                ) 
+        
+        return components_
+
     #---------------------------------------------------------------------------------#
     # Return a json dict of the object:
     #---------------------------------------------------------------------------------#
@@ -140,7 +272,10 @@ class SubTechnique:
                 "tactics": [tactic.name for tactic in self.tactics],
                 "mitigations": [mitigation.name for mitigation in self.mitigations],
                 "groups": [group.name for group in self.groups],
-                "datasources": [datasource.name for datasource in self.datasources]
+                "datasources": [datasource.name for datasource in self.datasources],
+                "software": [{software.name:software.type} for software in self.software],
+                "tools": [tool.name for tool in self.tools],
+                "malware": [malware.name for malware in self.malware]
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')

@@ -25,7 +25,7 @@ print(f'Loading import took: {end - start}')
 
 start = time.time()
 attack = enterpriseattack.Attack(
-    enterprise_json='enterpriseattack/data/enterprise-attack.json',
+    #enterprise_json='enterpriseattack/data/enterprise-attack.json',
     url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
     include_deprecated=False,
     update=True
@@ -35,7 +35,7 @@ print(f'Initialise Attack object (fresh download json) took: {end - start}')
 
 start = time.time()
 attack = enterpriseattack.Attack(
-    enterprise_json='enterpriseattack/data/enterprise-attack.json',
+    #enterprise_json='enterpriseattack/data/enterprise-attack.json',
     url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
     include_deprecated=False,
     update=False
@@ -155,7 +155,7 @@ print(f'Jsonify every group object took: {end - start}')
 start = time.time()
 for group in attack.groups:
     for software in group.software:
-        print(software.name)
+        pass
 end = time.time()
 print(f'Iterate over every group software object took: {end - start}')
 
@@ -260,21 +260,21 @@ print(f'Iterate over each sub_technique/tactic object took: {end - start}')
 start = time.time()
 for sub_technique in attack.sub_techniques:
     for technique in sub_technique.techniques:
-        print(technique.name)
+        pass
 end = time.time()
 print(f'Iterate over each sub_technique/tactic object took: {end - start}')
 
 start = time.time()
 for sub_technique in attack.sub_techniques:
     for mitigation in sub_technique.mitigations:
-        print(mitigation.name)
+        pass
 end = time.time()
 print(f'Iterate over each sub_technique/tactic object took: {end - start}')
 
 start = time.time()
 for sub_technique in attack.sub_techniques:
     for group in sub_technique.groups:
-        print(sub_technique.name, group.name)
+        pass
 end = time.time()
 print(f'Iterate over each sub_technique/tactic object took: {end - start}')
 

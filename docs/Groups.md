@@ -33,6 +33,9 @@ for group in attack.groups:
 ## Extra Attributes:
 ```py
 for group in attack.groups:
+    for malware in group.malware:
+        for tool in group.tools:
+            pass
     for software in group.software:
         print(software.name) # Software name
         # Access all of the software attributes...
@@ -72,8 +75,11 @@ for group in groups:
     "description": self.description,
     "url": self.url,
     "aliases": self.aliases,
+    "tactics": [tactic.name for tactic in self.tactics],
     "techniques": [technique.name for technique in self.techniques],
     "software": [{tool.type:tool.name} for tool in self.software],
+    "malware": [malware.name for malware in self.malware],
+    "tools": [tool.name for tool in self.tools],
     "references": self.references,
     "deprecated": self.deprecated,
     "revoked": self.revoked
