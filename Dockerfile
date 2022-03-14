@@ -10,4 +10,4 @@ RUN python setup.py install
 
 HEALTHCHECK NONE
 
-CMD [ "python", "/enterpriseattack/tests/benchmarks.py" ]
+CMD [ "python", "/enterpriseattack/tests/test_benchmarks.py" ]
