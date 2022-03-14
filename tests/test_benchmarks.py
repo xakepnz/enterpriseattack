@@ -31,17 +31,19 @@ enterpriseattack = test_i()
 
 
 def test_pass():
-    start = time.time()
-    attack = enterpriseattack.Attack(
-        url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
-        include_deprecated=False,
-        update=True
-    )
-    end = time.time()
-    print(f'Initialise Attack object (fresh download json) took: {end - start}')
+    # start = time.time()
+    # attack = enterpriseattack.Attack(
+    #     enterprise_json='enterprise-attack.json',
+    #     url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
+    #     include_deprecated=False,
+    #     update=True
+    # )
+    # end = time.time()
+    # print(f'Initialise Attack object (fresh download json) took: {end - start}')
 
     start = time.time()
     attack = enterpriseattack.Attack(
+        enterprise_json='enterprise-attack.json',
         url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
         include_deprecated=False,
         update=False
