@@ -19,14 +19,14 @@ ci:
 	py.test -n 8 --forked --junitxml=report.xml
 
 lint:
-	flake8 --ignore $(pep8-rules) enterpriseattack tests/benchmarks.py
+	flake8 --ignore $(pep8-rules) enterpriseattack tests/test_benchmarks.py
 
 format:
 	# Automatic reformatting
-	autopep8 -aaa --ignore $(pep8-rules) --in-place --recursive enterpriseattack tests/benchmarks.py
+	autopep8 -aaa --ignore $(pep8-rules) --in-place --recursive enterpriseattack tests/test_benchmarks.py
 
 coverage:
-	py.test --cov-config=.coveragerc --verbose --cov-report=term --cov-report=xml --cov=enterpriseattack tests/benchmarks.py
+	py.test --cov-config=.coveragerc --verbose --cov-report=term --cov-report=xml --cov=enterpriseattack tests/test_benchmarks.py
 	coveralls
 
 clean:
