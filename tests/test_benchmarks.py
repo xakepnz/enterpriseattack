@@ -43,7 +43,7 @@ def test_pass():
 
     start = time.time()
     attack = enterpriseattack.Attack(
-        enterprise_json='enterprise-attack.json',
+        enterprise_json='tests/enterprise-attack.json',
         url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
         include_deprecated=False,
         update=False
