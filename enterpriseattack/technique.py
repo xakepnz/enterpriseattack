@@ -103,7 +103,10 @@ class Technique:
         if self.x_mitre_data_sources:
             for attack_obj in self.attack_objects['objects']:
                 if attack_obj.get('type') == 'x-mitre-data-source':
-                    ds_ = [d_ for d_ in self.x_mitre_data_sources if attack_obj.get('name') in d_]
+                    ds_ = [
+                        d_ for d_ in self.x_mitre_data_sources
+                        if attack_obj.get('name') in d_
+                    ]
                     if ds_:
                         datasources_.append(
                             DataSource(
@@ -274,13 +277,19 @@ class Technique:
                 "url": self.url,
                 "detection": self.detection,
                 "tactics": [tactic.name for tactic in self.tactics],
-                "sub_techniques": [sub_technique.name for sub_technique in self.sub_techniques],
-                "datasources": [datasource.name for datasource in self.datasources],
+                "sub_techniques": [
+                    sub_technique.name for sub_technique in self.sub_techniques
+                ],
+                "datasources": [
+                    datasource.name for datasource in self.datasources
+                ],
                 "groups": [group.name for group in self.groups],
                 "software": [software.name for software in self.software],
                 "malware": [malware.name for malware in self.malware],
                 "tools": [tool.name for tool in self.tools],
-                "components": [component.name for component in self.components],
+                "components": [
+                    component.name for component in self.components
+                ],
                 "deprecated": self.deprecated,
                 "revoked": self.revoked,
                 "references": self.references,

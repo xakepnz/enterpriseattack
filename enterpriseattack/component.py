@@ -117,8 +117,12 @@ class Component:
                 "modified": self.modified,
                 "created_by_ref": self.created_by_ref,
                 "object_marking_ref": self.object_marking_ref,
-                "techniques": [technique.name for technique in self.techniques],
-                "sub_techniques": [sub_technique.name for sub_technique in self.sub_techniques],
+                "techniques": [
+                    technique.name for technique in self.techniques
+                ],
+                "sub_techniques": [
+                    sub_technique.name for sub_technique in self.sub_techniques
+                ],
                 "tactics": [tactic.name for tactic in self.tactics],
                 "name": self.name,
                 "type": self.type,
