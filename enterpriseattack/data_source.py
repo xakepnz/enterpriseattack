@@ -79,8 +79,13 @@ class DataSource:
                     if self.relationships.get(component.id):
                         for r_id in self.relationships.get(component.id):
                             if self.id_lookup.get(r_id):
-                                if (self.id_lookup.get(r_id).get('type') == 'attack-pattern' and
-                                        not self.id_lookup.get(r_id).get('x_mitre_is_subtechnique')):
+                                if (
+                                    self.id_lookup.get(r_id).get('type')
+                                        == 'attack-pattern'
+                                        and not self.id_lookup.get(r_id).get(
+                                            'x_mitre_is_subtechnique'
+                                            )
+                                        ):
                                     techniques_.append(
                                         Technique(
                                             self.attack_objects,
@@ -113,8 +118,12 @@ class DataSource:
                 "collection_layers": self.collection_layers,
                 "references": self.references,
                 "contributor": self.contributors,
-                "techniques": [technique.name for technique in self.techniques],
-                "components": [component.name for component in self.components],
+                "techniques": [
+                    technique.name for technique in self.techniques
+                ],
+                "components": [
+                    component.name for component in self.components
+                ],
                 "deprecated": self.deprecated,
                 "revoked": self.revoked
             }

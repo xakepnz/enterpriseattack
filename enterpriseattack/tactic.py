@@ -50,7 +50,10 @@ class Tactic:
                     not attack_obj.get('x_mitre_is_subtechnique')):
                 kill_chains = attack_obj.get('kill_chain_phases')
 
-                if enterpriseattack.utils.match_tactics(self.short_name, kill_chains):
+                if enterpriseattack.utils.match_tactics(
+                        self.short_name,
+                        kill_chains
+                        ):
                     techniques_.append(
                         Technique(
                             self.attack_objects,
@@ -78,13 +81,19 @@ class Tactic:
                 "description": self.description,
                 "url": self.url,
                 "short_name": self.short_name,
-                "techniques": [technique.name for technique in self.techniques],
+                "techniques": [
+                    technique.name for technique in self.techniques
+                ],
                 "deprecated": self.deprecated,
                 "revoked": self.revoked
             }
         except Exception as e:
-            logging.error(f'Failed to jsonify object, error was: {e}')
-            raise enterpriseattack.Error(f'Failed to create json object, error was: {e}')
+            logging.error(
+                f'Failed to jsonify object, error was: {e}'
+            )
+            raise enterpriseattack.Error(
+                f'Failed to create json object, error was: {e}'
+            )
 
     # ----------------------------------------------------------------------------#
 

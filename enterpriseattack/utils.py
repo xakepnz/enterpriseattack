@@ -31,12 +31,18 @@ def download(url, local_enterprise_json, **kwargs):
                     return True
 
             except (AttributeError, ValueError, TypeError) as e:
-                logging.error(f'Did not receive json response from: {url}, error was: {e}')
-                raise enterpriseattack.Error(f'Did not receive json response from: {url}')
+                logging.error(
+                    f'Did not receive json response from: {url}, '
+                    f'error was: {e}'
+                )
+                raise enterpriseattack.Error(
+                    f'Did not receive json response from: {url}'
+                )
 
             except FileNotFoundError:
                 raise enterpriseattack.Error(
-                    f'File: "{local_enterprise_json}" was not found. - Unable to create file, change directory?'
+                    f'File: "{local_enterprise_json}" was not found. '
+                    '- Unable to create file, change directory?'
                 )
 
         logging.error(f'Failed to connect to: {url}')
@@ -56,7 +62,9 @@ def read_json(enterprise_url, local_enterprise_json, update, **kwargs):
     if not update:
         try:
             if not update:
-                logging.debug(f'Attempting to read local json: {local_enterprise_json}')
+                logging.debug(
+                    f'Attempting to read local json: {local_enterprise_json}'
+                )
 
                 with open(local_enterprise_json, 'r') as f:
                     attack_objects = ujson.load(f)
@@ -66,7 +74,8 @@ def read_json(enterprise_url, local_enterprise_json, update, **kwargs):
         # Try to download the file, if we cannot find it:
         except FileNotFoundError:
             logging.warning(
-                f'File: {local_enterprise_json} does not exist, attempting to download new dataset'
+                f'File: {local_enterprise_json} does not exist, '
+                'attempting to download new dataset'
             )
             return read_json(
                 enterprise_url,
@@ -157,25 +166,41 @@ def set_relationships(attack_objects):
         # Map relationships:
         if attack_obj.get('type') == 'relationship':
             if attack_obj.get('source_ref') not in relationships_:
-                relationships_[attack_obj.get('source_ref')] = [attack_obj.get('target_ref')]
+                relationships_[
+                    attack_obj.get('source_ref')
+                ] = [attack_obj.get('target_ref')]
             else:
-                relationships_[attack_obj.get('source_ref')].append(attack_obj.get('target_ref'))
+                relationships_[
+                    attack_obj.get('source_ref')
+                ].append(attack_obj.get('target_ref'))
 
             if attack_obj.get('target_ref') not in relationships_:
-                relationships_[attack_obj.get('target_ref')] = [attack_obj.get('source_ref')]
+                relationships_[
+                    attack_obj.get('target_ref')
+                ] = [attack_obj.get('source_ref')]
             else:
-                relationships_[attack_obj.get('target_ref')].append(attack_obj.get('source_ref'))
+                relationships_[
+                    attack_obj.get('target_ref')
+                ].append(attack_obj.get('source_ref'))
 
         # Map data components to their data source id's:
         if attack_obj.get('type') == 'x-mitre-data-component':
             if attack_obj.get('created_by_ref') not in relationships_:
-                relationships_[attack_obj.get('id')] = [attack_obj.get('x_mitre_data_source_ref')]
+                relationships_[
+                    attack_obj.get('id')
+                ] = [attack_obj.get('x_mitre_data_source_ref')]
             else:
-                relationships_[attack_obj.get('id')].append(attack_obj.get('x_mitre_data_source_ref'))
+                relationships_[
+                    attack_obj.get('id')
+                ].append(attack_obj.get('x_mitre_data_source_ref'))
 
             if attack_obj.get('x_mitre_data_source_ref') not in relationships_:
-                relationships_[attack_obj.get('x_mitre_data_source_ref')] = [attack_obj.get('id')]
+                relationships_[
+                    attack_obj.get('x_mitre_data_source_ref')
+                ] = [attack_obj.get('id')]
             else:
-                relationships_[attack_obj.get('x_mitre_data_source_ref')].append(attack_obj.get('id'))
+                relationships_[
+                    attack_obj.get('x_mitre_data_source_ref')
+                ].append(attack_obj.get('id'))
 
     return relationships_, id_lookup_

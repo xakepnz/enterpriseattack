@@ -34,17 +34,22 @@ def test_pass():
     # start = time.time()
     # attack = enterpriseattack.Attack(
     #     enterprise_json='enterprise-attack.json',
-    #     url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
+    #     url='https://raw.githubusercontent.com/mitre/cti/master'
+    #         '/enterprise-attack/enterprise-attack.json',
     #     include_deprecated=False,
     #     update=True
     # )
     # end = time.time()
-    # print(f'Initialise Attack object (fresh download json) took: {end - start}')
+    # print(
+    #     'Initialise Attack object (fresh download json) '
+    #     f'took: {end - start}'
+    # )
 
     start = time.time()
     attack = enterpriseattack.Attack(
         enterprise_json='tests/enterprise-attack.json',
-        url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
+        url='https://raw.githubusercontent.com/mitre/cti/master'
+            '/enterprise-attack/enterprise-attack.json',
         include_deprecated=False,
         update=False
     )
@@ -75,21 +80,30 @@ def test_pass():
     for software in attack.software:
         software.to_json()
     end = time.time()
-    print(f'Iterate over each software object and jsonify it took: {end - start}')
+    print(
+        'Iterate over each software object and jsonify '
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for software in attack.software:
         for group in software.groups:
             pass
     end = time.time()
-    print(f'Iterate over each software object and assoc group object took: {end - start}')
+    print(
+        'Iterate over each software object and assoc group object'
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for software in attack.software:
         for technique in software.techniques:
             pass
     end = time.time()
-    print(f'Iterate over each software object and assoc technique object took: {end - start}')
+    print(
+        'Iterate over each software object and assoc technique object '
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for software in attack.software:
@@ -97,7 +111,10 @@ def test_pass():
             for sub_technique in technique.sub_techniques:
                 pass
     end = time.time()
-    print(f'Iterate over every software/technique/sub_technique object took: {end - start}')
+    print(
+        'Iterate over every software/technique/sub_technique object '
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for software in attack.software:
@@ -120,14 +137,19 @@ def test_pass():
     for datasource in attack.data_sources:
         datasource.to_json()
     end = time.time()
-    print(f'Iterate over every data source object and jsonify it: {end - start}')
+    print(
+        'Iterate over every data source object and jsonify '
+        f'took: {end - start}')
 
     start = time.time()
     for datasource in attack.data_sources:
         for technique in datasource.techniques:
             print(technique.name)
     end = time.time()
-    print(f'Iterate over each data source object and the techniques it took: {end - start}')
+    print(
+        'Iterate over each data source object and the techniques '
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for datasource in attack.data_sources:
@@ -135,14 +157,20 @@ def test_pass():
             for sub_technique in technique.sub_techniques:
                 pass
     end = time.time()
-    print(f'Iterate over each data source/technique/subtechnique objects it took: {end - start}')
+    print(
+        'Iterate over each data source/technique/subtechnique objects '
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for datasource in attack.data_sources:
         for component in datasource.components:
             pass
     end = time.time()
-    print(f'Iterate over each data source object and component took: {end - start}')
+    print(
+        'Iterate over each data source object and component '
+        f'took: {end - start}'
+    )
 
     # ----------------------------------------------------------------------------#
     # Group tests:
@@ -189,34 +217,49 @@ def test_pass():
         for sub_technique in technique.sub_techniques:
             pass
     end = time.time()
-    print(f'Iterate over each technique/sub_technique object took: {end - start}')
+    print(
+        'Iterate over each technique/sub_technique object '
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for technique in attack.techniques:
         for mitigation in technique.mitigations:
             pass
     end = time.time()
-    print(f'Iterate over each technique/mitigation object took: {end - start}')
+    print(
+        'Iterate over each technique/mitigation object '
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for technique in attack.techniques:
         for tactic in technique.tactics:
             pass
     end = time.time()
-    print(f'Iterate over each technique/tactic object took: {end - start}')
+    print(
+        'Iterate over each technique/tactic object '
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for technique in attack.techniques:
         for datasource in technique.datasources:
             pass
     end = time.time()
-    print(f'Iterate over each technique/data source object took: {end - start}')
+    print(
+        'Iterate over each technique/data source object '
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for technique in attack.techniques:
         technique.to_json()
     end = time.time()
-    print(f'Iterate over each technique object and jsonify it took: {end - start}')
+    print(
+        'Iterate over each technique object and jsonify it '
+        f'took: {end - start}'
+    )
 
     # ----------------------------------------------------------------------------#
     # Tactic tests:
@@ -232,7 +275,10 @@ def test_pass():
     for tactic in attack.tactics:
         tactic.to_json()
     end = time.time()
-    print(f'Iterate over each tactic object and jsonify it took: {end - start}')
+    print(
+        'Iterate over each tactic object and jsonify it '
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for tactic in attack.tactics:
@@ -256,14 +302,19 @@ def test_pass():
         for datasource in sub_technique.datasources:
             pass
     end = time.time()
-    print(f'Iterate over each sub_technique/data source object took: {end - start}')
+    print(
+        'Iterate over each sub_technique/data source object '
+        f'took: {end - start}')
 
     start = time.time()
     for sub_technique in attack.sub_techniques:
         for tactic in sub_technique.tactics:
             pass
     end = time.time()
-    print(f'Iterate over each sub_technique/tactic object took: {end - start}')
+    print(
+        'Iterate over each sub_technique/tactic object '
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for sub_technique in attack.sub_techniques:
@@ -290,14 +341,20 @@ def test_pass():
     for sub_technique in attack.sub_techniques:
         sub_technique.to_json()
     end = time.time()
-    print(f'Iterate over each sub_technique object and jsonify took: {end - start}')
+    print(
+        'Iterate over each sub_technique object and jsonify '
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for sub_technique in attack.sub_techniques:
         for mitigation in sub_technique.mitigations:
             pass
     end = time.time()
-    print(f'Iterate over each sub_technique/mitigation object took: {end - start}')
+    print(
+        'Iterate over each sub_technique/mitigation object '
+        f'took: {end - start}'
+    )
 
     # ----------------------------------------------------------------------------#
     # Mitigation tests:
@@ -313,7 +370,10 @@ def test_pass():
     for mitigation in attack.mitigations:
         mitigation.to_json()
     end = time.time()
-    print(f'Iterate over each mitigation object and jsonify took: {end - start}')
+    print(
+        'Iterate over each mitigation object and jsonify '
+        f'took: {end - start}'
+    )
 
     start = time.time()
     for mitigation in attack.mitigations:
