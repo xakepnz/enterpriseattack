@@ -50,8 +50,12 @@ class Group:
 
         if self.relationships.get(self.mid):
             for target_id in self.relationships.get(self.mid):
-                if (target_id.startswith('attack-pattern') and
-                        not self.id_lookup[target_id].get('x_mitre_is_subtechnique')):
+                if (
+                        target_id.startswith('attack-pattern')
+                        and not self.id_lookup[target_id].get(
+                            'x_mitre_is_subtechnique'
+                        )
+                        ):
                     if self.id_lookup.get(target_id):
                         techniques_.append(
                             Technique(
@@ -173,7 +177,9 @@ class Group:
                 "url": self.url,
                 "aliases": self.aliases,
                 "tactics": [tactic.name for tactic in self.tactics],
-                "techniques": [technique.name for technique in self.techniques],
+                "techniques": [
+                    technique.name for technique in self.techniques
+                ],
                 "software": [{tool.type: tool.name} for tool in self.software],
                 "malware": [malware.name for malware in self.malware],
                 "tools": [tool.name for tool in self.tools],

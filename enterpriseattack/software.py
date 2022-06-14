@@ -123,7 +123,9 @@ class Software:
                 "references": self.references,
                 "labels": self.labels,
                 "groups": [group.name for group in self.groups],
-                "techniques": [technique.name for technique in self.techniques],
+                "techniques": [
+                    technique.name for technique in self.techniques
+                ],
                 "tactics": [tactic.name for tactic in self.tactics],
                 "platforms": self.platforms,
                 "deprecated": self.deprecated,
