@@ -46,8 +46,11 @@ class Mitigation:
 
         if self.relationships.get(self.mid):
             for target_id in self.relationships.get(self.mid):
-                if (target_id.startswith('attack-pattern') and
-                        not self.id_lookup[target_id].get('x_mitre_is_subtechnique')):
+                if (
+                        target_id.startswith('attack-pattern')
+                        and not self.id_lookup[target_id].get(
+                            'x_mitre_is_subtechnique'
+                        )):
                     if self.id_lookup.get(target_id):
                         techniques_.append(
                             Technique(
@@ -93,7 +96,9 @@ class Mitigation:
                 "type": self.type,
                 "description": self.description,
                 "url": self.url,
-                "techniques": [technique.name for technique in self.techniques],
+                "techniques": [
+                    technique.name for technique in self.techniques
+                ],
                 "tactics": [tactic.name for tactic in self.tactics],
                 "deprecated": self.deprecated,
                 "revoked": self.revoked

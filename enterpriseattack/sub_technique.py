@@ -54,7 +54,10 @@ class SubTechnique:
         if self.x_mitre_data_sources:
             for attack_obj in self.attack_objects['objects']:
                 if attack_obj.get('type') == 'x-mitre-data-source':
-                    ds_ = [d_ for d_ in self.x_mitre_data_sources if attack_obj.get('name') in d_]
+                    ds_ = [
+                        d_ for d_ in self.x_mitre_data_sources
+                        if attack_obj.get('name') in d_
+                    ]
                     if ds_:
                         datasources_.append(
                             DataSource(
@@ -79,8 +82,12 @@ class SubTechnique:
         if self.relationships.get(self.mid):
             for r_id in self.relationships.get(self.mid):
                 if self.id_lookup.get(r_id):
-                    if (self.id_lookup.get(r_id).get('type') == 'attack-pattern' and
-                            not self.id_lookup.get(r_id).get('x_mitre_is_subtechnique')):
+                    if (
+                            self.id_lookup.get(r_id).get('type')
+                            == 'attack-pattern'
+                            and not self.id_lookup.get(r_id).get(
+                                'x_mitre_is_subtechnique'
+                            )):
                         techniques_.append(
                             Technique(
                                 self.attack_objects,
@@ -103,8 +110,11 @@ class SubTechnique:
 
         if self.relationships.get(self.mid):
             for r_id in self.relationships.get(self.mid):
-                if (self.id_lookup.get(r_id) and
-                        self.id_lookup.get(r_id).get('type') == 'intrusion-set'):
+                if (
+                        self.id_lookup.get(r_id)
+                        and self.id_lookup.get(r_id).get('type')
+                        == 'intrusion-set'
+                        ):
                     groups_.append(
                         Group(
                             self.attack_objects,
@@ -143,8 +153,11 @@ class SubTechnique:
 
         if self.relationships.get(self.mid):
             for r_id in self.relationships.get(self.mid):
-                if (self.id_lookup.get(r_id) and
-                        self.id_lookup.get(r_id).get('type') == 'course-of-action'):
+                if (
+                        self.id_lookup.get(r_id)
+                        and self.id_lookup.get(r_id).get('type')
+                        == 'course-of-action'
+                        ):
                     mitigations_.append(
                         Mitigation(
                             self.attack_objects,
@@ -270,12 +283,21 @@ class SubTechnique:
                 "platforms": self.platforms,
                 "permissions_required": self.permissions_required,
                 "references": self.references,
-                "techniques": [technique.name for technique in self.techniques],
+                "techniques": [
+                    technique.name for technique in self.techniques
+                ],
                 "tactics": [tactic.name for tactic in self.tactics],
-                "mitigations": [mitigation.name for mitigation in self.mitigations],
+                "mitigations": [
+                    mitigation.name for mitigation in self.mitigations
+                ],
                 "groups": [group.name for group in self.groups],
-                "datasources": [datasource.name for datasource in self.datasources],
-                "software": [{software.name: software.type} for software in self.software],
+                "datasources": [
+                    datasource.name for datasource in self.datasources
+                ],
+                "software": [
+                    {software.name: software.type}
+                    for software in self.software
+                ],
                 "tools": [tool.name for tool in self.tools],
                 "malware": [malware.name for malware in self.malware]
             }

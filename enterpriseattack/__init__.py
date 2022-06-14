@@ -25,24 +25,37 @@ class Attack:
     def __init__(
             self,
             enterprise_json=None,
-            url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
+            url='https://raw.githubusercontent.com/mitre/cti/master/'
+                'enterprise-attack/enterprise-attack.json',
             include_deprecated=False,
             update=False,
             **kwargs):
 
-        # Save the json dump to the same directory the script lives if none supplied:
+        # Save the json dump to the same directory the script lives if
+        # none supplied:
         if not enterprise_json:
-            enterprise_json = f'{path.dirname(path.realpath(__file__))}/enterprise-attack.json'
+            enterprise_json = (
+                f'{path.dirname(path.realpath(__file__))}'
+                '/enterprise-attack.json'
+            )
             self.enterprise_json = enterprise_json
 
         # Parse the json:
-        self.attack_objects = utils.read_json(url, enterprise_json, update, **kwargs)
+        self.attack_objects = utils.read_json(
+            url,
+            enterprise_json,
+            update,
+            **kwargs
+        )
 
         # Allow for including depreciated items Mitre has revoked:
         self.include_deprecated = include_deprecated
 
-        # Set the relationships of all objects, and create a dict sorted by ID's:
-        self.relationships, self.id_lookup = utils.set_relationships(self.attack_objects)
+        # Set the relationships of all objects, and create a dict
+        # sorted by ID's:
+        self.relationships, self.id_lookup = utils.set_relationships(
+            self.attack_objects
+        )
 
     # ----------------------------------------------------------------------------#
     # Return all enterpriseattack tactics:
