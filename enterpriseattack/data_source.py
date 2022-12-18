@@ -28,6 +28,8 @@ class DataSource:
         self.description = kwargs.get('description')
         self.platforms = kwargs.get('x_mitre_platforms')
         self.collection_layers = kwargs.get('x_mitre_collection_layers')
+        self.attack_spec_version = kwargs.get('x_mitre_attack_spec_version')
+        self.domains = kwargs.get('x_mitre_domains')
         self.references = enterpriseattack.utils.obtain_sources(
             kwargs.get('external_references')
         )
