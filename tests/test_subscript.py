@@ -18,6 +18,11 @@ print(f'The tactic: {evasion.name} has: {len(evasion.techniques)} techniques')
 
 # ----------------------------------------------------------------------------#
 
+for cam, obj in attack.campaigns.items():
+    print(obj.to_json())
+
+# ----------------------------------------------------------------------------#
+
 print(
     '\nStats:\n\n'
     f'MITRE ATT&CK Version: {attack.mitre_version}\n'
