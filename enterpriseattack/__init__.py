@@ -30,9 +30,15 @@ class Attack:
             include_deprecated=False,
             update=False,
             mitre_version='latest',
+            subscriptable=False,
             **kwargs):
 
-        # Change url to specific Mitre ATT&CK version if user supplied:
+        # Set subscriptable bool, this allows for .get(str) against properies:
+        self.subscriptable = subscriptable
+
+        # Change url to specific Mitre ATT&CK version if user supplied
+        # Remove 'v' if user supplied in version:
+        self.mitre_version = mitre_version
         if mitre_version != 'latest':
             url = (
                 'https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v'
@@ -72,12 +78,35 @@ class Attack:
 
     @property
     def tactics(self):
-        tactics_ = []
+        if self.subscriptable:
+            tactics_ = {}
+        else:
+            tactics_ = []
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'x-mitre-tactic':
                 if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
+                        if not self.subscriptable:
+                            tactics_.append(
+                                tactic.Tactic(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj
+                                )
+                            )
+                        else:
+                            tactics_[
+                                attack_obj.get('name')
+                            ] = tactic.Tactic(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj
+                            )
+                else:
+                    if not self.subscriptable:
                         tactics_.append(
                             tactic.Tactic(
                                 self.attack_objects,
@@ -86,15 +115,15 @@ class Attack:
                                 **attack_obj
                             )
                         )
-                else:
-                    tactics_.append(
-                        tactic.Tactic(
+                    else:
+                        tactics_[
+                            attack_obj.get('name')
+                        ] = tactic.Tactic(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
                             **attack_obj
                         )
-                    )
 
         return tactics_
 
@@ -104,12 +133,37 @@ class Attack:
 
     @property
     def techniques(self):
-        techniques_ = []
+        if self.subscriptable:
+            techniques_ = {}
+        else:
+            techniques_ = []
+
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'attack-pattern':
                 if not attack_obj.get('x_mitre_is_subtechnique'):
                     if not self.include_deprecated:
                         if not attack_obj.get('x_mitre_deprecated'):
+                            if not self.subscriptable:
+                                techniques_.append(
+                                    technique.Technique(
+                                        self.attack_objects,
+                                        self.relationships,
+                                        self.id_lookup,
+                                        **attack_obj
+                                    )
+                                )
+                            else:
+                                techniques_[
+                                    attack_obj.get('name')
+                                ] = technique.Technique(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj
+                                )
+
+                    else:
+                        if not self.subscriptable:
                             techniques_.append(
                                 technique.Technique(
                                     self.attack_objects,
@@ -118,15 +172,16 @@ class Attack:
                                     **attack_obj
                                 )
                             )
-                    else:
-                        techniques_.append(
-                            technique.Technique(
+                        else:
+                            techniques_[
+                                attack_obj.get('name')
+                            ] = technique.Technique(
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
                                 **attack_obj
                             )
-                        )
+
         return techniques_
 
     # ----------------------------------------------------------------------------#
@@ -135,13 +190,36 @@ class Attack:
 
     @property
     def sub_techniques(self):
-        sub_techniques_ = []
+        if self.subscriptable:
+            sub_techniques_ = {}
+        else:
+            sub_techniques_ = []
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'attack-pattern':
                 if attack_obj.get('x_mitre_is_subtechnique'):
                     if not self.include_deprecated:
                         if not attack_obj.get('x_mitre_deprecated'):
+                            if not self.subscriptable:
+                                sub_techniques_.append(
+                                    sub_technique.SubTechnique(
+                                        self.attack_objects,
+                                        self.relationships,
+                                        self.id_lookup,
+                                        **attack_obj
+                                    )
+                                )
+                            else:
+                                sub_techniques_[
+                                    attack_obj.get('name')
+                                ] = sub_technique.SubTechnique(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj
+                                )
+                    else:
+                        if not self.subscriptable:
                             sub_techniques_.append(
                                 sub_technique.SubTechnique(
                                     self.attack_objects,
@@ -150,15 +228,15 @@ class Attack:
                                     **attack_obj
                                 )
                             )
-                    else:
-                        sub_techniques_.append(
-                            sub_technique.SubTechnique(
+                        else:
+                            sub_techniques_[
+                                attack_obj.get('name')
+                            ] = sub_technique.SubTechnique(
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
                                 **attack_obj
                             )
-                        )
 
         return sub_techniques_
 
@@ -168,12 +246,35 @@ class Attack:
 
     @property
     def groups(self):
-        groups_ = []
+        if self.subscriptable:
+            groups_ = {}
+        else:
+            groups_ = []
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'intrusion-set':
                 if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
+                        if not self.subscriptable:
+                            groups_.append(
+                                group.Group(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj
+                                )
+                            )
+                        else:
+                            groups_[
+                                attack_obj.get('name')
+                            ] = group.Group(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj
+                            )
+                else:
+                    if not self.subscriptable:
                         groups_.append(
                             group.Group(
                                 self.attack_objects,
@@ -182,15 +283,15 @@ class Attack:
                                 **attack_obj
                             )
                         )
-                else:
-                    groups_.append(
-                        group.Group(
+                    else:
+                        groups_[
+                            attack_obj.get('name')
+                        ] = group.Group(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
                             **attack_obj
                         )
-                    )
 
         return groups_
 
@@ -200,12 +301,35 @@ class Attack:
 
     @property
     def software(self):
-        software_ = []
+        if self.subscriptable:
+            software_ = {}
+        else:
+            software_ = []
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') in ['tool', 'malware']:
                 if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
+                        if not self.subscriptable:
+                            software_.append(
+                                software.Software(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj
+                                )
+                            )
+                        else:
+                            software_[
+                                attack_obj.get('name')
+                            ] = software.Software(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj
+                            )
+                else:
+                    if not self.subscriptable:
                         software_.append(
                             software.Software(
                                 self.attack_objects,
@@ -214,30 +338,53 @@ class Attack:
                                 **attack_obj
                             )
                         )
-                else:
-                    software_.append(
-                        software.Software(
+                    else:
+                        software_[
+                            attack_obj.get('name')
+                        ] = software.Software(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
                             **attack_obj
                         )
-                    )
 
         return software_
 
     # ----------------------------------------------------------------------------#
-    # Return all enterpriseattack software:
+    # Return all enterpriseattack malware:
     # ----------------------------------------------------------------------------#
 
     @property
     def malware(self):
-        malware_ = []
+        if self.subscriptable:
+            malware_ = {}
+        else:
+            malware_ = []
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'malware':
                 if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
+                        if not self.subscriptable:
+                            malware_.append(
+                                software.Software(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj
+                                )
+                            )
+                        else:
+                            malware_[
+                                attack_obj.get('name')
+                            ] = software.Software(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj
+                            )
+                else:
+                    if not self.subscriptable:
                         malware_.append(
                             software.Software(
                                 self.attack_objects,
@@ -246,15 +393,15 @@ class Attack:
                                 **attack_obj
                             )
                         )
-                else:
-                    malware_.append(
-                        software.Software(
+                    else:
+                        malware_[
+                            attack_obj.get('name')
+                        ] = software.Software(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
                             **attack_obj
                         )
-                    )
 
         return malware_
 
@@ -264,12 +411,35 @@ class Attack:
 
     @property
     def tools(self):
-        tools_ = []
+        if self.subscriptable:
+            tools_ = {}
+        else:
+            tools_ = []
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'tool':
                 if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
+                        if not self.subscriptable:
+                            tools_.append(
+                                software.Software(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj
+                                )
+                            )
+                        else:
+                            tools_[
+                                attack_obj.get('name')
+                            ] = software.Software(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj
+                            )
+                else:
+                    if not self.subscriptable:
                         tools_.append(
                             software.Software(
                                 self.attack_objects,
@@ -278,15 +448,15 @@ class Attack:
                                 **attack_obj
                             )
                         )
-                else:
-                    tools_.append(
-                        software.Software(
+                    else:
+                        tools_[
+                            attack_obj.get('name')
+                        ] = software.Software(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
                             **attack_obj
                         )
-                    )
 
         return tools_
 
@@ -296,12 +466,35 @@ class Attack:
 
     @property
     def mitigations(self):
-        mitigations_ = []
+        if self.subscriptable:
+            mitigations_ = {}
+        else:
+            mitigations_ = []
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'course-of-action':
                 if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
+                        if not self.subscriptable:
+                            mitigations_.append(
+                                mitigation.Mitigation(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj
+                                )
+                            )
+                        else:
+                            mitigations_[
+                                attack_obj.get('name')
+                            ] = mitigation.Mitigation(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj
+                            )
+                else:
+                    if not self.subscriptable:
                         mitigations_.append(
                             mitigation.Mitigation(
                                 self.attack_objects,
@@ -310,15 +503,15 @@ class Attack:
                                 **attack_obj
                             )
                         )
-                else:
-                    mitigations_.append(
-                        mitigation.Mitigation(
+                    else:
+                        mitigations_[
+                            attack_obj.get('name')
+                        ] = mitigation.Mitigation(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
                             **attack_obj
                         )
-                    )
 
         return mitigations_
 
@@ -328,12 +521,35 @@ class Attack:
 
     @property
     def data_sources(self):
-        data_sources_ = []
+        if self.subscriptable:
+            data_sources_ = {}
+        else:
+            data_sources_ = []
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'x-mitre-data-source':
                 if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
+                        if not self.subscriptable:
+                            data_sources_.append(
+                                data_source.DataSource(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj
+                                )
+                            )
+                        else:
+                            data_sources_[
+                                attack_obj.get('name')
+                            ] = data_source.DataSource(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj
+                            )
+                else:
+                    if not self.subscriptable:
                         data_sources_.append(
                             data_source.DataSource(
                                 self.attack_objects,
@@ -342,15 +558,15 @@ class Attack:
                                 **attack_obj
                             )
                         )
-                else:
-                    data_sources_.append(
-                        data_source.DataSource(
+                    else:
+                        data_sources_[
+                            attack_obj.get('name')
+                        ] = data_source.DataSource(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
                             **attack_obj
                         )
-                    )
 
         return data_sources_
 
@@ -360,12 +576,35 @@ class Attack:
 
     @property
     def components(self):
-        components_ = []
+        if self.subscriptable:
+            components_ = {}
+        else:
+            components_ = []
 
         for attack_obj in self.attack_objects.get('objects'):
             if attack_obj.get('type') == 'x-mitre-data-component':
                 if not self.include_deprecated:
                     if not attack_obj.get('x_mitre_deprecated'):
+                        if not self.subscriptable:
+                            components_.append(
+                                component.Component(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj
+                                )
+                            )
+                        else:
+                            components_[
+                                attack_obj.get('name')
+                            ] = component.Component(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj
+                            )
+                else:
+                    if not self.subscriptable:
                         components_.append(
                             component.Component(
                                 self.attack_objects,
@@ -374,15 +613,15 @@ class Attack:
                                 **attack_obj
                             )
                         )
-                else:
-                    components_.append(
-                        component.Component(
+                    else:
+                        components_[
+                            attack_obj.get('name')
+                        ] = component.Component(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
                             **attack_obj
                         )
-                    )
 
         return components_
 
