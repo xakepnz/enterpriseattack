@@ -2,6 +2,7 @@
 
 from os import path
 
+from enterpriseattack import campaign
 from enterpriseattack import component
 from enterpriseattack import data_source
 from enterpriseattack import group
@@ -624,6 +625,61 @@ class Attack:
                         )
 
         return components_
+
+    # ----------------------------------------------------------------------------#
+    # Return all enterpriseattack campaigns:
+    # ----------------------------------------------------------------------------#
+
+    @property
+    def campaigns(self):
+        if self.subscriptable:
+            campaigns_ = {}
+        else:
+            campaigns_ = []
+
+        for attack_obj in self.attack_objects.get('objects'):
+            if attack_obj.get('type') == 'campaign':
+                if not self.include_deprecated:
+                    if not attack_obj.get('x_mitre_deprecated'):
+                        if not self.subscriptable:
+                            campaigns_.append(
+                                campaign.Campaign(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj
+                                )
+                            )
+                        else:
+                            campaigns_[
+                                attack_obj.get('name')
+                            ] = campaign.Campaign(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj
+                            )
+                else:
+                    if not self.subscriptable:
+                        campaigns_.append(
+                            campaign.Campaign(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj
+                            )
+                        )
+                    else:
+                        campaigns_[
+                            attack_obj.get('name')
+                        ] = campaign.Campaign(
+                            self.attack_objects,
+                            self.relationships,
+                            self.id_lookup,
+                            **attack_obj
+                        )
+
+        return campaigns_
 
 # ----------------------------------------------------------------------------#
 # Exception class for errors:
