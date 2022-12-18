@@ -112,6 +112,105 @@ class Campaign:
         return tactics_
 
     # ----------------------------------------------------------------------------#
+    # Access Software for each Campaign object:
+    # ----------------------------------------------------------------------------#
+
+    @property
+    def software(self):
+        from .software import Software
+
+        softwares_ = []
+
+        if self.relationships.get(self.mid):
+            for r_id in self.relationships.get(self.mid):
+                if self.id_lookup.get(r_id):
+                    if (self.id_lookup.get(r_id).get('type') in
+                            ['tool', 'malware']):
+                        softwares_.append(
+                            Software(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **self.id_lookup[r_id]
+                            )
+                        )
+
+        return softwares_
+
+    # ----------------------------------------------------------------------------#
+    # Access Malware for each Campaign object:
+    # ----------------------------------------------------------------------------#
+
+    @property
+    def malware(self):
+        from .software import Software
+
+        malware_ = []
+
+        if self.relationships.get(self.mid):
+            for r_id in self.relationships.get(self.mid):
+                if self.id_lookup.get(r_id):
+                    if self.id_lookup.get(r_id).get('type') == 'malware':
+                        malware_.append(
+                            Software(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **self.id_lookup[r_id]
+                            )
+                        )
+
+        return malware_
+
+    # ----------------------------------------------------------------------------#
+    # Access Tools for each Campaign object:
+    # ----------------------------------------------------------------------------#
+
+    @property
+    def tools(self):
+        from .software import Software
+
+        tools_ = []
+
+        if self.relationships.get(self.mid):
+            for r_id in self.relationships.get(self.mid):
+                if self.id_lookup.get(r_id):
+                    if self.id_lookup.get(r_id).get('type') == 'tool':
+                        tools_.append(
+                            Software(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **self.id_lookup[r_id]
+                            )
+                        )
+        return tools_
+
+    # ----------------------------------------------------------------------------#
+    # Access Groups for each Campaign object:
+    # ----------------------------------------------------------------------------#
+
+    @property
+    def groups(self):
+        from .group import Group
+
+        groups_ = []
+
+        if self.relationships.get(self.mid):
+            for target_id in self.relationships.get(self.mid):
+                if target_id.startswith('intrusion-set'):
+                    if self.id_lookup.get(target_id):
+                        groups_.append(
+                            Group(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **self.id_lookup[target_id]
+                            )
+                        )
+        return groups_
+
+    # ----------------------------------------------------------------------------#
     # Return a json dict of the object:
     # ----------------------------------------------------------------------------#
 
@@ -123,6 +222,8 @@ class Campaign:
                 "created": self.created,
                 "modified": self.modified,
                 "created_by_ref": self.created_by_ref,
+                "last_seen": self.last_seen,
+                "first_seen": self.first_seen,
                 "object_marking_ref": self.object_marking_ref,
                 "techniques": [
                     technique.name for technique in self.techniques
@@ -131,6 +232,10 @@ class Campaign:
                     sub_technique.name for sub_technique in self.sub_techniques
                 ],
                 "tactics": [tactic.name for tactic in self.tactics],
+                "tools": [tool.name for tool in self.tools],
+                "malware": [malware.name for malware in self.malware],
+                "software": [software.name for software in self.software],
+                "groups": [group.name for group in self.groups],
                 "name": self.name,
                 "type": self.type,
                 "description": self.description,
