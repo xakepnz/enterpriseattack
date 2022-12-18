@@ -29,7 +29,16 @@ class Attack:
                 'enterprise-attack/enterprise-attack.json',
             include_deprecated=False,
             update=False,
+            mitre_version='latest',
             **kwargs):
+
+        # Change url to specific Mitre ATT&CK version if user supplied:
+        if mitre_version != 'latest':
+            url = (
+                'https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v'
+                f'{mitre_version.replace("v", "")}/enterprise-attack/'
+                'enterprise-attack.json'
+            )
 
         # Save the json dump to the same directory the script lives if
         # none supplied:
