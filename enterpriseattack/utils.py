@@ -61,15 +61,14 @@ def read_json(enterprise_url, local_enterprise_json, update, **kwargs):
     # Read local copy if we have one:
     if not update:
         try:
-            if not update:
-                logging.debug(
-                    f'Attempting to read local json: {local_enterprise_json}'
-                )
+            logging.debug(
+                f'Attempting to read local json: {local_enterprise_json}'
+            )
 
-                with open(local_enterprise_json, 'r') as f:
-                    attack_objects = ujson.load(f)
-                    logging.debug('Successfully read local json')
-                return attack_objects
+            with open(local_enterprise_json, 'r') as f:
+                attack_objects = ujson.load(f)
+                logging.debug('Successfully read local json')
+            return attack_objects
 
         # Try to download the file, if we cannot find it:
         except FileNotFoundError:
