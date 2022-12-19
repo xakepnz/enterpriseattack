@@ -3,31 +3,37 @@ import re
 from setuptools import setup, find_packages
 from io import open
 
-with open(os.path.join(os.path.dirname(__file__), 'enterpriseattack', '__init__.py')) as fp:
+with open(
+    os.path.join(
+        os.path.dirname(__file__),
+        'enterpriseattack',
+        '__init__.py'
+        )) as fp:
     VERSION = re.match(r'.*__version__ = \'(.*?)\'', fp.read(), re.S).group(1)
 
 with open('README.md', 'r', encoding='utf-8') as fp:
     readme = fp.read()
 
 setup(
-    name = 'enterpriseattack',
-    author = 'xakepnz',
-    author_email = 'xakepnz@protonmail.com',
+    name='enterpriseattack',
+    author='xakepnz',
+    author_email='xakepnz@protonmail.com',
     version=VERSION,
-    packages = find_packages(exclude=['tests*','docs*']),
-    description = 'A lightweight Python module to interact with the Mitre Att&ck Enterprise framework.',
+    packages=find_packages(exclude=['tests*', 'docs*']),
+    description='A lightweight Python module to interact with the '
+                'Mitre Att&ck Enterprise framework.',
     long_description=readme,
     long_description_content_type='text/markdown',
-    url = 'https://github.com/xakepnz/enterpriseattack',
-    keywords = [
+    url='https://github.com/xakepnz/enterpriseattack',
+    keywords=[
         'mitre att&ck',
         'att&ck enterprise',
         'enterpriseattack',
         'mitre framework',
         'att&ck'
     ],
-    include_package_data = True,
-    install_requires = [
+    include_package_data=True,
+    install_requires=[
         'ujson >= 3.0.0',
         'requests >= 2.9.2'
     ],
