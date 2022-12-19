@@ -22,7 +22,7 @@ MITRE ATT&CK® is a globally-accessible knowledge base of adversary tactics and 
 
 ### Install via Pip:
    ```sh
-   pip install enterpriseattack
+   pip3 install enterpriseattack
    ```
 
 ### Alternatively clone the repository:
@@ -39,8 +39,8 @@ MITRE ATT&CK® is a globally-accessible knowledge base of adversary tactics and 
 ### Build the docker image:
 
 ```sh
-docker build enterpriseattack:0.1.4 .
-docker tag enterpriseattack:0.1.4 enterpriseattack:latest
+docker build enterpriseattack:0.1.6 .
+docker tag enterpriseattack:0.1.6 enterpriseattack:latest
 ```
 
 ### Run the benchmarks on the container:
@@ -59,11 +59,28 @@ import enterpriseattack
 attack = enterpriseattack.Attack()
 ```
 
+### Example Subscriptable objects:
+Access any object directly from the Attack class, rather than iterating to find specific objects.
+
+```py
+attack = enterpriseattack.Attack(subscriptable=True)
+
+wizard_spider = attack.groups.get('Wizard Spider')
+print(len(wizard_spider.tactics))
+
+execution = attack.tactics.get('Execution')
+print(len(execution.techniques))
+```
+
 ### Example: Passing custom args:
 In this example, you can choose where to download the official Mitre Att&ck json from, including proxies to pass through. Alternatively, if you want to save the json file in a separate location, you can alter the enterprise_json arg. By default this is saved within your default site-packages location.
 
-* update - boolean forces a refresh download (each time this is called), overwriting the previous file.
-* include_deprecated - boolean to include Mitre Att&ck deprecated objects (from previous Att&ck versions).
+* `enterprise_json` - (optional) location of enterprise json file, (saved automatically in pip location)
+* `url` - (optional) location of enterprise json file to download from.
+* `update` - (optional) boolean forces a refresh download (each time this is called), overwriting the previous file.
+* `include_deprecated` - (optional) boolean to include MITRE ATT&CK deprecated objects (from previous Att&ck versions).
+* `mitre_version` - (optional) specify a MITRE ATT&CK data version.
+* `proxies` - (optional) dict of proxies to pass through to reach the MITRE GitHub for the enterprise-attack.json.
 
 ```py
 attack = enterpriseattack.Attack(
@@ -71,12 +88,26 @@ attack = enterpriseattack.Attack(
    url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
    include_deprecated=False,
    update=False,
+   subscriptable=True,
+   mitre_version='latest',
    proxies={'http':'http://127.0.0.1:1337'}
 )
 ```
 
+### Example: Force Download/use an older MITRE ATT&CK data set:
+```py
+attack = enterpriseattack.Attack(
+   mitre_version='11.3',
+   update=True
+)
+
+print(attack.mitre_version)
+```
+
 ### Example: Iterate over tactics/techniques/sub_techniques:
 ```py
+attack = enterpriseattack.Attack()
+
 for tactic in attack.tactics:
    print(tactic.name)
    for technique in tactic.techniques:
@@ -91,6 +122,8 @@ for software in attack.software:
 
 ### Example: Create a json object of any tactic/technique/sub_technique/group/software/datasource:
 ```py
+attack = enterpriseattack.Attack()
+
 for tactic in attack.tactics:
    print(tactic.to_json())
 
