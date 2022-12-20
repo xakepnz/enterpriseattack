@@ -13,6 +13,7 @@
 - [Software (Tools/Malware)](Software.md)
 - [Datasources](Datasources.md)
 - [Components](Components.md)
+- [Campaigns](Campaigns.md)
 
 ## What is MITRE ATT&CK?
 
@@ -29,7 +30,7 @@ If network access restrictions apply to your situation, you can download the [MI
 ## Install via Pip:
 
 ```bash
-pip install enterpriseattack
+pip3 install enterpriseattack
 ```
 
 ## Install via Github:
@@ -47,6 +48,9 @@ These are the default values when initializing the attack class:
 * `url` - The URL that hosts the json, defaults to the official MITRE ATT&CK® Github.
 * `include_deprecated` - Include old objects that mitre have removed from later versions.
 * `update` - Force a download of the url, and rewrite the enterprise_json file.
+* `mitre_version` - Choose a specific version of the MITRE ATT&CK data to download (default is latest).
+* `subscriptable` - Access objects via their `name` attr, directly from the Attack class.
+
 
 ```py
 import enterpriseattack
@@ -55,7 +59,9 @@ attack = enterpriseattack.Attack(
     enterprise_json=None,
     url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
     include_deprecated=False,
-    update=False
+    update=False,
+    mitre_version='latest',
+    subscriptable=True
 )
 ```
 That's it! Check out the other docs to learn more.
