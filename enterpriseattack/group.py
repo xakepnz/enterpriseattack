@@ -69,6 +69,31 @@ class Group:
         return techniques_
 
     # ----------------------------------------------------------------------------#
+    # Access Sub Techniques for each Group object:
+    # ----------------------------------------------------------------------------#
+
+    @property
+    def sub_techniques(self):
+        from .sub_technique import SubTechnique
+
+        sub_techniques_ = []
+
+        if self.relationships.get(self.mid):
+            for r_ in self.relationships.get(self.mid):
+                if (r_.startswith('attack-pattern') and
+                        self.id_lookup[r_].get('x_mitre_is_subtechnique')):
+                    sub_techniques_.append(
+                        SubTechnique(
+                            self.attack_objects,
+                            self.relationships,
+                            self.id_lookup,
+                            **self.id_lookup[r_]
+                        )
+                    )
+
+        return sub_techniques_
+
+    # ----------------------------------------------------------------------------#
     # Access Tactics for each Group object:
     # ----------------------------------------------------------------------------#
 
