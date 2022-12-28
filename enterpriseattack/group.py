@@ -205,6 +205,9 @@ class Group:
                 "techniques": [
                     technique.name for technique in self.techniques
                 ],
+                "sub_techniques": [
+                    sub.name for sub in self.sub_techniques
+                ],
                 "software": [{tool.type: tool.name} for tool in self.software],
                 "malware": [malware.name for malware in self.malware],
                 "tools": [tool.name for tool in self.tools],
