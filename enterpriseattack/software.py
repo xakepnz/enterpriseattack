@@ -51,10 +51,40 @@ class Software:
 
         if self.relationships.get(self.mid):
             for target_id in self.relationships.get(self.mid):
-                if target_id.startswith('attack-pattern'):
+                if target_id.startswith('attack-pattern') \
+                    and not self.id_lookup.get(target_id).get(
+                        'x_mitre_is_subtechnique'
+                        ):
+                    techniques_.append(
+                        Technique(
+                            self.attack_objects,
+                            self.relationships,
+                            self.id_lookup,
+                            **self.id_lookup[target_id]
+                        )
+                    )
+
+        return techniques_
+
+    # ----------------------------------------------------------------------------#
+    # Access Sub Techniques for each Software object:
+    # ----------------------------------------------------------------------------#
+
+    @property
+    def sub_techniques(self):
+        from .sub_technique import SubTechnique
+
+        sub_techniques_ = []
+
+        if self.relationships.get(self.mid):
+            for target_id in self.relationships.get(self.mid):
+                if target_id.startswith('attack-pattern') \
+                    and self.id_lookup.get(target_id).get(
+                        'x_mitre_is_subtechnique'
+                        ):
                     if self.id_lookup.get(target_id):
-                        techniques_.append(
-                            Technique(
+                        sub_techniques_.append(
+                            SubTechnique(
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
@@ -62,7 +92,7 @@ class Software:
                             )
                         )
 
-        return techniques_
+        return sub_techniques_
 
     # ----------------------------------------------------------------------------#
     # Access Tactics for each Software object:
