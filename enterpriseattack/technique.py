@@ -76,17 +76,18 @@ class Technique:
 
         sub_techniques_ = []
 
-        for r_ in self.relationships.get(self.mid):
-            if r_.startswith('attack-pattern'):
-                if self.id_lookup.get(r_).get('x_mitre_is_subtechnique'):
-                    sub_techniques_.append(
-                        SubTechnique(
-                            self.attack_objects,
-                            self.relationships,
-                            self.id_lookup,
-                            **self.id_lookup[r_]
+        if self.relationships.get(self.mid):
+            for r_ in self.relationships.get(self.mid):
+                if r_.startswith('attack-pattern'):
+                    if self.id_lookup.get(r_).get('x_mitre_is_subtechnique'):
+                        sub_techniques_.append(
+                            SubTechnique(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **self.id_lookup[r_]
+                            )
                         )
-                    )
 
         return sub_techniques_
 
