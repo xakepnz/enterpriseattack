@@ -65,6 +65,35 @@ class Tactic:
         return techniques_
 
     # ----------------------------------------------------------------------------#
+    # Return a list of sub-techniques to every Tactic object:
+    # ----------------------------------------------------------------------------#
+
+    @property
+    def sub_techniques(self):
+        from .sub_technique import SubTechnique
+
+        sub_techniques_ = []
+
+        for attack_obj in self.attack_objects['objects']:
+            if (attack_obj.get('type') == 'attack-pattern' and
+                    attack_obj.get('x_mitre_is_subtechnique')):
+                kill_chains = attack_obj.get('kill_chain_phases')
+
+                if enterpriseattack.utils.match_tactics(
+                        self.short_name,
+                        kill_chains
+                        ):
+                    sub_techniques_.append(
+                        SubTechnique(
+                            self.attack_objects,
+                            self.relationships,
+                            self.id_lookup,
+                            **attack_obj
+                        )
+                    )
+        return sub_techniques_
+
+    # ----------------------------------------------------------------------------#
     # Return a json dict of the object:
     # ----------------------------------------------------------------------------#
 
@@ -83,6 +112,9 @@ class Tactic:
                 "short_name": self.short_name,
                 "techniques": [
                     technique.name for technique in self.techniques
+                ],
+                "sub_techniques": [
+                    subTech.name for subTech in self.sub_techniques
                 ],
                 "deprecated": self.deprecated,
                 "revoked": self.revoked
