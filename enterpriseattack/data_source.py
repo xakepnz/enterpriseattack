@@ -100,6 +100,40 @@ class DataSource:
         return techniques_
 
     # ----------------------------------------------------------------------------#
+    # Access Sub Techniques for each Data Source object:
+    # ----------------------------------------------------------------------------#
+
+    @property
+    def sub_techniques(self):
+        from .sub_technique import SubTechnique
+
+        sub_techniques_ = []
+
+        if self.components:
+            for component in self.components:
+                if component.data_source_ref == self.mid:
+                    if self.relationships.get(component.id):
+                        for r_id in self.relationships.get(component.id):
+                            if self.id_lookup.get(r_id):
+                                if (
+                                    self.id_lookup.get(r_id).get('type')
+                                        == 'attack-pattern'
+                                        and self.id_lookup.get(r_id).get(
+                                            'x_mitre_is_subtechnique'
+                                            )
+                                        ):
+                                    sub_techniques_.append(
+                                        SubTechnique(
+                                            self.attack_objects,
+                                            self.relationships,
+                                            self.id_lookup,
+                                            **self.id_lookup[r_id]
+                                        )
+                                    )
+
+        return sub_techniques_
+
+    # ----------------------------------------------------------------------------#
     # Return a json dict of the object:
     # ----------------------------------------------------------------------------#
 

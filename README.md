@@ -39,8 +39,8 @@ MITRE ATT&CK® is a globally-accessible knowledge base of adversary tactics and 
 ### Build the docker image:
 
 ```sh
-docker build enterpriseattack:0.1.7 .
-docker tag enterpriseattack:0.1.7 enterpriseattack:latest
+docker build enterpriseattack:0.1.8 .
+docker tag enterpriseattack:0.1.8 enterpriseattack:latest
 ```
 
 ### Run the benchmarks on the container:

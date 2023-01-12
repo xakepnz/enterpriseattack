@@ -24,7 +24,8 @@ body:
       label: Version
       description: What version of enterpriseattack are you running?
       options:
-        - 0.1.7 (Default)
+        - 0.1.8 (Default)
+        - 0.1.7
         - 0.1.6
         - 0.1.5
         - 0.1.4
