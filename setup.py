@@ -17,14 +17,14 @@ with open('README.md', 'r', encoding='utf-8') as fp:
 setup(
     name='enterpriseattack',
     author='xakepnz',
-    author_email='xakepnz@protonmail.com',
+    author_email='xakepnz@pm.me',
     version=VERSION,
     packages=find_packages(exclude=['tests*', 'docs*']),
     description='A lightweight Python module to interact with the '
                 'Mitre Att&ck Enterprise framework.',
     long_description=readme,
     long_description_content_type='text/markdown',
-    url='https://github.com/xakepnz/enterpriseattack',
+    url='https://gitlab.com/xakepnz/enterpriseattack',
     keywords=[
         'mitre att&ck',
         'att&ck enterprise',
