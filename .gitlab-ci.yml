@@ -1,0 +1,33 @@
+# ----------------------------------------------------------------------------#
+
+stages:
+  - test
+  - deploy
+
+# ----------------------------------------------------------------------------#
+
+include:
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+
+# ----------------------------------------------------------------------------#
+
+before_script:
+  - pip install -r requirements.txt
+  - pip install -r dev_requirements.txt
+
+# ----------------------------------------------------------------------------#
+
+lint:
+  stage: test
+  script:
+    - flake8 .
+
+# ----------------------------------------------------------------------------#
+
+sast:
+  stage: test
+  interruptible: true
+  script:
+    - []
