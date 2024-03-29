@@ -1,14 +1,8 @@
-[![Downloads](https://pepy.tech/badge/enterpriseattack)](https://pepy.tech/project/enterpriseattack)
-[![PyPI version](https://badge.fury.io/py/enterpriseattack.svg)](https://badge.fury.io/py/enterpriseattack)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![image](https://img.shields.io/pypi/pyversions/enterpriseattack.svg)](https://pypi.org/project/enterpriseattack/)
-[![image](https://app.travis-ci.com/xakepnz/enterpriseattack.svg?branch=main)](https://travis-ci.com/xakepnz/enterpriseattack)
+## enterpriseattack - MITRE's Enterprise ATT&CK®
 
-## enterpriseattack - MITRE's Enterprise Att&ck
+A lightweight Python module to interact with the [MITRE ATT&CK](https://attack.mitre.org/) Enterprise dataset. Built to be used in production applications due to it's speed and minimal depedancies. [Read the docs](https://gitlab.com/xakepnz/enterpriseattack/tree/main/docs) for more info.
 
-A lightweight Python module to interact with the [MITRE ATT&CK](https://attack.mitre.org/) Enterprise dataset. Built to be used in production applications due to it's speed and minimal depedancies. [Read the docs](https://github.com/xakepnz/enterpriseattack/tree/main/docs) for more info.
-
-## MITRE Att&ck
+## MITRE ATT&CK®
 
 MITRE ATT&CK® is a globally-accessible knowledge base of adversary tactics and techniques based on real-world observations. The ATT&CK knowledge base is used as a foundation for the development of specific threat models and methodologies in the private sector, in government, and in the cybersecurity product and service community.
 
@@ -27,7 +21,7 @@ MITRE ATT&CK® is a globally-accessible knowledge base of adversary tactics and 
 
 ### Alternatively clone the repository:
    ```sh
-   git clone https://github.com/xakepnz/enterpriseattack.git
+   git clone https://gitlab.com/xakepnz/enterpriseattack.git
    cd enterpriseattack
    python3 setup.py install
    ```
@@ -133,6 +127,6 @@ for group in attack.groups:
 ...
 ```
 
-For more examples, please refer to the [Documentation](https://github.com/xakepnz/enterpriseattack/tree/main/docs)
+For more examples, please refer to the [Documentation](https://gitlab.com/xakepnz/enterpriseattack/tree/main/docs)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
