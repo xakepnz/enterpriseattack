@@ -33,10 +33,10 @@ If network access restrictions apply to your situation, you can download the [MI
 pip3 install enterpriseattack
 ```
 
-## Install via Github:
+## Install via GitLab:
 
 ```bash
-git clone https://github.com/xakepnz/enterpriseattack.git
+git clone https://gitlab.com/xakepnz/enterpriseattack.git
 cd enterpriseattack
 python3 setup.py install
 ```
