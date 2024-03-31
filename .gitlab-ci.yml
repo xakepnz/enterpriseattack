@@ -22,8 +22,6 @@ lint:
   script:
     - pip install -r dev_requirements.txt
     - flake8 .
-  rules:
-    - if: '$CI_PIPELINE_SOURCE != "schedule"'
 
 # ----------------------------------------------------------------------------#
 
