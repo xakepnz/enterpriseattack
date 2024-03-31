@@ -12,9 +12,8 @@ stages:
 
 before_script:
   - apk update && apk add python3 py3-pip
-  - python3 -m venv ./venv
-  - source ./venv/bin/activate
-  - pip3 install -r requirements.txt && pip3 install -r dev_requirements.txt
+  - pip3 install -r requirements.txt &&\
+    pip3 install -r dev_requirements.txt
 
 # ----------------------------------------------------------------------------#
 
@@ -28,7 +27,11 @@ include:
 lint:
   stage: test
   script:
-    - flake8 . --exclude ./venv
+    - flake8 .
+  only:
+    changes:
+      - '*.py'
+      - '**/*.py'
 
 # ----------------------------------------------------------------------------#
 
