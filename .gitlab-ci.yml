@@ -22,10 +22,8 @@ lint:
   script:
     - pip install -r dev_requirements.txt
     - flake8 .
-  only:
-    changes:
-      - '*.py'
-      - '**/*.py'
+  rules:
+    - if: '$CI_PIPELINE_SOURCE != "schedule"'
 
 # ----------------------------------------------------------------------------#
 
@@ -34,6 +32,3 @@ sast:
   interruptible: true
   script:
     - []
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
