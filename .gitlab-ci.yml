@@ -1,0 +1,32 @@
+# ----------------------------------------------------------------------------#
+
+image: python:latest
+
+# ----------------------------------------------------------------------------#
+
+stages:
+  - test
+  - deploy
+
+# ----------------------------------------------------------------------------#
+
+include:
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+
+# ----------------------------------------------------------------------------#
+
+lint:
+  stage: test
+  script:
+    - pip install -r dev_requirements.txt
+    - flake8 .
+
+# ----------------------------------------------------------------------------#
+
+sast:
+  stage: test
+  interruptible: true
+  script:
+    - []

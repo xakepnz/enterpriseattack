@@ -13,4 +13,7 @@ attack = enterpriseattack.Attack(
 # --------------------------------------------------------------------------- #
 
 for group in attack.groups:
-    print(f'{group.id}: {", ".join(t.id for t in group.techniques + group.sub_techniques)}')
+    print(
+        f'{group.id}: '
+        f'{", ".join(t.id for t in group.techniques + group.sub_techniques)}'
+    )
