@@ -11,7 +11,6 @@ stages:
 # ----------------------------------------------------------------------------#
 
 before_script:
-  - apk update && apk add python3 py3-pip
   - pip install -r requirements.txt &&\
     pip install -r dev_requirements.txt
 
@@ -40,3 +39,6 @@ sast:
   interruptible: true
   script:
     - []
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
