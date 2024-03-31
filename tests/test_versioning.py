@@ -4,6 +4,12 @@ import enterpriseattack
 
 # ----------------------------------------------------------------------------#
 
+versions = [
+    '11.1', '11.2', '11.3', '12.0', '12.1', '13.0', '13.1', '14.0', '14.1'
+]
+
+# ----------------------------------------------------------------------------#
+
 
 def stats():
     print(
@@ -22,15 +28,6 @@ def stats():
 # ----------------------------------------------------------------------------#
 
 
-attack = enterpriseattack.Attack(mitre_version='11.3', update=True)
-stats()
-
-# ----------------------------------------------------------------------------#
-
-attack = enterpriseattack.Attack(mitre_version='12.1', update=True)
-stats()
-
-# ----------------------------------------------------------------------------#
-
-attack = enterpriseattack.Attack(mitre_version='gg', update=True)
-stats()
+for version in versions:
+    attack = enterpriseattack.Attack(mitre_version=version, update=True)
+    stats()
