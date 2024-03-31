@@ -34,3 +34,4 @@ coverage.xml
 .tox/
 .testmondata
 tests/debug.py
+.pytest_cache/
