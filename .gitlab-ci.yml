@@ -30,3 +30,13 @@ sast:
   interruptible: true
   script:
     - []
+
+# ----------------------------------------------------------------------------#
+
+pytest:
+  stage: test
+  script:
+    - pip install -r requirements.txt
+    - pip install -r dev_requirements.txt
+    - python setup.py install
+    - pytest tests
