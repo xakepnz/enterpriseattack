@@ -10,12 +10,6 @@ stages:
 
 # ----------------------------------------------------------------------------#
 
-before_script:
-  - pip install -r requirements.txt &&\
-    pip install -r dev_requirements.txt
-
-# ----------------------------------------------------------------------------#
-
 include:
   - template: Jobs/Dependency-Scanning.gitlab-ci.yml
   - template: Jobs/SAST.gitlab-ci.yml
@@ -26,6 +20,7 @@ include:
 lint:
   stage: test
   script:
+    - pip install -r dev_requirements.txt
     - flake8 .
   only:
     changes:
