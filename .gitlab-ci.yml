@@ -52,3 +52,11 @@ coverage:
     - pip install -r requirements.txt
     - pytest --cov=enterpriseattack --cov-report term-missing
   coverage: '/TOTAL.*\s+(\d+\%)/'
+
+# ----------------------------------------------------------------------------#
+
+tox:
+  stage: test
+  interruptible: true
+  script:
+    - tox --parallel auto
