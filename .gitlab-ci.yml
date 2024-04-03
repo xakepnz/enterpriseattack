@@ -48,5 +48,7 @@ coverage:
   stage: test
   interruptible: true
   script:
+    - pip install -r dev_requirements.txt
+    - pip install -r requirements.txt
     - pytest --cov=enterpriseattack --cov-report term-missing
   coverage: '/TOTAL.*\s+(\d+\%)/'
