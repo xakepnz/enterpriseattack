@@ -1,5 +1,7 @@
 ### Description
 <!-- What changes are being introduced? -->
 
-/label ~"update"
+/label ~"housekeeping"
 /assign @xakepnz
+
+<!-- Remember to add the correct labels for this MR -->
