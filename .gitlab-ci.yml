@@ -59,4 +59,5 @@ tox:
   stage: test
   interruptible: true
   script:
+    - pip install -r dev_requirements.txt
     - tox --parallel auto
