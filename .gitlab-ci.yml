@@ -6,6 +6,7 @@ image: python:latest
 
 stages:
   - test
+  - tox
   - deploy
 
 # ----------------------------------------------------------------------------#
@@ -55,9 +56,38 @@ coverage:
 
 # ----------------------------------------------------------------------------#
 
-tox:
-  stage: test
-  interruptible: true
+test_py312:
+  stage: tox
+  image: python:3.12
   script:
-    - pip install -r dev_requirements.txt
-    - tox --parallel auto
+    - tox -e py-coverage --parallel auto
+
+test_py311:
+  stage: tox
+  image: python:3.11
+  script:
+    - tox -e py-coverage --parallel auto
+
+test_py310:
+  stage: tox
+  image: python:3.10
+  script:
+    - tox -e py-coverage --parallel auto
+
+test_py39:
+  stage: tox
+  image: python:3.9
+  script:
+    - tox -e py-coverage --parallel auto
+
+test_py38:
+  stage: tox
+  image: python:3.8
+  script:
+    - tox -e py-coverage --parallel auto
+
+test_py37:
+  stage: tox
+  image: python:3.7
+  script:
+    - tox -e py-coverage --parallel auto
