@@ -2,11 +2,15 @@
 
 import enterpriseattack
 
+from pathlib import Path
+
 # ----------------------------------------------------------------------------#
 
 
 def test_str_repr():
-    attack = enterpriseattack.Attack()
+    localJson = f'{Path(__file__).parent}/data/enterprise-attack.json'
+
+    attack = enterpriseattack.Attack(enterprise_json=localJson)
 
     methods = [
         'tactics', 'techniques', 'sub_techniques', 'groups', 'campaigns',
