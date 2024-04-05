@@ -28,8 +28,8 @@ def test_deprecated():
 
     for meth in methods:
 
-        # there has not been a deprecated tool yet...
-        if meth == 'tools':
+        # these methods do not have any deprecated items:
+        if meth in ['tactics', 'tools']:
             assert len(getattr(attackNotDeprecated, meth)) \
                 == len(getattr(attackDeprecated, meth))
         else:
