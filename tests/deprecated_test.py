@@ -40,3 +40,9 @@ def test_deprecated():
 
     assert len(attackNotDeprecated.mitigations) \
         != len(attackDeprecated.mitigations)
+
+    assert len(attackNotDeprecated.tools) \
+        != len(attackDeprecated.tools)
+
+    assert len(attackNotDeprecated.malware) \
+        != len(attackDeprecated.malware)
