@@ -2,7 +2,11 @@
 
 import enterpriseattack
 
+import logging
+
 # ----------------------------------------------------------------------------#
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def test_subscriptable():

@@ -3,8 +3,11 @@
 import enterpriseattack
 
 from pathlib import Path
+import logging
 
 # ----------------------------------------------------------------------------#
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def test_local_load():
