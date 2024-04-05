@@ -20,29 +20,18 @@ def test_deprecated():
         include_deprecated=True
     )
 
-    assert len(attackNotDeprecated.techniques) \
-        != len(attackDeprecated.techniques)
+    methods = [
+        'tactics', 'techniques', 'sub_techniques', 'groups', 'software',
+        'tools', 'malware', 'components', 'campaigns', 'mitigations',
+        'data_sources'
+    ]
 
-    assert len(attackNotDeprecated.sub_techniques) \
-        != len(attackDeprecated.sub_techniques)
+    for meth in methods:
 
-    assert len(attackNotDeprecated.groups) \
-        != len(attackDeprecated.groups)
-
-    assert len(attackNotDeprecated.software) \
-        != len(attackDeprecated.software)
-
-    assert len(attackNotDeprecated.components) \
-        != len(attackDeprecated.components)
-
-    assert len(attackNotDeprecated.data_sources) \
-        != len(attackDeprecated.data_sources)
-
-    assert len(attackNotDeprecated.mitigations) \
-        != len(attackDeprecated.mitigations)
-
-    assert len(attackNotDeprecated.tools) \
-        != len(attackDeprecated.tools)
-
-    assert len(attackNotDeprecated.malware) \
-        != len(attackDeprecated.malware)
+        # there has not been a deprecated tool yet...
+        if meth == 'tools':
+            assert len(getattr(attackNotDeprecated, meth)) \
+                == len(getattr(attackDeprecated, meth))
+        else:
+            assert len(getattr(attackNotDeprecated, meth)) \
+                != len(getattr(attackDeprecated, meth))
