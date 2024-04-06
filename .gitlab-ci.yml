@@ -61,39 +61,39 @@ py312:
   image: python:3.12
   script:
     - pip install -r dev_requirements.txt
-    - tox --parallel auto
+    - tox -e py312 --parallel auto
 
 py311:
   stage: tox
   image: python:3.11
   script:
     - pip install -r dev_requirements.txt
-    - tox --parallel auto
+    - tox -e py311 --parallel auto
 
 py310:
   stage: tox
   image: python:3.10
   script:
     - pip install -r dev_requirements.txt
-    - tox --parallel auto
+    - tox -e py310 --parallel auto
 
 py39:
   stage: tox
   image: python:3.9
   script:
     - pip install -r dev_requirements.txt
-    - tox --parallel auto
+    - tox -e py39 --parallel auto
 
 py38:
   stage: tox
   image: python:3.8
   script:
     - pip install -r dev_requirements.txt
-    - tox --parallel auto
+    - tox -e py38 --parallel auto
 
 py37:
   stage: tox
   image: python:3.7
   script:
     - pip install -r dev_requirements.txt
-    - tox --parallel auto
+    - tox -e py37 --parallel auto
