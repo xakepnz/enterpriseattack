@@ -8,19 +8,12 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 
-def test_deprecated():
+def test_deprecated(attack_update_latest_subscript_deprecated):
     attackNotDeprecated = enterpriseattack.Attack(
         mitre_version='latest',
         subscriptable=True,
         update=True,
         include_deprecated=False
-    )
-
-    attackDeprecated = enterpriseattack.Attack(
-        mitre_version='latest',
-        subscriptable=True,
-        update=True,
-        include_deprecated=True
     )
 
     methods = [
@@ -34,7 +27,11 @@ def test_deprecated():
         # these methods do not have any deprecated items:
         if meth in ['tactics', 'tools', 'campaigns']:
             assert len(getattr(attackNotDeprecated, meth)) \
-                == len(getattr(attackDeprecated, meth))
+                == len(getattr(
+                    attack_update_latest_subscript_deprecated, meth)
+                    )
         else:
             assert len(getattr(attackNotDeprecated, meth)) \
-                != len(getattr(attackDeprecated, meth))
+                != len(getattr(
+                    attack_update_latest_subscript_deprecated, meth)
+                    )

@@ -1,7 +1,5 @@
 # ----------------------------------------------------------------------------#
 
-import enterpriseattack
-
 import logging
 
 # ----------------------------------------------------------------------------#
@@ -9,9 +7,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 
-def test_to_json():
-    attack = enterpriseattack.Attack()
-
+def test_to_json(attack_update_latest_subscript_deprecated):
     methods = [
         'tactics', 'techniques', 'sub_techniques', 'groups', 'campaigns',
         'software', 'tools', 'malware', 'data_sources', 'components',
@@ -19,4 +15,6 @@ def test_to_json():
     ]
 
     for meth in methods:
-        assert any(obj.to_json() for obj in getattr(attack, meth))
+        assert any(obj.to_json() for obj in getattr(
+            attack_update_latest_subscript_deprecated, meth)
+        )
