@@ -7,7 +7,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 
-def test_to_json(attack_update_latest_nonSubscript_deprecated):
+def test_str_repr(attack_local):
     methods = [
         'tactics', 'techniques', 'sub_techniques', 'groups', 'campaigns',
         'software', 'tools', 'malware', 'data_sources', 'components',
@@ -15,6 +15,5 @@ def test_to_json(attack_update_latest_nonSubscript_deprecated):
     ]
 
     for meth in methods:
-        assert any(obj.to_json() for obj in getattr(
-            attack_update_latest_nonSubscript_deprecated, meth)
-        )
+        assert str(any(obj) for obj in getattr(attack_local, meth))
+        assert repr(any(obj) for obj in getattr(attack_local, meth))
