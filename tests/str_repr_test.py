@@ -15,5 +15,9 @@ def test_str_repr(attack_local):
     ]
 
     for meth in methods:
-        assert str(any(obj) for obj in getattr(attack_local, meth))
-        assert repr(any(obj) for obj in getattr(attack_local, meth))
+
+        for obj in getattr(attack_local, meth):
+            assert str(obj)
+
+        for obj in getattr(attack_local, meth):
+            assert repr(obj)
