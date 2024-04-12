@@ -1,3 +1,11 @@
+# ! THIS PROJECT HAS MOVED TO GITLAB !
+
+- `New project home`: https://gitlab.com/xakepnz/enterpriseattack
+- No changes will be pushed to GitHub, as all changes / tests / deployments will be done via GitLab CI/CD.
+- This repo will remain as-is for historical purposes...
+
+---
+
 [![Downloads](https://pepy.tech/badge/enterpriseattack)](https://pepy.tech/project/enterpriseattack)
 [![PyPI version](https://badge.fury.io/py/enterpriseattack.svg)](https://badge.fury.io/py/enterpriseattack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
