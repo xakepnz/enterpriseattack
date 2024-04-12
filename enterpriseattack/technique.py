@@ -52,18 +52,17 @@ class Technique:
 
         groups_ = []
 
-        if self.relationships.get(self.mid):
-            for r_id in self.relationships.get(self.mid):
-                if self.id_lookup.get(r_id):
-                    if self.id_lookup.get(r_id).get('type') == 'intrusion-set':
-                        groups_.append(
-                            Group(
-                                self.attack_objects,
-                                self.relationships,
-                                self.id_lookup,
-                                **self.id_lookup[r_id]
-                            )
+        for r_id in self.relationships.get(self.mid, {}):
+            if self.id_lookup.get(r_id):
+                if self.id_lookup.get(r_id).get('type') == 'intrusion-set':
+                    groups_.append(
+                        Group(
+                            self.attack_objects,
+                            self.relationships,
+                            self.id_lookup,
+                            **self.id_lookup[r_id]
                         )
+                    )
         return groups_
 
     # ----------------------------------------------------------------------------#
@@ -76,18 +75,17 @@ class Technique:
 
         sub_techniques_ = []
 
-        if self.relationships.get(self.mid):
-            for r_ in self.relationships.get(self.mid):
-                if r_.startswith('attack-pattern'):
-                    if self.id_lookup.get(r_).get('x_mitre_is_subtechnique'):
-                        sub_techniques_.append(
-                            SubTechnique(
-                                self.attack_objects,
-                                self.relationships,
-                                self.id_lookup,
-                                **self.id_lookup[r_]
-                            )
+        for r_ in self.relationships.get(self.mid, {}):
+            if r_.startswith('attack-pattern'):
+                if self.id_lookup.get(r_).get('x_mitre_is_subtechnique'):
+                    sub_techniques_.append(
+                        SubTechnique(
+                            self.attack_objects,
+                            self.relationships,
+                            self.id_lookup,
+                            **self.id_lookup[r_]
                         )
+                    )
 
         return sub_techniques_
 
@@ -129,7 +127,7 @@ class Technique:
 
         components_ = []
 
-        for r_ in self.relationships.get(self.mid):
+        for r_ in self.relationships.get(self.mid, {}):
             if self.id_lookup[r_].get('type') == 'x-mitre-data-component':
                 components_.append(
                     Component(
@@ -175,7 +173,7 @@ class Technique:
 
         mitigations_ = []
 
-        for r_ in self.relationships.get(self.mid):
+        for r_ in self.relationships.get(self.mid, {}):
             if self.id_lookup[r_].get('type') == 'course-of-action':
                 mitigations_.append(
                     Mitigation(
@@ -198,7 +196,7 @@ class Technique:
 
         software_ = []
 
-        for r_ in self.relationships.get(self.mid):
+        for r_ in self.relationships.get(self.mid, {}):
             if self.id_lookup[r_].get('type') in ['tool', 'malware']:
                 software_.append(
                     Software(
@@ -221,7 +219,7 @@ class Technique:
 
         malware_ = []
 
-        for r_ in self.relationships.get(self.mid):
+        for r_ in self.relationships.get(self.mid, {}):
             if self.id_lookup[r_].get('type') == 'malware':
                 malware_.append(
                     Software(
@@ -244,7 +242,7 @@ class Technique:
 
         tools_ = []
 
-        for r_ in self.relationships.get(self.mid):
+        for r_ in self.relationships.get(self.mid, {}):
             if self.id_lookup[r_].get('type') == 'tool':
                 tools_.append(
                     Software(
