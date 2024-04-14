@@ -35,3 +35,4 @@ coverage.xml
 .testmondata
 tests/debug.py
 .pytest_cache/
+enterpriseattack/enterprise-attack.json
