@@ -1,46 +1,29 @@
-## enterpriseattack - MITRE's Enterprise ATT&CK®
+## enterpriseattack - MITRE ATT&CK® Matrix for Enterprise
 
-A lightweight Python module to interact with the [MITRE ATT&CK](https://attack.mitre.org/) Enterprise dataset. Built to be used in production applications due to it's speed and minimal depedancies. [Read the docs](https://gitlab.com/xakepnz/enterpriseattack/tree/main/docs) for more info.
+A lightweight Python module to interact with the [MITRE ATT&CK®](https://attack.mitre.org/) Enterprise dataset. Built for speed with minimal dependencies. [Read the docs](https://gitlab.com/xakepnz/enterpriseattack/tree/main/docs) for more info.
 
 ## MITRE ATT&CK®
 
-MITRE ATT&CK® is a globally-accessible knowledge base of adversary tactics and techniques based on real-world observations. The ATT&CK knowledge base is used as a foundation for the development of specific threat models and methodologies in the private sector, in government, and in the cybersecurity product and service community.
-
-### Dependancies
-
-* Python 3.x
-* ujson >= 3.0.0
-* requests >= 2.9.2
+MITRE ATT&CK® is a globally-accessible knowledge base of adversary tactics and techniques based on real-world observations. The ATT&CK® knowledge base is used as a foundation for the development of specific threat models and methodologies in the private sector, in government, and in the cybersecurity product and service community.
 
 ## Installation
 
 ### Install via Pip:
    ```sh
    pip3 install enterpriseattack
+
+   # or directly from the repo:
+   python3 -m venv tempEnv && \
+   source tempEnv/bin/activate && \
+   pip install git+https://gitlab.com/xakepnz/enterpriseattack.git@main
    ```
 
-### Alternatively clone the repository:
+### Or from source:
    ```sh
    git clone https://gitlab.com/xakepnz/enterpriseattack.git
    cd enterpriseattack
    python3 setup.py install
    ```
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## Docker:
-
-### Build the docker image:
-
-```sh
-docker build enterpriseattack:0.1.8 .
-docker tag enterpriseattack:0.1.8 enterpriseattack:latest
-```
-
-### Run the benchmarks on the container:
-```sh
-docker run enterpriseattack
-```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -72,8 +55,8 @@ In this example, you can choose where to download the official Mitre Att&ck json
 * `enterprise_json` - (optional) location of enterprise json file, (saved automatically in pip location)
 * `url` - (optional) location of enterprise json file to download from.
 * `update` - (optional) boolean forces a refresh download (each time this is called), overwriting the previous file.
-* `include_deprecated` - (optional) boolean to include MITRE ATT&CK deprecated objects (from previous Att&ck versions).
-* `mitre_version` - (optional) specify a MITRE ATT&CK data version.
+* `include_deprecated` - (optional) boolean to include MITRE ATT&CK® deprecated objects (from previous ATT&CK® versions).
+* `mitre_version` - (optional) specify a MITRE ATT&CK® data version.
 * `proxies` - (optional) dict of proxies to pass through to reach the MITRE GitHub for the enterprise-attack.json.
 
 ```py
@@ -130,3 +113,7 @@ for group in attack.groups:
 For more examples, please refer to the [Documentation](https://gitlab.com/xakepnz/enterpriseattack/tree/main/docs)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+## Contributing
+
+Please see the [Contributing doc](CONTRIBUTING.md)
