@@ -97,3 +97,17 @@ py37:
   script:
     - pip install -r dev_requirements.txt
     - tox -e py37 --parallel auto
+
+# ----------------------------------------------------------------------------#
+
+deploy:
+  stage: deploy
+  script:
+    - pip install twine
+    - python3 setup.py sdist bdist_wheel --universal
+    - twine upload dist/*
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - setup.py
+        - enterpriseattack/*
