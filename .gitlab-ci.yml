@@ -5,8 +5,8 @@ image: python:latest
 # ----------------------------------------------------------------------------#
 
 stages:
+  - lint
   - test
-  - tox
   - deploy
 
 # ----------------------------------------------------------------------------#
@@ -19,7 +19,7 @@ include:
 # ----------------------------------------------------------------------------#
 
 lint:
-  stage: test
+  stage: lint
   interruptible: true
   script:
     - pip install -r dev_requirements.txt
@@ -35,7 +35,7 @@ sast:
 
 # ----------------------------------------------------------------------------#
 
-pytest:
+unit:
   stage: test
   interruptible: true
   script:
@@ -56,43 +56,43 @@ coverage:
 
 # ----------------------------------------------------------------------------#
 
-py312:
-  stage: tox
+python:3.12:
+  stage: test
   image: python:3.12
   script:
     - pip install -r dev_requirements.txt
     - tox -e py312 --parallel auto
 
-py311:
-  stage: tox
+python:3.11:
+  stage: test
   image: python:3.11
   script:
     - pip install -r dev_requirements.txt
     - tox -e py311 --parallel auto
 
-py310:
-  stage: tox
+python:3.10:
+  stage: test
   image: python:3.10
   script:
     - pip install -r dev_requirements.txt
     - tox -e py310 --parallel auto
 
-py39:
-  stage: tox
+python:3.9:
+  stage: test
   image: python:3.9
   script:
     - pip install -r dev_requirements.txt
     - tox -e py39 --parallel auto
 
-py38:
-  stage: tox
+python:3.8:
+  stage: test
   image: python:3.8
   script:
     - pip install -r dev_requirements.txt
     - tox -e py38 --parallel auto
 
-py37:
-  stage: tox
+python:3.7:
+  stage: test
   image: python:3.7
   script:
     - pip install -r dev_requirements.txt
