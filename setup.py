@@ -17,12 +17,20 @@ with open(
 
 # ----------------------------------------------------------------------------#
 
-with open('README.md', 'r', encoding='utf-8') as fp:
+with open(
+    os.path.join(
+        os.path.dirname(__file__),
+        'README.md'
+        )) as fp:
     README = fp.read()
 
 # ----------------------------------------------------------------------------#
 
-with open('requirements.txt', 'r', encoding='utf-8') as fp:
+with open(
+    os.path.join(
+        os.path.dirname(__file__),
+        'requirements.txt'
+        )) as fp:
     REQUIREMENTS = fp.read().splitlines()
 
 # ----------------------------------------------------------------------------#
@@ -33,6 +41,9 @@ setup(
     author_email='xakepnz@pm.me',
     version=VERSION,
     packages=find_packages(exclude=['tests*', 'docs*']),
+    package_data={
+        '': ['VERSION']
+    },
     description='A lightweight Python module to interact with the '
                 '[MITRE ATT&CK®](https://attack.mitre.org/) Enterprise '
                 'dataset. Built for speed with minimal dependencies. '
