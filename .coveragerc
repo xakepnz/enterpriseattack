@@ -1,0 +1,6 @@
+[run]
+omit =
+    lib/*
+    venv/*
+    bin/*
+    include/*

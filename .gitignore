@@ -26,6 +26,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+bin
 
 # Tests / Coverage
 report.xml
@@ -35,4 +36,8 @@ coverage.xml
 .testmondata
 tests/debug.py
 .pytest_cache/
+tests/data/enterprise-attack.json
 enterpriseattack/enterprise-attack.json
+pyvenv.cfg
+include
+htmlcov

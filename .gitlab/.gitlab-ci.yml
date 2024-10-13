@@ -1,0 +1,140 @@
+# ----------------------------------------------------------------------------#
+
+image: python:latest
+
+# ----------------------------------------------------------------------------#
+
+stages:
+  - lint
+  - build
+  - test
+  # - deploy
+
+# ----------------------------------------------------------------------------#
+
+include:
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Jobs/License-Scanning.gitlab-ci.yml
+
+# ----------------------------------------------------------------------------#
+
+flake8:
+  stage: lint
+  interruptible: true
+  before_script:
+    - pip install -r requirements-dev.txt
+  script:
+    - flake8 .
+
+# ----------------------------------------------------------------------------#
+
+black:
+  stage: lint
+  interruptible: true
+  before_script:
+    - pip install -r requirements-dev.txt
+  script:
+    - black -l 79 -S enterpriseattack
+
+# ----------------------------------------------------------------------------#
+
+build:
+  stage: build
+  interruptible: true
+  variables:
+    COSIGN_YES: "true"
+  id_tokens:
+    SIGSTORE_ID_TOKEN:
+      aud: sigstore
+  script:
+    - python3 setup.py sdist bdist_wheel --universal
+    - cosign sign-blob artifact.txt --bundle cosign.bundle
+  artifacts:
+    paths:
+      - dist/*
+      - cosign.bundle
+
+# ----------------------------------------------------------------------------#
+
+sast:
+  stage: test
+  interruptible: true
+  script:
+    - []
+
+# ----------------------------------------------------------------------------#
+
+coverage:
+  stage: test
+  interruptible: true
+  before_script:
+    - pip install -r requirements-dev.txt
+  script:
+    - pytest -s -vv --cov=enterpriseattack --cov-report=term --cov-report=term-missing --cov-report=html tests
+  coverage: '/TOTAL.*? (100(?:\.0+)?\%\|[1-9]?\d(?:\.\d+)?\%)$/'
+
+# ----------------------------------------------------------------------------#
+
+bandit:
+  stage: test
+  interruptible: true
+  script:
+    - pip install bandit
+    - bandit .
+
+# ----------------------------------------------------------------------------#
+
+python:3.13:
+  stage: test
+  image: python:3.13
+  script:
+    - tox -e py313
+
+python:3.12:
+  stage: test
+  image: python:3.12
+  script:
+    - tox -e py312
+
+python:3.11:
+  stage: test
+  image: python:3.11
+  script:
+    - tox -e py311
+
+python:3.10:
+  stage: test
+  image: python:3.10
+  script:
+    - tox -e py310
+
+python:3.9:
+  stage: test
+  image: python:3.9
+  script:
+    - tox -e py39
+
+python:3.8:
+  stage: test
+  image: python:3.8
+  script:
+    - tox -e py38
+
+python:3.7:
+  stage: test
+  image: python:3.7
+  script:
+    - tox -e py37
+
+# ----------------------------------------------------------------------------#
+
+# deploy:
+#   stage: deploy
+#   script:
+#     - pip install twine
+#     - python setup.py sdist bdist_wheel
+#     - twine upload dist/* -u $PYPI_USERNAME -p $PYPI_PASSWORD
+#   only:
+#     - tags
