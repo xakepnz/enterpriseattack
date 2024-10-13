@@ -1,14 +1,24 @@
-### BUG: 
-<!-- Thanks for taking the time to fill out this bug report! -->
+### Bug:
+<!-- Thanks for taking the time to fill out this bug report!
+     Please explain in detail what the bug is: -->
 
-#### What happened?
-<!-- Also tell us what you expected to happen? -->
 
 #### Version
 <!-- What version of enterpriseattack are you running? -->
 
-#### Logs
-<!-- Attach any relevant logs -->
 
+<details><summary>This can be found via the following cmd</summary>
+
+```sh
+python3 -c "import enterpriseattack; print(enterpriseattack.__version__)"
+```
+
+</details>
+
+#### Logs & Screenshots
+<!-- Attach any relevant logs or screenshots -->
+
+
+<!-- GitLab Commands -->
 /labels ~"bug" ~"priority::1"
 /assign @xakepnz
