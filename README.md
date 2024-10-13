@@ -11,11 +11,6 @@ MITRE ATT&CK® is a globally-accessible knowledge base of adversary tactics and 
 ### Install via Pip:
    ```sh
    pip3 install enterpriseattack
-
-   # or directly from the repo:
-   python3 -m venv tempEnv && \
-   source tempEnv/bin/activate && \
-   pip install git+https://gitlab.com/xakepnz/enterpriseattack.git@main
    ```
 
 ### Or from source:
