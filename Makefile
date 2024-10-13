@@ -1,6 +1,6 @@
 .PHONY: install clean build publish test coverage
 
-VENV := ./venv
+VENV := ./venv/bin
 
 init:
 	python3 -m venv venv .
