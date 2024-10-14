@@ -54,7 +54,7 @@ build:
     - dpkg -i cosign_${LATEST_VERSION}_amd64.deb
   script:
     - python3 setup.py sdist bdist_wheel --universal
-    - cosign sign-blob artifact.txt --bundle cosign.bundle
+    - cosign sign-blob dist/enterpriseattack-*.tar.gz --bundle cosign.bundle
   artifacts:
     paths:
       - dist/*

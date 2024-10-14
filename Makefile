@@ -22,5 +22,4 @@ clean:
 	rm -fr build dist .egg enterpriseattack.egg-info report.xml htmlcov pyvenv.cfg venv lib include bin .pytest_cache .coverage .tox
 
 build:
-	make clean
 	$(VENV)/python setup.py sdist bdist_wheel --universal
