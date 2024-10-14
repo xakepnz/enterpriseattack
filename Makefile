@@ -1,9 +1,9 @@
 .PHONY: install clean build publish test coverage
 
-VENV := ./venv/bin
+VENV := .venv/bin
 
 init:
-	python3 -m venv venv .
+	python3 -m venv .venv
 
 install:
 	make init
@@ -22,4 +22,5 @@ clean:
 	rm -fr build dist .egg enterpriseattack.egg-info report.xml htmlcov pyvenv.cfg venv lib include bin .pytest_cache .coverage .tox
 
 build:
+	make install
 	$(VENV)/python setup.py sdist bdist_wheel --universal
