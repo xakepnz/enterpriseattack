@@ -75,6 +75,7 @@ coverage:
   interruptible: true
   before_script:
     - pip install -r requirements-dev.txt
+    - pip install -r requirements.txt
   script:
     - pytest -s -vv --cov=enterpriseattack --cov-report=term --cov-report=term-missing --cov-report=html tests
   coverage: '/TOTAL.*? (100(?:\.0+)?\%\|[1-9]?\d(?:\.\d+)?\%)$/'
@@ -95,6 +96,7 @@ python:3.13:
   image: python:3.13
   before_script:
     - pip install -r requirements-dev.txt
+    - pip install -r requirements.txt
   script:
     - tox -e py313
 
@@ -103,6 +105,7 @@ python:3.12:
   image: python:3.12
   before_script:
     - pip install -r requirements-dev.txt
+    - pip install -r requirements.txt
   script:
     - tox -e py312
 
@@ -111,6 +114,7 @@ python:3.11:
   image: python:3.11
   before_script:
     - pip install -r requirements-dev.txt
+    - pip install -r requirements.txt
   script:
     - tox -e py311
 
@@ -119,6 +123,7 @@ python:3.10:
   image: python:3.10
   before_script:
     - pip install -r requirements-dev.txt
+    - pip install -r requirements.txt
   script:
     - tox -e py310
 
@@ -127,6 +132,7 @@ python:3.9:
   image: python:3.9
   before_script:
     - pip install -r requirements-dev.txt
+    - pip install -r requirements.txt
   script:
     - tox -e py39
 
@@ -135,6 +141,7 @@ python:3.8:
   image: python:3.8
   before_script:
     - pip install -r requirements-dev.txt
+    - pip install -r requirements.txt
   script:
     - tox -e py38
 
@@ -143,6 +150,7 @@ python:3.7:
   image: python:3.7
   before_script:
     - pip install -r requirements-dev.txt
+    - pip install -r requirements.txt
   script:
     - tox -e py37
 
