@@ -1,9 +1,9 @@
 # ----------------------------------------------------------------------------#
 
+import logging
+
 import requests
 import ujson
-
-import logging
 
 import enterpriseattack
 
