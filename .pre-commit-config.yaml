@@ -25,4 +25,4 @@ repos:
     rev: 5.13.2
     hooks:
       - id: isort
-        args: [--diff]
+        args: [--diff, --skip-gitignore, --line-length=79]

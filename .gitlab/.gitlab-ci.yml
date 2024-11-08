@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------#
 
-image: python:latest
+image: python:3.13
 
 # ----------------------------------------------------------------------------#
 
@@ -19,13 +19,23 @@ include:
 
 # ----------------------------------------------------------------------------#
 
+isort:
+  stage: lint
+  interruptible: true
+  before_script:
+    - pip install -r requirements-dev.txt
+  script:
+    - isort --diff --skip-gitignore --line-length 79 enterpriseattack
+
+# ----------------------------------------------------------------------------#
+
 flake8:
   stage: lint
   interruptible: true
   before_script:
     - pip install -r requirements-dev.txt
   script:
-    - flake8 .
+    - flake8 enterpriseattack
 
 # ----------------------------------------------------------------------------#
 
