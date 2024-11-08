@@ -16,8 +16,7 @@ class Campaign:
         self.attack_objects = attack_objects
 
         self.id = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'external_id'
+            kwargs.get('external_references'), 'external_id'
         )
 
         self.references = enterpriseattack.utils.obtain_sources(
@@ -25,8 +24,7 @@ class Campaign:
         )
 
         self.url = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'url'
+            kwargs.get('external_references'), 'url'
         )
 
         self.mid = kwargs.get('id')
@@ -58,14 +56,15 @@ class Campaign:
 
         if self.relationships.get(self.mid):
             for r_ in self.relationships.get(self.mid):
-                if (r_.startswith('attack-pattern') and
-                        not self.id_lookup[r_].get('x_mitre_is_subtechnique')):
+                if r_.startswith('attack-pattern') and not self.id_lookup[
+                    r_
+                ].get('x_mitre_is_subtechnique'):
                     techniques_.append(
                         Technique(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **self.id_lookup[r_]
+                            **self.id_lookup[r_],
                         )
                     )
 
@@ -83,14 +82,15 @@ class Campaign:
 
         if self.relationships.get(self.mid):
             for r_ in self.relationships.get(self.mid):
-                if (r_.startswith('attack-pattern') and
-                        self.id_lookup[r_].get('x_mitre_is_subtechnique')):
+                if r_.startswith('attack-pattern') and self.id_lookup[r_].get(
+                    'x_mitre_is_subtechnique'
+                ):
                     sub_techniques_.append(
                         SubTechnique(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **self.id_lookup[r_]
+                            **self.id_lookup[r_],
                         )
                     )
 
@@ -124,14 +124,16 @@ class Campaign:
         if self.relationships.get(self.mid):
             for r_id in self.relationships.get(self.mid):
                 if self.id_lookup.get(r_id):
-                    if (self.id_lookup.get(r_id).get('type') in
-                            ['tool', 'malware']):
+                    if self.id_lookup.get(r_id).get('type') in [
+                        'tool',
+                        'malware',
+                    ]:
                         softwares_.append(
                             Software(
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[r_id]
+                                **self.id_lookup[r_id],
                             )
                         )
 
@@ -156,7 +158,7 @@ class Campaign:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[r_id]
+                                **self.id_lookup[r_id],
                             )
                         )
 
@@ -181,7 +183,7 @@ class Campaign:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[r_id]
+                                **self.id_lookup[r_id],
                             )
                         )
         return tools_
@@ -205,7 +207,7 @@ class Campaign:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[target_id]
+                                **self.id_lookup[target_id],
                             )
                         )
         return groups_
@@ -242,7 +244,7 @@ class Campaign:
                 "url": self.url,
                 "references": self.references,
                 "deprecated": self.deprecated,
-                "revoked": self.revoked
+                "revoked": self.revoked,
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')

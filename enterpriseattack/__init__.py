@@ -2,9 +2,18 @@
 
 from os import path
 
-from enterpriseattack import (campaign, component, data_source, group,
-                              mitigation, software, sub_technique, tactic,
-                              technique, utils)
+from enterpriseattack import (
+    campaign,
+    component,
+    data_source,
+    group,
+    mitigation,
+    software,
+    sub_technique,
+    tactic,
+    technique,
+    utils,
+)
 
 # ----------------------------------------------------------------------------#
 
@@ -17,15 +26,16 @@ __version__ = '0.1.9'
 
 class Attack:
     def __init__(
-            self,
-            enterprise_json=None,
-            url='https://raw.githubusercontent.com/mitre/cti/master/'
-                'enterprise-attack/enterprise-attack.json',
-            include_deprecated=False,
-            update=False,
-            mitre_version='latest',
-            subscriptable=False,
-            **kwargs):
+        self,
+        enterprise_json=None,
+        url='https://raw.githubusercontent.com/mitre/cti/master/'
+        'enterprise-attack/enterprise-attack.json',
+        include_deprecated=False,
+        update=False,
+        mitre_version='latest',
+        subscriptable=False,
+        **kwargs,
+    ):
 
         # Set subscriptable bool, this allows for .get(str) against properies:
         self.subscriptable = subscriptable
@@ -51,10 +61,7 @@ class Attack:
 
         # Parse the json:
         self.attack_objects = utils.read_json(
-            url,
-            enterprise_json,
-            update,
-            **kwargs
+            url, enterprise_json, update, **kwargs
         )
 
         # Allow for including depreciated items Mitre has revoked:
@@ -87,17 +94,15 @@ class Attack:
                                     self.attack_objects,
                                     self.relationships,
                                     self.id_lookup,
-                                    **attack_obj
+                                    **attack_obj,
                                 )
                             )
                         else:
-                            tactics_[
-                                attack_obj.get('name')
-                            ] = tactic.Tactic(
+                            tactics_[attack_obj.get('name')] = tactic.Tactic(
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                 else:
                     if not self.subscriptable:
@@ -106,17 +111,15 @@ class Attack:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                         )
                     else:
-                        tactics_[
-                            attack_obj.get('name')
-                        ] = tactic.Tactic(
+                        tactics_[attack_obj.get('name')] = tactic.Tactic(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **attack_obj
+                            **attack_obj,
                         )
 
         return tactics_
@@ -143,17 +146,17 @@ class Attack:
                                         self.attack_objects,
                                         self.relationships,
                                         self.id_lookup,
-                                        **attack_obj
+                                        **attack_obj,
                                     )
                                 )
                             else:
-                                techniques_[
-                                    attack_obj.get('name')
-                                ] = technique.Technique(
-                                    self.attack_objects,
-                                    self.relationships,
-                                    self.id_lookup,
-                                    **attack_obj
+                                techniques_[attack_obj.get('name')] = (
+                                    technique.Technique(
+                                        self.attack_objects,
+                                        self.relationships,
+                                        self.id_lookup,
+                                        **attack_obj,
+                                    )
                                 )
 
                     else:
@@ -163,17 +166,17 @@ class Attack:
                                     self.attack_objects,
                                     self.relationships,
                                     self.id_lookup,
-                                    **attack_obj
+                                    **attack_obj,
                                 )
                             )
                         else:
-                            techniques_[
-                                attack_obj.get('name')
-                            ] = technique.Technique(
-                                self.attack_objects,
-                                self.relationships,
-                                self.id_lookup,
-                                **attack_obj
+                            techniques_[attack_obj.get('name')] = (
+                                technique.Technique(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj,
+                                )
                             )
 
         return techniques_
@@ -200,17 +203,17 @@ class Attack:
                                         self.attack_objects,
                                         self.relationships,
                                         self.id_lookup,
-                                        **attack_obj
+                                        **attack_obj,
                                     )
                                 )
                             else:
-                                sub_techniques_[
-                                    attack_obj.get('name')
-                                ] = sub_technique.SubTechnique(
-                                    self.attack_objects,
-                                    self.relationships,
-                                    self.id_lookup,
-                                    **attack_obj
+                                sub_techniques_[attack_obj.get('name')] = (
+                                    sub_technique.SubTechnique(
+                                        self.attack_objects,
+                                        self.relationships,
+                                        self.id_lookup,
+                                        **attack_obj,
+                                    )
                                 )
                     else:
                         if not self.subscriptable:
@@ -219,17 +222,17 @@ class Attack:
                                     self.attack_objects,
                                     self.relationships,
                                     self.id_lookup,
-                                    **attack_obj
+                                    **attack_obj,
                                 )
                             )
                         else:
-                            sub_techniques_[
-                                attack_obj.get('name')
-                            ] = sub_technique.SubTechnique(
-                                self.attack_objects,
-                                self.relationships,
-                                self.id_lookup,
-                                **attack_obj
+                            sub_techniques_[attack_obj.get('name')] = (
+                                sub_technique.SubTechnique(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj,
+                                )
                             )
 
         return sub_techniques_
@@ -255,17 +258,15 @@ class Attack:
                                     self.attack_objects,
                                     self.relationships,
                                     self.id_lookup,
-                                    **attack_obj
+                                    **attack_obj,
                                 )
                             )
                         else:
-                            groups_[
-                                attack_obj.get('name')
-                            ] = group.Group(
+                            groups_[attack_obj.get('name')] = group.Group(
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                 else:
                     if not self.subscriptable:
@@ -274,17 +275,15 @@ class Attack:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                         )
                     else:
-                        groups_[
-                            attack_obj.get('name')
-                        ] = group.Group(
+                        groups_[attack_obj.get('name')] = group.Group(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **attack_obj
+                            **attack_obj,
                         )
 
         return groups_
@@ -310,17 +309,17 @@ class Attack:
                                     self.attack_objects,
                                     self.relationships,
                                     self.id_lookup,
-                                    **attack_obj
+                                    **attack_obj,
                                 )
                             )
                         else:
-                            software_[
-                                attack_obj.get('name')
-                            ] = software.Software(
-                                self.attack_objects,
-                                self.relationships,
-                                self.id_lookup,
-                                **attack_obj
+                            software_[attack_obj.get('name')] = (
+                                software.Software(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj,
+                                )
                             )
                 else:
                     if not self.subscriptable:
@@ -329,17 +328,15 @@ class Attack:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                         )
                     else:
-                        software_[
-                            attack_obj.get('name')
-                        ] = software.Software(
+                        software_[attack_obj.get('name')] = software.Software(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **attack_obj
+                            **attack_obj,
                         )
 
         return software_
@@ -365,17 +362,17 @@ class Attack:
                                     self.attack_objects,
                                     self.relationships,
                                     self.id_lookup,
-                                    **attack_obj
+                                    **attack_obj,
                                 )
                             )
                         else:
-                            malware_[
-                                attack_obj.get('name')
-                            ] = software.Software(
-                                self.attack_objects,
-                                self.relationships,
-                                self.id_lookup,
-                                **attack_obj
+                            malware_[attack_obj.get('name')] = (
+                                software.Software(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj,
+                                )
                             )
                 else:
                     if not self.subscriptable:
@@ -384,17 +381,15 @@ class Attack:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                         )
                     else:
-                        malware_[
-                            attack_obj.get('name')
-                        ] = software.Software(
+                        malware_[attack_obj.get('name')] = software.Software(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **attack_obj
+                            **attack_obj,
                         )
 
         return malware_
@@ -420,17 +415,15 @@ class Attack:
                                     self.attack_objects,
                                     self.relationships,
                                     self.id_lookup,
-                                    **attack_obj
+                                    **attack_obj,
                                 )
                             )
                         else:
-                            tools_[
-                                attack_obj.get('name')
-                            ] = software.Software(
+                            tools_[attack_obj.get('name')] = software.Software(
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                 else:
                     if not self.subscriptable:
@@ -439,17 +432,15 @@ class Attack:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                         )
                     else:
-                        tools_[
-                            attack_obj.get('name')
-                        ] = software.Software(
+                        tools_[attack_obj.get('name')] = software.Software(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **attack_obj
+                            **attack_obj,
                         )
 
         return tools_
@@ -475,17 +466,17 @@ class Attack:
                                     self.attack_objects,
                                     self.relationships,
                                     self.id_lookup,
-                                    **attack_obj
+                                    **attack_obj,
                                 )
                             )
                         else:
-                            mitigations_[
-                                attack_obj.get('name')
-                            ] = mitigation.Mitigation(
-                                self.attack_objects,
-                                self.relationships,
-                                self.id_lookup,
-                                **attack_obj
+                            mitigations_[attack_obj.get('name')] = (
+                                mitigation.Mitigation(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj,
+                                )
                             )
                 else:
                     if not self.subscriptable:
@@ -494,17 +485,17 @@ class Attack:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                         )
                     else:
-                        mitigations_[
-                            attack_obj.get('name')
-                        ] = mitigation.Mitigation(
-                            self.attack_objects,
-                            self.relationships,
-                            self.id_lookup,
-                            **attack_obj
+                        mitigations_[attack_obj.get('name')] = (
+                            mitigation.Mitigation(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj,
+                            )
                         )
 
         return mitigations_
@@ -530,17 +521,17 @@ class Attack:
                                     self.attack_objects,
                                     self.relationships,
                                     self.id_lookup,
-                                    **attack_obj
+                                    **attack_obj,
                                 )
                             )
                         else:
-                            data_sources_[
-                                attack_obj.get('name')
-                            ] = data_source.DataSource(
-                                self.attack_objects,
-                                self.relationships,
-                                self.id_lookup,
-                                **attack_obj
+                            data_sources_[attack_obj.get('name')] = (
+                                data_source.DataSource(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj,
+                                )
                             )
                 else:
                     if not self.subscriptable:
@@ -549,17 +540,17 @@ class Attack:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                         )
                     else:
-                        data_sources_[
-                            attack_obj.get('name')
-                        ] = data_source.DataSource(
-                            self.attack_objects,
-                            self.relationships,
-                            self.id_lookup,
-                            **attack_obj
+                        data_sources_[attack_obj.get('name')] = (
+                            data_source.DataSource(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj,
+                            )
                         )
 
         return data_sources_
@@ -585,17 +576,17 @@ class Attack:
                                     self.attack_objects,
                                     self.relationships,
                                     self.id_lookup,
-                                    **attack_obj
+                                    **attack_obj,
                                 )
                             )
                         else:
-                            components_[
-                                attack_obj.get('name')
-                            ] = component.Component(
-                                self.attack_objects,
-                                self.relationships,
-                                self.id_lookup,
-                                **attack_obj
+                            components_[attack_obj.get('name')] = (
+                                component.Component(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj,
+                                )
                             )
                 else:
                     if not self.subscriptable:
@@ -604,17 +595,17 @@ class Attack:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                         )
                     else:
-                        components_[
-                            attack_obj.get('name')
-                        ] = component.Component(
-                            self.attack_objects,
-                            self.relationships,
-                            self.id_lookup,
-                            **attack_obj
+                        components_[attack_obj.get('name')] = (
+                            component.Component(
+                                self.attack_objects,
+                                self.relationships,
+                                self.id_lookup,
+                                **attack_obj,
+                            )
                         )
 
         return components_
@@ -640,17 +631,17 @@ class Attack:
                                     self.attack_objects,
                                     self.relationships,
                                     self.id_lookup,
-                                    **attack_obj
+                                    **attack_obj,
                                 )
                             )
                         else:
-                            campaigns_[
-                                attack_obj.get('name')
-                            ] = campaign.Campaign(
-                                self.attack_objects,
-                                self.relationships,
-                                self.id_lookup,
-                                **attack_obj
+                            campaigns_[attack_obj.get('name')] = (
+                                campaign.Campaign(
+                                    self.attack_objects,
+                                    self.relationships,
+                                    self.id_lookup,
+                                    **attack_obj,
+                                )
                             )
                 else:
                     if not self.subscriptable:
@@ -659,20 +650,19 @@ class Attack:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                         )
                     else:
-                        campaigns_[
-                            attack_obj.get('name')
-                        ] = campaign.Campaign(
+                        campaigns_[attack_obj.get('name')] = campaign.Campaign(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **attack_obj
+                            **attack_obj,
                         )
 
         return campaigns_
+
 
 # ----------------------------------------------------------------------------#
 # Exception class for errors:

@@ -16,8 +16,7 @@ class Group:
         self.attack_objects = attack_objects
 
         self.id = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'external_id'
+            kwargs.get('external_references'), 'external_id'
         )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
@@ -32,8 +31,7 @@ class Group:
             kwargs.get('external_references')
         )
         self.url = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'url'
+            kwargs.get('external_references'), 'url'
         )
         self.revoked = kwargs.get('revoked')
         self.deprecated = kwargs.get('x_mitre_deprecated')
@@ -50,19 +48,18 @@ class Group:
 
         if self.relationships.get(self.mid):
             for target_id in self.relationships.get(self.mid):
-                if (
-                        target_id.startswith('attack-pattern')
-                        and not self.id_lookup[target_id].get(
-                            'x_mitre_is_subtechnique'
-                        )
-                        ):
+                if target_id.startswith(
+                    'attack-pattern'
+                ) and not self.id_lookup[target_id].get(
+                    'x_mitre_is_subtechnique'
+                ):
                     if self.id_lookup.get(target_id):
                         techniques_.append(
                             Technique(
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[target_id]
+                                **self.id_lookup[target_id],
                             )
                         )
 
@@ -80,14 +77,15 @@ class Group:
 
         if self.relationships.get(self.mid):
             for r_ in self.relationships.get(self.mid):
-                if (r_.startswith('attack-pattern') and
-                        self.id_lookup[r_].get('x_mitre_is_subtechnique')):
+                if r_.startswith('attack-pattern') and self.id_lookup[r_].get(
+                    'x_mitre_is_subtechnique'
+                ):
                     sub_techniques_.append(
                         SubTechnique(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **self.id_lookup[r_]
+                            **self.id_lookup[r_],
                         )
                     )
 
@@ -121,14 +119,16 @@ class Group:
         if self.relationships.get(self.mid):
             for r_id in self.relationships.get(self.mid):
                 if self.id_lookup.get(r_id):
-                    if (self.id_lookup.get(r_id).get('type') in
-                            ['tool', 'malware']):
+                    if self.id_lookup.get(r_id).get('type') in [
+                        'tool',
+                        'malware',
+                    ]:
                         softwares_.append(
                             Software(
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[r_id]
+                                **self.id_lookup[r_id],
                             )
                         )
 
@@ -153,7 +153,7 @@ class Group:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[r_id]
+                                **self.id_lookup[r_id],
                             )
                         )
 
@@ -178,7 +178,7 @@ class Group:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[r_id]
+                                **self.id_lookup[r_id],
                             )
                         )
         return tools_
@@ -205,15 +205,13 @@ class Group:
                 "techniques": [
                     technique.name for technique in self.techniques
                 ],
-                "sub_techniques": [
-                    sub.name for sub in self.sub_techniques
-                ],
+                "sub_techniques": [sub.name for sub in self.sub_techniques],
                 "software": [{tool.type: tool.name} for tool in self.software],
                 "malware": [malware.name for malware in self.malware],
                 "tools": [tool.name for tool in self.tools],
                 "references": self.references,
                 "deprecated": self.deprecated,
-                "revoked": self.revoked
+                "revoked": self.revoked,
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')

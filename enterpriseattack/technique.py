@@ -16,8 +16,7 @@ class Technique:
         self.attack_objects = attack_objects
 
         self.id = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'external_id'
+            kwargs.get('external_references'), 'external_id'
         )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
@@ -28,8 +27,7 @@ class Technique:
         self.type = kwargs.get('type')
         self.description = kwargs.get('description')
         self.url = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'url'
+            kwargs.get('external_references'), 'url'
         )
         self.platforms = kwargs.get('x_mitre_platforms')
         self.permissions_required = kwargs.get('x_mitre_permissions_required')
@@ -60,7 +58,7 @@ class Technique:
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **self.id_lookup[r_id]
+                            **self.id_lookup[r_id],
                         )
                     )
         return groups_
@@ -83,7 +81,7 @@ class Technique:
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **self.id_lookup[r_]
+                            **self.id_lookup[r_],
                         )
                     )
 
@@ -103,7 +101,8 @@ class Technique:
             for attack_obj in self.attack_objects['objects']:
                 if attack_obj.get('type') == 'x-mitre-data-source':
                     ds_ = [
-                        d_ for d_ in self.x_mitre_data_sources
+                        d_
+                        for d_ in self.x_mitre_data_sources
                         if attack_obj.get('name') in d_
                     ]
                     if ds_:
@@ -112,7 +111,7 @@ class Technique:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                         )
         return datasources_
@@ -134,7 +133,7 @@ class Technique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
@@ -153,14 +152,16 @@ class Technique:
         for attack_obj in self.attack_objects['objects']:
             if attack_obj.get('type') == 'x-mitre-tactic':
                 if enterpriseattack.utils.match_tactics(
-                        attack_obj.get('x_mitre_shortname'),
-                        self.kill_chain_phases):
+                    attack_obj.get('x_mitre_shortname'), self.kill_chain_phases
+                ):
                     tactics_.append(
                         Tactic(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **attack_obj))
+                            **attack_obj,
+                        )
+                    )
         return tactics_
 
     # ----------------------------------------------------------------------------#
@@ -180,7 +181,7 @@ class Technique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
@@ -203,7 +204,7 @@ class Technique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
@@ -226,7 +227,7 @@ class Technique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
@@ -249,7 +250,7 @@ class Technique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
@@ -292,7 +293,7 @@ class Technique:
                 "deprecated": self.deprecated,
                 "revoked": self.revoked,
                 "references": self.references,
-                "kill_chain_phases": self.kill_chain_phases
+                "kill_chain_phases": self.kill_chain_phases,
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')

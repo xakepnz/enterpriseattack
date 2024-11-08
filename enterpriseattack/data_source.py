@@ -11,12 +11,12 @@ import enterpriseattack
 
 class DataSource:
     def __init__(self, attack_objects, relationships, id_lookup, **kwargs):
+
         self.relationships = relationships
         self.id_lookup = id_lookup
         self.attack_objects = attack_objects
         self.id = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'external_id'
+            kwargs.get('external_references'), 'external_id'
         )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
@@ -34,8 +34,7 @@ class DataSource:
             kwargs.get('external_references')
         )
         self.url = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'url'
+            kwargs.get('external_references'), 'url'
         )
         self.contributors = kwargs.get('x_mitre_contributors')
         self.revoked = kwargs.get('revoked')
@@ -59,7 +58,7 @@ class DataSource:
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **self.id_lookup[r_]
+                            **self.id_lookup[r_],
                         )
                     )
 
@@ -81,19 +80,16 @@ class DataSource:
                     if self.relationships.get(component.id):
                         for r_id in self.relationships.get(component.id):
                             if self.id_lookup.get(r_id):
-                                if (
-                                    self.id_lookup.get(r_id).get('type')
-                                        == 'attack-pattern'
+                                if self.id_lookup.get(r_id).get('type') \
+                                        == 'attack-pattern' \
                                         and not self.id_lookup.get(r_id).get(
-                                            'x_mitre_is_subtechnique'
-                                            )
-                                        ):
+                                        'x_mitre_is_subtechnique'):
                                     techniques_.append(
                                         Technique(
                                             self.attack_objects,
                                             self.relationships,
                                             self.id_lookup,
-                                            **self.id_lookup[r_id]
+                                            **self.id_lookup[r_id],
                                         )
                                     )
 
@@ -115,19 +111,19 @@ class DataSource:
                     if self.relationships.get(component.id):
                         for r_id in self.relationships.get(component.id):
                             if self.id_lookup.get(r_id):
-                                if (
-                                    self.id_lookup.get(r_id).get('type')
-                                        == 'attack-pattern'
-                                        and self.id_lookup.get(r_id).get(
-                                            'x_mitre_is_subtechnique'
-                                            )
-                                        ):
+                                if self.id_lookup.get(r_id).get(
+                                    'type'
+                                ) == 'attack-pattern' and self.id_lookup.get(
+                                    r_id
+                                ).get(
+                                    'x_mitre_is_subtechnique'
+                                ):
                                     sub_techniques_.append(
                                         SubTechnique(
                                             self.attack_objects,
                                             self.relationships,
                                             self.id_lookup,
-                                            **self.id_lookup[r_id]
+                                            **self.id_lookup[r_id],
                                         )
                                     )
 
@@ -161,7 +157,7 @@ class DataSource:
                     component.name for component in self.components
                 ],
                 "deprecated": self.deprecated,
-                "revoked": self.revoked
+                "revoked": self.revoked,
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')

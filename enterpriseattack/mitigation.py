@@ -16,8 +16,7 @@ class Mitigation:
         self.attack_objects = attack_objects
 
         self.id = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'external_id'
+            kwargs.get('external_references'), 'external_id'
         )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
@@ -28,8 +27,7 @@ class Mitigation:
         self.type = kwargs.get('type')
         self.description = kwargs.get('description')
         self.url = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'url'
+            kwargs.get('external_references'), 'url'
         )
         self.revoked = kwargs.get('revoked')
         self.deprecated = kwargs.get('x_mitre_deprecated')
@@ -46,18 +44,18 @@ class Mitigation:
 
         if self.relationships.get(self.mid):
             for target_id in self.relationships.get(self.mid):
-                if (
-                        target_id.startswith('attack-pattern')
-                        and not self.id_lookup[target_id].get(
-                            'x_mitre_is_subtechnique'
-                        )):
+                if target_id.startswith(
+                    'attack-pattern'
+                ) and not self.id_lookup[target_id].get(
+                    'x_mitre_is_subtechnique'
+                ):
                     if self.id_lookup.get(target_id):
                         techniques_.append(
                             Technique(
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[target_id]
+                                **self.id_lookup[target_id],
                             )
                         )
 
@@ -101,7 +99,7 @@ class Mitigation:
                 ],
                 "tactics": [tactic.name for tactic in self.tactics],
                 "deprecated": self.deprecated,
-                "revoked": self.revoked
+                "revoked": self.revoked,
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')

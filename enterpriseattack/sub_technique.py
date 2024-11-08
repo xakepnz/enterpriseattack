@@ -16,8 +16,7 @@ class SubTechnique:
         self.attack_objects = attack_objects
 
         self.id = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'external_id'
+            kwargs.get('external_references'), 'external_id'
         )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
@@ -28,8 +27,7 @@ class SubTechnique:
         self.created_by_ref = kwargs.get('created_by_ref')
         self.object_marking_ref = kwargs.get('object_marking_refs')
         self.url = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'url'
+            kwargs.get('external_references'), 'url'
         )
         self.permissions_required = kwargs.get('x_mitre_permissions_required')
         self.platforms = kwargs.get('x_mitre_platforms')
@@ -55,7 +53,8 @@ class SubTechnique:
             for attack_obj in self.attack_objects['objects']:
                 if attack_obj.get('type') == 'x-mitre-data-source':
                     ds_ = [
-                        d_ for d_ in self.x_mitre_data_sources
+                        d_
+                        for d_ in self.x_mitre_data_sources
                         if attack_obj.get('name') in d_
                     ]
                     if ds_:
@@ -64,7 +63,7 @@ class SubTechnique:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                         )
         return datasources_
@@ -82,18 +81,17 @@ class SubTechnique:
         if self.relationships.get(self.mid):
             for r_id in self.relationships.get(self.mid):
                 if self.id_lookup.get(r_id):
-                    if (
-                            self.id_lookup.get(r_id).get('type')
-                            == 'attack-pattern'
-                            and not self.id_lookup.get(r_id).get(
-                                'x_mitre_is_subtechnique'
-                            )):
+                    if self.id_lookup.get(r_id).get(
+                        'type'
+                    ) == 'attack-pattern' and not self.id_lookup.get(r_id).get(
+                        'x_mitre_is_subtechnique'
+                    ):
                         techniques_.append(
                             Technique(
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[r_id]
+                                **self.id_lookup[r_id],
                             )
                         )
         return techniques_
@@ -111,16 +109,15 @@ class SubTechnique:
         if self.relationships.get(self.mid):
             for r_id in self.relationships.get(self.mid):
                 if (
-                        self.id_lookup.get(r_id)
-                        and self.id_lookup.get(r_id).get('type')
-                        == 'intrusion-set'
-                        ):
+                    self.id_lookup.get(r_id)
+                    and self.id_lookup.get(r_id).get('type') == 'intrusion-set'
+                ):
                     groups_.append(
                         Group(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **self.id_lookup[r_id]
+                            **self.id_lookup[r_id],
                         )
                     )
         return groups_
@@ -154,16 +151,16 @@ class SubTechnique:
         if self.relationships.get(self.mid):
             for r_id in self.relationships.get(self.mid):
                 if (
-                        self.id_lookup.get(r_id)
-                        and self.id_lookup.get(r_id).get('type')
-                        == 'course-of-action'
-                        ):
+                    self.id_lookup.get(r_id)
+                    and self.id_lookup.get(r_id).get('type')
+                    == 'course-of-action'
+                ):
                     mitigations_.append(
                         Mitigation(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **self.id_lookup[r_id]
+                            **self.id_lookup[r_id],
                         )
                     )
 
@@ -186,7 +183,7 @@ class SubTechnique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
@@ -209,7 +206,7 @@ class SubTechnique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
@@ -232,7 +229,7 @@ class SubTechnique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
@@ -255,7 +252,7 @@ class SubTechnique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
@@ -299,7 +296,7 @@ class SubTechnique:
                     for software in self.software
                 ],
                 "tools": [tool.name for tool in self.tools],
-                "malware": [malware.name for malware in self.malware]
+                "malware": [malware.name for malware in self.malware],
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')
