@@ -1,0 +1,150 @@
+# ----------------------------------------------------------------------------#
+# Build:
+# ----------------------------------------------------------------------------#
+
+[build-system]
+requires = ["setuptools>=61.2", "wheel>=0.42", "setuptools-scm>=8.1.0"]
+build-backend = "setuptools.build_meta"
+
+# ----------------------------------------------------------------------------#
+# Project:
+# ----------------------------------------------------------------------------#
+
+[project]
+name = "enterpriseattack"
+version = "0.1.9"
+requires-python = ">=3.7"
+description = "A lightweight Python module to interact with the MITRE ATT&CK Enterprise framework."
+authors = [{name = "xakepnz", email = "xakepnz@pm.me"}]
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = [
+    "mitre att&ck",
+    "att&ck enterprise",
+    "enterpriseattack",
+    "mitre framework",
+    "att&ck",
+    "MITRE ATT&CK PYTHON",
+    "mitre attck"
+]
+classifiers=[
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Security"
+]
+dependencies = [
+    "ujson >= 3.0.0",
+    "requests >= 2.9.2"
+]
+
+[project.optional-dependencies]
+build = [
+    "setuptools ~= 61.2",
+    "wheel == 0.43.0",
+    "build == 1.2.2.post1",
+    "setuptools-scm ~= 8.1.0",
+    "python-semantic-release == 9.8.8",
+    "pre-commit ~= 3.5.0",
+    "twine == 5.1.1"
+]
+test = [
+    "pytest == 8.1.2",
+    "flake8 ~= 5.0.4",
+    "bandit == 1.7.8",
+    "yamllint == 1.35.1",
+    "pytest-cov == 5.0.0",
+    "coverage == 5.2.1",
+    "tox ~= 4.15.0"
+]
+
+[project.urls]
+Repository = "https://gitlab.com/xakepnz/enterpriseattack"
+Documentation = "https://gitlab.com/xakepnz/enterpriseattack/-/tree/main/docs?ref_type=heads#table-of-contents"
+Issues = "https://gitlab.com/xakepnz/enterpriseattack/-/issues"
+Changelog = "https://gitlab.com/xakepnz/enterpriseattack/-/tree/main/CHANGELOG.md"
+
+# ----------------------------------------------------------------------------#
+# Semantic Release:
+# ----------------------------------------------------------------------------#
+
+[tool.semantic_release]
+build_command = """
+    python3 -m pip install -e .[build]
+    python3 -m build .
+"""
+version_variables = ["enterpriseattack/__init__.py:__version__"]
+version_toml = ["pyproject.toml:project.version"]
+commit_parser = "angular"
+changelog_file = "CHANGELOG.md"
+commit_message = "chore(release): bump version to {version}"
+log_level = "info"
+logging_use_named_masks = true
+upload_to_vcs_release = true
+patch_without_tag = false
+upload_to_pypi = false
+major_on_zero = false
+allow_zero_version = false
+
+[tool.semantic_release.changelog]
+exclude_commit_patterns = [
+  '''chore(?:\([^)]*?\))?: .+''',
+  '''ci(?:\([^)]*?\))?: .+''',
+  '''refactor(?:\([^)]*?\))?: .+''',
+  '''style(?:\([^)]*?\))?: .+''',
+  '''test(?:\([^)]*?\))?: .+''',
+  '''build\((?!deps\): .+)''',
+  '''Merged? .*''',
+  '''lint(?:\([^)]*?\))?: .+''',
+  '''Initial Commit.*'''
+]
+
+[tool.semantic_release.commit_parser_options]
+allowed_types = [
+    "build", "chore", "ci", "docs", "feat", "fix",
+    "perf", "refactor", "test", "style"
+]
+minor_types = ["feat"]
+patch_types = ["fix", "perf", "docs"]
+
+[tool.semantic_release.branches.main]
+match = "main"
+prerelease = false
+prerelease_token = "rc"
+
+[tool.semantic_release.remote]
+type = "gitlab"
+token = { env = "GITLAB_TOKEN" }
+
+# ----------------------------------------------------------------------------#
+# Coverage:
+# ----------------------------------------------------------------------------#
+
+[tool.coverage.paths]
+source = ["*enterpriseattack*"]
+
+[tool.coverage.run]
+include = ["*enterpriseattack*"]
+branch = true
+parallel = true
+omit = [
+    "tests/*",
+    ".tox/*"
+]
+
+[tool.coverage.report]
+show_missing = true
+precision = 2
