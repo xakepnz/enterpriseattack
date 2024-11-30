@@ -1,12 +1,13 @@
 # ----------------------------------------------------------------------------#
 
-image: python:latest
+image: python:3.12
 
 # ----------------------------------------------------------------------------#
 
 stages:
+  - lint
   - test
-  - tox
+  - compatibility
   - deploy
 
 # ----------------------------------------------------------------------------#
@@ -18,12 +19,35 @@ include:
 
 # ----------------------------------------------------------------------------#
 
-lint:
-  stage: test
+commit:
+  stage: lint
+  image: node:latest
+  script:
+    - npm install -g @commitlint/cli @commitlint/config-angular
+    - git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+    - git log --pretty=format:%s $CI_MERGE_REQUEST_DIFF_BASE_SHA..$CI_COMMIT_SHA | commitlint --config .commitlintrc
+  only:
+    - merge_requests
+
+# ----------------------------------------------------------------------------#
+
+docs:
+  stage: lint
+  image: node:latest
+  script:
+    - npm install -g markdownlint-cli
+    - markdownlint **/*.md
+  rules:
+    - when: always
+
+# ----------------------------------------------------------------------------#
+
+flake8:
+  stage: lint
   interruptible: true
   script:
-    - pip install -r dev_requirements.txt
-    - flake8 .
+    - make install
+    - tox -e flake8
 
 # ----------------------------------------------------------------------------#
 
@@ -39,8 +63,7 @@ pytest:
   stage: test
   interruptible: true
   script:
-    - pip install -r dev_requirements.txt
-    - pip install -r requirements.txt
+    - make install
     - pytest tests
 
 # ----------------------------------------------------------------------------#
@@ -49,50 +72,49 @@ coverage:
   stage: test
   interruptible: true
   script:
-    - pip install -r dev_requirements.txt
-    - pip install -r requirements.txt
+    - make install
     - pytest --cov=enterpriseattack --cov-report term-missing
   coverage: '/TOTAL.*\s+(\d+\%)/'
 
 # ----------------------------------------------------------------------------#
 
 py312:
-  stage: tox
+  stage: compatibility
   image: python:3.12
   script:
     - pip install -r dev_requirements.txt
     - tox -e py312 --parallel auto
 
 py311:
-  stage: tox
+  stage: compatibility
   image: python:3.11
   script:
     - pip install -r dev_requirements.txt
     - tox -e py311 --parallel auto
 
 py310:
-  stage: tox
+  stage: compatibility
   image: python:3.10
   script:
     - pip install -r dev_requirements.txt
     - tox -e py310 --parallel auto
 
 py39:
-  stage: tox
+  stage: compatibility
   image: python:3.9
   script:
     - pip install -r dev_requirements.txt
     - tox -e py39 --parallel auto
 
 py38:
-  stage: tox
+  stage: compatibility
   image: python:3.8
   script:
     - pip install -r dev_requirements.txt
     - tox -e py38 --parallel auto
 
 py37:
-  stage: tox
+  stage: compatibility
   image: python:3.7
   script:
     - pip install -r dev_requirements.txt
