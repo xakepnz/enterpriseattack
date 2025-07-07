@@ -1,7 +1,20 @@
 pep8-rules := E501,N806,W503,W504
 
+VENV = venv
+
+PYTHON = $(VENV)/bin/python
+PRE_COMMIT = $(VENV)/bin/pre-commit
+
 init:
 	pip install -r requirements.txt
+
+install:
+	@echo "Installing enterpriseattack..."
+	python3 -m venv venv
+	. $(VENV)/bin/activate && \
+	$(PYTHON) -m pip install -q -r requirements.txt &&\
+	$(PRE_COMMIT) install &&\
+	$(PRE_COMMIT) install --hook-type commit-msg
 
 test:
 	# This runs all of the tests, on both Python 2 and Python 3.
