@@ -1,0 +1,18 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "packageRules": [
+    {
+      "matchManagers": ["pip_requirements", "pep621"],
+      "matchDepTypes": ["project.dependencies"],
+      "commitMessagePrefix": "fix:"
+    },
+    {
+      "matchManagers": ["pip_requirements", "pep621"],
+      "matchDepTypes": ["project.optional-dependencies"],
+      "commitMessagePrefix": "chore:"
+    }
+  ],
+  "pre-commit": {
+    "enabled": true
+  }
+}
