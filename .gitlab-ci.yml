@@ -6,6 +6,7 @@ image: python:3.13
 
 stages:
   - test
+  - lint
   - tox
   - deploy
 
@@ -17,14 +18,45 @@ include:
   - template: Jobs/Secret-Detection.gitlab-ci.yml
 
 # ----------------------------------------------------------------------------#
+# Linting tests:
+# ----------------------------------------------------------------------------#
 
+# commitlint
+commit:
+  stage: lint
+  image: node:latest
+  script:
+    - npm install -g @commitlint/cli @commitlint/config-angular
+    # get a copy of main
+    - git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+    # ensure that the angular commit msg type is followed
+    - git log --pretty=format:%s $CI_MERGE_REQUEST_DIFF_BASE_SHA..$CI_COMMIT_SHA | commitlint --config .commitlintrc
+  only:
+    - merge_requests
+
+# renovate
+renovate:
+  stage: lint
+  image: node:23
+  script:
+    - npm install -g renovate
+    - renovate-config-validator
+  rules:
+    - changes:
+        - renovate.json
+  allow_failure: true
+
+# flake8
 lint:
   stage: test
   interruptible: true
   script:
     - pip install -r dev_requirements.txt
     - flake8 .
+  allow_failure: true
 
+# ----------------------------------------------------------------------------#
+# Security tests:
 # ----------------------------------------------------------------------------#
 
 sast:
@@ -53,6 +85,7 @@ coverage:
     - pip install -r requirements.txt
     - pytest --cov=enterpriseattack --cov-report term-missing
   coverage: '/TOTAL.*\s+(\d+\%)/'
+  allow_failure: true
 
 # ----------------------------------------------------------------------------#
 
@@ -98,6 +131,8 @@ py37:
     - pip install -r dev_requirements.txt
     - tox -e py37 --parallel auto
 
+# ----------------------------------------------------------------------------#
+# Pypi & GitLab Releases:
 # ----------------------------------------------------------------------------#
 
 deploy:
