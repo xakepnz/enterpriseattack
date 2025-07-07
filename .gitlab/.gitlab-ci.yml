@@ -165,7 +165,7 @@ release:
     # ensure we don't have a detatched head in the pipeline
     # and that there is no untracked files in the dir
     # remove previous build files as we will overwrite if there's a new version:
-    - git stash -u && git checkout main && git fetch --all && rm dist/**
+    - git stash -u && git checkout main && git fetch --all
 
     # install release deps
     - make install
