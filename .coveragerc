@@ -1,0 +1,16 @@
+[paths]
+source =
+    *enterpriseattack*
+
+[run]
+include =
+    *enterpriseattack*
+branch = True
+parallel = True
+omit =
+    enterpriseattack/tests/*
+    .tox/*
+
+[report]
+show_missing = True
+precision = 2

@@ -25,7 +25,7 @@ dependency-setup:
   stage: deps
   script:
     - make install
-    - make deps
+    - make sbom
   artifacts:
     when: on_success
     paths: ["**/pipdeptree.json"]
