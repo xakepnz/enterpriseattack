@@ -1,14 +1,14 @@
-### BUG: 
-<!-- Thanks for taking the time to fill out this bug report! -->
-
-#### What happened?
+#### Description
 <!-- Also tell us what you expected to happen? -->
 
-#### Version
+#### Versions
 <!-- What version of enterpriseattack are you running? -->
 
-#### Logs
+- enterpriseattack version:
+- MITRE ATT&CK Enterprise version:
+
+#### Logs or Screenshots
 <!-- Attach any relevant logs -->
 
-/labels ~"bug" ~"priority::1"
+/labels ~"bug" ~"priority::3"
 /assign @xakepnz

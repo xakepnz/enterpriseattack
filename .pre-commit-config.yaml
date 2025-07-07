@@ -11,7 +11,8 @@ repos:
     rev: v0.45.0
     hooks:
       - id: markdownlint
-        args: ["**/*.md", "-c", ".markdownlint.yaml"]
+        files: \.md$
+        args: ["-c", ".markdownlint.yaml"]
 
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.27.2
