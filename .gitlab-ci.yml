@@ -117,20 +117,6 @@ py39:
     - pip install -r dev_requirements.txt
     - tox -e py39 --parallel auto
 
-py38:
-  stage: tox
-  image: python:3.8
-  script:
-    - pip install -r dev_requirements.txt
-    - tox -e py38 --parallel auto
-
-py37:
-  stage: tox
-  image: python:3.7
-  script:
-    - pip install -r dev_requirements.txt
-    - tox -e py37 --parallel auto
-
 # ----------------------------------------------------------------------------#
 # Pypi & GitLab Releases:
 # ----------------------------------------------------------------------------#
