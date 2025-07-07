@@ -18,6 +18,22 @@ include:
   - template: Jobs/Secret-Detection.gitlab-ci.yml
 
 # ----------------------------------------------------------------------------#
+# SBOM:
+# ----------------------------------------------------------------------------#
+
+dependency-setup:
+  stage: deps
+  script:
+    - make install
+    - make deps
+  artifacts:
+    when: on_success
+    paths: ["**/pipdeptree.json"]
+    access: developer
+  rules:
+    - when: always
+
+# ----------------------------------------------------------------------------#
 # Linting tests:
 # ----------------------------------------------------------------------------#
 
