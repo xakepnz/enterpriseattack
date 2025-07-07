@@ -19,7 +19,7 @@ authors = [
     {name = "xakepnz", email = "xakepnz@pm.me"}
 ]
 readme = "README.md"
-license = {file = "LICENSE"}
+license-files = ["LICENSE"]
 keywords = [
     "mitre att&ck",
     "att&ck enterprise",
