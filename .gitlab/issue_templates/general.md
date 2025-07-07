@@ -4,5 +4,5 @@
 ### Version
 <!-- What version of enterpriseattack are you running? -->
 
-/labels ~"priority::3" ~"general"
+/labels ~"priority::4" ~"general"
 /assign @xakepnz

@@ -1,0 +1,42 @@
+repos:
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v9.22.0
+    hooks:
+        - id: commitlint
+          stages: [commit-msg]
+          additional_dependencies: ['@commitlint/config-angular']
+          args: ['--config', '.commitlintrc', '--verbose']
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.45.0
+    hooks:
+      - id: markdownlint
+        files: \.md$
+        args: ["-c", ".markdownlint.yaml"]
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.27.2
+    hooks:
+      - id: gitleaks
+        args: ['--no-banner']
+
+  - repo: https://github.com/pycqa/isort
+    rev: 6.0.1
+    hooks:
+      - id: isort
+
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        args: ['-S', '--line-length=79', '--diff']
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.3.0
+    hooks:
+      - id: flake8
+
+  - repo: https://github.com/renovatebot/pre-commit-hooks
+    rev: 41.23.3
+    hooks:
+      - id: renovate-config-validator
