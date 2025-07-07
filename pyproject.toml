@@ -14,8 +14,7 @@ build-backend = "setuptools.build_meta"
 name = "enterpriseattack"
 version = "1.0.0"
 requires-python = ">=3.9"
-description = """A lightweight Python module to interact with the MITRE ATT&CK® 
-Enterprise dataset. Built for speed with minimal dependencies."""
+description = "A lightweight Python module to interact with the MITRE ATT&CK® Enterprise dataset."
 authors = [
     {name = "xakepnz", email = "xakepnz@pm.me"}
 ]
