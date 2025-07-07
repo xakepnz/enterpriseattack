@@ -24,7 +24,7 @@ install:
 	python3 -m venv venv
 	. $(VENV)/bin/activate && \
 	$(PYTHON) -m pip install -q . &&\
-	$(PYTHON) -m pip install -q .[test,build] &&\
+	$(PYTHON) -m pip install -q .[test,build,release] &&\
 	$(PRE_COMMIT) install &&\
 	$(PRE_COMMIT) install --hook-type commit-msg
 

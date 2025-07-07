@@ -137,14 +137,57 @@ py39:
 # Pypi & GitLab Releases:
 # ----------------------------------------------------------------------------#
 
-deploy:
-  stage: deploy
+# deploy:
+#   stage: deploy
+#   script:
+#     - pip install twine
+#     - python3 setup.py sdist bdist_wheel --universal
+#     - twine upload dist/*
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "merge_request_event"
+#       changes:
+#         - setup.py
+#         - enterpriseattack/*
+
+# -----------------------------------------------------------------------------
+# GitLab & Pypi release using python-semantic-release
+# -----------------------------------------------------------------------------
+
+release:
+  variables:
+    GIT_DEPTH: 0
+    GIT_STRATEGY: "clone"
+    TWINE_USERNAME: __token__
+    TWINE_PASSWORD: $PYPI_TOKEN
+  stage: release
   script:
-    - pip install twine
-    - python3 setup.py sdist bdist_wheel --universal
-    - twine upload dist/*
+    # ensure we don't have a detatched head in the pipeline
+    # and that there is no untracked files in the dir
+    # remove previous build files as we will overwrite if there's a new version:
+    - git stash -u && git checkout main && git fetch --all && rm dist/**
+
+    # install release deps
+    - make install
+
+    # publish a new release (only if the commit msg matches)
+    - venv/bin/semantic-release version && venv/bin/semantic-release publish
+
+    # Check if there are files in the /dist folder
+    # this only will occur if semantic-release wants to publish a new version:
+    - if [ -z "$(ls -A dist)" ]; then
+        echo "No version to publish";
+        exit 0;
+      else
+        echo "Publishing new version";
+        venv/bin/twine upload --config-file .pypirc --repository pypi --verbose dist/*;
+        export TWINE_USERNAME="gitlab-ci-token" && export TWINE_PASSWORD="$CI_JOB_TOKEN";
+        venv/bin/twine upload --config-file .pypirc --repository gitlab --verbose dist/*;
+      fi
+
   rules:
-    - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "merge_request_event"
-      changes:
-        - setup.py
-        - enterpriseattack/*
+    # only run on main branch
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: always
+    # skip the job if it's triggered by a release commit
+    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
+      when: never
