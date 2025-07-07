@@ -2,16 +2,9 @@
 
 from os import path
 
-from enterpriseattack import campaign
-from enterpriseattack import component
-from enterpriseattack import data_source
-from enterpriseattack import group
-from enterpriseattack import mitigation
-from enterpriseattack import software
-from enterpriseattack import sub_technique
-from enterpriseattack import tactic
-from enterpriseattack import technique
-from enterpriseattack import utils
+from enterpriseattack import (campaign, component, data_source, group,
+                              mitigation, software, sub_technique, tactic,
+                              technique, utils)
 
 # ----------------------------------------------------------------------------#
 

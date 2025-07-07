@@ -14,3 +14,7 @@ MD033:
 
 # This rule conflicts with issue templates
 MD041: false
+
+ignores:
+  files:
+    - "CHANGELOG.md"
