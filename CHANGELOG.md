@@ -2,6 +2,26 @@
 
 <!-- version list -->
 
+## v1.0.1 (2025-07-08)
+
+### Bug Fixes
+
+- Refresh semantic-release token, hardcode version for auto update
+  ([`840054c`](https://gitlab.com/xakepnz/enterpriseattack/-/commit/840054c1776c77a62a9937c8977c677447b20c95))
+
+- Remove deprecated license classifier
+  ([`2bc4fd1`](https://gitlab.com/xakepnz/enterpriseattack/-/commit/2bc4fd19208ffb32cd2417965e89e42e05eaf589))
+
+- Remove newline from pyproject description
+  ([`4e78087`](https://gitlab.com/xakepnz/enterpriseattack/-/commit/4e78087e00adde7453d539833a8efcb2cb368460))
+
+- Update license-files syntax
+  ([`b5120b9`](https://gitlab.com/xakepnz/enterpriseattack/-/commit/b5120b95fb7325b7e11096de11871eaaa1c3e649))
+
+- Version pin to 1.0.0
+  ([`f9de500`](https://gitlab.com/xakepnz/enterpriseattack/-/commit/f9de500aa25a472bdf0b72b6aa53a5b976ebbb4a))
+
+
 ## v1.0.0 (2025-07-07)
 
 - Refactored ci config, added pyproject.toml, updated license (year), added pre-commit
