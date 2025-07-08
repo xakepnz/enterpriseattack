@@ -12,15 +12,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "enterpriseattack"
-version = "1.0.0"
+version = "1.0.1"
 requires-python = ">=3.9"
-description = """A lightweight Python module to interact with the MITRE ATT&CK® 
-Enterprise dataset. Built for speed with minimal dependencies."""
+description = "A lightweight Python module to interact with the MITRE ATT&CK® Enterprise dataset."
 authors = [
     {name = "xakepnz", email = "xakepnz@pm.me"}
 ]
 readme = "README.md"
-license = {file = "LICENSE"}
+license-files = ["LICENSE"]
 keywords = [
     "mitre att&ck",
     "att&ck enterprise",
@@ -36,7 +35,6 @@ classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: Science/Research",
     "Intended Audience :: System Administrators",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
