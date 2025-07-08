@@ -5,11 +5,23 @@ image: python:3.13
 # ----------------------------------------------------------------------------#
 
 stages:
-  - deps
   - test
   - lint
   - tox
   - release
+
+# ----------------------------------------------------------------------------#
+
+workflow:
+  auto_cancel:
+    on_job_failure: all
+  rules:
+    # Run merge request pipelines only (not branch pipelines)
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+    # Run branch pipelines only for main branch
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "$CI_DEFAULT_BRANCH"'
+      when: always
 
 # ----------------------------------------------------------------------------#
 
@@ -23,7 +35,7 @@ include:
 # ----------------------------------------------------------------------------#
 
 dependency-setup:
-  stage: deps
+  stage: test
   script:
     - make install
     - make sbom
@@ -33,6 +45,8 @@ dependency-setup:
     access: developer
   rules:
     - when: always
+    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
+      when: never
 
 # ----------------------------------------------------------------------------#
 # Linting tests:
@@ -48,8 +62,9 @@ commit:
     - git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
     # ensure that the angular commit msg type is followed
     - git log --pretty=format:%s $CI_MERGE_REQUEST_DIFF_BASE_SHA..$CI_COMMIT_SHA | commitlint --config .commitlintrc
-  only:
-    - merge_requests
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: never
 
 # renovate
 renovate:
@@ -64,13 +79,17 @@ renovate:
   allow_failure: true
 
 # flake8
-lint:
-  stage: test
+flake8:
+  stage: lint
   interruptible: true
   script:
-    - pip install -r dev_requirements.txt
-    - flake8 .
+    - make install
+    - venv/bin/flake8 . --exclude venv
   allow_failure: true
+  rules:
+    - changes:
+      - "*.py"
+      - "**/*.py"
 
 # ----------------------------------------------------------------------------#
 # Security tests:
@@ -91,6 +110,9 @@ pytest:
     - pip install -r dev_requirements.txt
     - pip install -r requirements.txt
     - pytest tests
+  rules:
+    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
+      when: never
 
 # ----------------------------------------------------------------------------#
 
@@ -98,11 +120,13 @@ coverage:
   stage: test
   interruptible: true
   script:
-    - pip install -r dev_requirements.txt
-    - pip install -r requirements.txt
-    - pytest --cov=enterpriseattack --cov-report term-missing
-  coverage: '/TOTAL.*\s+(\d+\%)/'
+    - make install
+    - venv/bin/pytest --cov=enterpriseattack --cov-report term-missing
+  coverage: '/TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
+      when: never
 
 # ----------------------------------------------------------------------------#
 
@@ -133,22 +157,6 @@ py39:
   script:
     - pip install -r dev_requirements.txt
     - tox -e py39 --parallel auto
-
-# ----------------------------------------------------------------------------#
-# Pypi & GitLab Releases:
-# ----------------------------------------------------------------------------#
-
-# deploy:
-#   stage: deploy
-#   script:
-#     - pip install twine
-#     - python3 setup.py sdist bdist_wheel --universal
-#     - twine upload dist/*
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "merge_request_event"
-#       changes:
-#         - setup.py
-#         - enterpriseattack/*
 
 # -----------------------------------------------------------------------------
 # GitLab & Pypi release using python-semantic-release
