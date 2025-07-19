@@ -75,7 +75,7 @@ renovate:
     - renovate-config-validator
   rules:
     - changes:
-        - renovate.json
+      - renovate.json
   allow_failure: true
 
 # flake8
@@ -107,9 +107,8 @@ pytest:
   stage: test
   interruptible: true
   script:
-    - pip install -r dev_requirements.txt
-    - pip install -r requirements.txt
-    - pytest tests
+    - make install
+    - venv/bin/pytest tests
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
       when: never
