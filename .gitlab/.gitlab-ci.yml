@@ -91,6 +91,27 @@ flake8:
       - "*.py"
       - "**/*.py"
 
+isort:
+  stage: lint
+  interruptible: true
+  script:
+    - make install
+    - |
+      changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py')
+      if [ -n "$changed" ]; then
+        echo "$changed" | xargs venv/bin/isort --check-only --diff
+      else
+        echo "No Python files changed."
+      fi
+  rules:
+    - changes:
+        - "**/*.py"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: never
+    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
+      when: never
+  allow_failure: true
+
 # ----------------------------------------------------------------------------#
 # Security tests:
 # ----------------------------------------------------------------------------#
