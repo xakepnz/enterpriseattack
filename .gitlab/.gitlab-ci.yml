@@ -52,8 +52,7 @@ dependency-setup:
 # Linting tests:
 # ----------------------------------------------------------------------------#
 
-# commitlint
-commit:
+commitlint:
   stage: lint
   image: node:latest
   script:
@@ -66,8 +65,7 @@ commit:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       when: never
 
-# renovate
-renovate:
+renovate-config-validator:
   stage: lint
   image: node:23
   script:
@@ -78,7 +76,6 @@ renovate:
       - renovate.json
   allow_failure: true
 
-# flake8
 flake8:
   stage: lint
   interruptible: true
@@ -105,7 +102,28 @@ isort:
       fi
   rules:
     - changes:
-        - "**/*.py"
+      - "**/*.py"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: never
+    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
+      when: never
+  allow_failure: true
+
+black:
+  stage: lint
+  interruptible: true
+  script:
+    - make install
+    - |
+      changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py')
+      if [ -n "$changed" ]; then
+        echo "$changed" | xargs venv/bin/black -S --line-length=79 --check --diff
+      else
+        echo "No Python files changed."
+      fi
+  rules:
+    - changes:
+      - "**/*.py"
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       when: never
     - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
