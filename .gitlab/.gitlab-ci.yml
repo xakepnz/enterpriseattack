@@ -52,8 +52,7 @@ dependency-setup:
 # Linting tests:
 # ----------------------------------------------------------------------------#
 
-# commitlint
-commit:
+commitlint:
   stage: lint
   image: node:latest
   script:
@@ -66,8 +65,7 @@ commit:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       when: never
 
-# renovate
-renovate:
+renovate-config-validator:
   stage: lint
   image: node:23
   script:
@@ -75,10 +73,9 @@ renovate:
     - renovate-config-validator
   rules:
     - changes:
-        - renovate.json
+      - renovate.json
   allow_failure: true
 
-# flake8
 flake8:
   stage: lint
   interruptible: true
@@ -90,6 +87,48 @@ flake8:
     - changes:
       - "*.py"
       - "**/*.py"
+
+isort:
+  stage: lint
+  interruptible: true
+  script:
+    - make install
+    - |
+      changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py')
+      if [ -n "$changed" ]; then
+        echo "$changed" | xargs venv/bin/isort --check-only --diff
+      else
+        echo "No Python files changed."
+      fi
+  rules:
+    - changes:
+      - "**/*.py"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: never
+    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
+      when: never
+  allow_failure: true
+
+black:
+  stage: lint
+  interruptible: true
+  script:
+    - make install
+    - |
+      changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py')
+      if [ -n "$changed" ]; then
+        echo "$changed" | xargs venv/bin/black -S --line-length=79 --check --diff
+      else
+        echo "No Python files changed."
+      fi
+  rules:
+    - changes:
+      - "**/*.py"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: never
+    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
+      when: never
+  allow_failure: true
 
 # ----------------------------------------------------------------------------#
 # Security tests:
@@ -107,9 +146,8 @@ pytest:
   stage: test
   interruptible: true
   script:
-    - pip install -r dev_requirements.txt
-    - pip install -r requirements.txt
-    - pytest tests
+    - make install
+    - venv/bin/pytest tests
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
       when: never
@@ -125,8 +163,7 @@ coverage:
   coverage: '/TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   allow_failure: true
   rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
-      when: never
+    - when: always
 
 # ----------------------------------------------------------------------------#
 
