@@ -125,8 +125,7 @@ coverage:
   coverage: '/TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   allow_failure: true
   rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
-      when: never
+    - when: always
 
 # ----------------------------------------------------------------------------#
 
