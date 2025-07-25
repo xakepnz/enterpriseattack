@@ -20,7 +20,7 @@ workflow:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: always
     # Run branch pipelines only for main branch
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "$CI_DEFAULT_BRANCH"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: always
 
 # ----------------------------------------------------------------------------#
@@ -39,14 +39,14 @@ dependency-setup:
   script:
     - make install
     - make sbom
+  rules:
+    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
+      when: never
+    - when: on_success
   artifacts:
     when: on_success
     paths: ["**/pipdeptree.json"]
     access: developer
-  rules:
-    - when: always
-    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
-      when: never
 
 # ----------------------------------------------------------------------------#
 # Linting tests:
@@ -62,8 +62,9 @@ commitlint:
     # ensure that the angular commit msg type is followed
     - git log --pretty=format:%s $CI_MERGE_REQUEST_DIFF_BASE_SHA..$CI_COMMIT_SHA | commitlint --config .commitlintrc
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: never
+    - when: always
 
 renovate-config-validator:
   stage: lint
@@ -72,8 +73,14 @@ renovate-config-validator:
     - npm install -g renovate
     - renovate-config-validator
   rules:
-    - changes:
-      - renovate.json
+    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - renovate.json
+      when: always
   allow_failure: true
 
 flake8:
@@ -82,11 +89,17 @@ flake8:
   script:
     - make install
     - venv/bin/flake8 . --exclude venv
-  allow_failure: true
   rules:
-    - changes:
-      - "*.py"
-      - "**/*.py"
+    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - "*.py"
+        - "**/*.py"
+      when: always
+  allow_failure: true
 
 isort:
   stage: lint
@@ -101,13 +114,15 @@ isort:
         echo "No Python files changed."
       fi
   rules:
-    - changes:
-      - "*.py"
-      - "**/*.py"
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      when: never
     - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
       when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - "*.py"
+        - "**/*.py"
+      when: always
   allow_failure: true
 
 black:
@@ -123,13 +138,15 @@ black:
         echo "No Python files changed."
       fi
   rules:
-    - changes:
-      - "*.py"
-      - "**/*.py"
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      when: never
     - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
       when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - "*.py"
+        - "**/*.py"
+      when: always
   allow_failure: true
 
 markdownlint:
@@ -140,9 +157,15 @@ markdownlint:
     - npm install -g markdownlint-cli
     - markdownlint $(git diff --name-only origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME...HEAD -- '*.md' || true)
   rules:
-    - if: '$CI_MERGE_REQUEST_ID'
+    - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
+        - "*.md"
         - "**/*.md"
+      when: always
   allow_failure: true
 
 # ----------------------------------------------------------------------------#
@@ -166,6 +189,13 @@ pytest:
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
       when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - "*.py"
+        - "**/*.py"
+      when: always
 
 # ----------------------------------------------------------------------------#
 
@@ -175,10 +205,10 @@ coverage:
   script:
     - make install
     - venv/bin/pytest --cov=enterpriseattack --cov-report term-missing
-  coverage: '/TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
-  allow_failure: true
   rules:
     - when: always
+  allow_failure: true
+  coverage: '/TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
 
 # ----------------------------------------------------------------------------#
 
@@ -246,9 +276,9 @@ release:
       fi
 
   rules:
-    # only run on main branch
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      when: always
     # skip the job if it's triggered by a release commit
     - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
       when: never
+    # only run on main branch
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: always
