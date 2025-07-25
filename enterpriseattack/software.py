@@ -10,6 +10,7 @@ import enterpriseattack
 
 
 class Software:
+
     def __init__(self, attack_objects, relationships, id_lookup, **kwargs):
         self.relationships = relationships
         self.id_lookup = id_lookup
