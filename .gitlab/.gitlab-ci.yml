@@ -125,6 +125,7 @@ isort:
   script:
     - make install
     - |
+      git fetch origin $CI_DEFAULT_BRANCH
       changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py' || true)
       if [ -n "$changed" ]; then
         echo "$changed" | xargs venv/bin/isort --check-only --diff
@@ -151,6 +152,7 @@ black:
   script:
     - make install
     - |
+      git fetch origin $CI_DEFAULT_BRANCH
       changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py' || true)
       if [ -n "$changed" ]; then
         echo "$changed" | xargs venv/bin/black -S --line-length=79 --check --diff
@@ -176,6 +178,8 @@ markdownlint:
   image: node:23
   interruptible: true
   script:
+    - apt-get update && apt-get install -y git
+    - git fetch origin $CI_DEFAULT_BRANCH
     - npm install -g markdownlint-cli
     - markdownlint $(git diff --name-only origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME...HEAD -- '*.md' || true)
   rules:
