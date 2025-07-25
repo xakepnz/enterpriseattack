@@ -97,7 +97,14 @@ flake8:
   interruptible: true
   script:
     - make install
-    - venv/bin/flake8 . --exclude venv
+    - |
+      git fetch origin $CI_DEFAULT_BRANCH
+      changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py' || true)
+      if [ -n "$changed" ]; then
+        echo "$changed" | xargs -r venv/bin/flake8 --exclude venv
+      else
+        echo "No Python files changed."
+      fi
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
       when: never
@@ -118,7 +125,7 @@ isort:
   script:
     - make install
     - |
-      changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py')
+      changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py' || true)
       if [ -n "$changed" ]; then
         echo "$changed" | xargs venv/bin/isort --check-only --diff
       else
@@ -144,7 +151,7 @@ black:
   script:
     - make install
     - |
-      changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py')
+      changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py' || true)
       if [ -n "$changed" ]; then
         echo "$changed" | xargs venv/bin/black -S --line-length=79 --check --diff
       else
