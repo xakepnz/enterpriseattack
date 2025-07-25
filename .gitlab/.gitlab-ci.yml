@@ -204,7 +204,7 @@ coverage:
   interruptible: true
   script:
     - make install
-    - venv/bin/pytest --cov=enterpriseattack --cov-report term-missing
+    - venv/bin/pytest --cov=enterpriseattack --cov-report=term-missing --cov-report=html --cov-config=.coveragerc tests
   rules:
     - when: always
   allow_failure: true
