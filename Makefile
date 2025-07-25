@@ -2,6 +2,7 @@
 
 .PHONY: init
 .PHONY: install
+.PHONY: test
 .PHONY: cover
 .PHONY: clean
 .PHONY: build
@@ -15,6 +16,7 @@ PYTHON = $(VENV)/bin/python
 PRE_COMMIT = $(VENV)/bin/pre-commit
 PIP_DEP_TREE = $(VENV)/bin/pipdeptree
 PYTEST = $(VENV)/bin/pytest
+TOX = $(VENV)/bin/tox
 
 # ----------------------------------------------------------------------------#
 
@@ -31,7 +33,7 @@ install:
 	$(PRE_COMMIT) install --hook-type commit-msg
 
 test:
-	tox --parallel auto
+	$(TOX) run-parallel --verbose
 
 cover:
 	${PYTEST} -vv --cov=./enterpriseattack --cov-config=.coveragerc \
