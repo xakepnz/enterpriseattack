@@ -102,6 +102,7 @@ isort:
       fi
   rules:
     - changes:
+      - "*.py"
       - "**/*.py"
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       when: never
@@ -123,11 +124,25 @@ black:
       fi
   rules:
     - changes:
+      - "*.py"
       - "**/*.py"
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       when: never
     - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
       when: never
+  allow_failure: true
+
+markdownlint:
+  stage: lint
+  image: node:23
+  interruptible: true
+  script:
+    - npm install -g markdownlint-cli
+    - markdownlint $(git diff --name-only origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME...HEAD -- '*.md' || true)
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+      changes:
+        - "**/*.md"
   allow_failure: true
 
 # ----------------------------------------------------------------------------#
