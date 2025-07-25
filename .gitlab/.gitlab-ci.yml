@@ -12,6 +12,11 @@ stages:
 
 # ----------------------------------------------------------------------------#
 
+variables:
+  PIP_DISABLE_PIP_VERSION_CHECK: 1
+
+# ----------------------------------------------------------------------------#
+
 workflow:
   auto_cancel:
     on_job_failure: all
@@ -66,6 +71,8 @@ commitlint:
       when: never
     - when: always
 
+# ----------------------------------------------------------------------------#
+
 renovate-config-validator:
   stage: lint
   image: node:23
@@ -82,6 +89,8 @@ renovate-config-validator:
         - renovate.json
       when: always
   allow_failure: true
+
+# ----------------------------------------------------------------------------#
 
 flake8:
   stage: lint
@@ -100,6 +109,8 @@ flake8:
         - "**/*.py"
       when: always
   allow_failure: true
+
+# ----------------------------------------------------------------------------#
 
 isort:
   stage: lint
@@ -125,6 +136,8 @@ isort:
       when: always
   allow_failure: true
 
+# ----------------------------------------------------------------------------#
+
 black:
   stage: lint
   interruptible: true
@@ -148,6 +161,8 @@ black:
         - "**/*.py"
       when: always
   allow_failure: true
+
+# ----------------------------------------------------------------------------#
 
 markdownlint:
   stage: lint
@@ -180,12 +195,34 @@ sast:
 
 # ----------------------------------------------------------------------------#
 
-pytest:
+coverage:
   stage: test
   interruptible: true
   script:
     - make install
-    - venv/bin/pytest tests
+    - make cover
+  rules:
+    - when: always
+  allow_failure: true
+  coverage: '/TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+
+# ----------------------------------------------------------------------------#
+
+pyenv:
+  stage: tox
+  variables:
+    PYENV_ROOT: "$HOME/.pyenv"
+    PATH: "$PYENV_ROOT/bin:$PATH"
+    PYTHON_VERSIONS: 3.9 3.10 3.11 3.12 3.13
+  before_script:
+    - make install
+    - apt-get install curl
+    - curl -fsSL https://pyenv.run | bash
+    - eval "$(pyenv init - bash)"
+  script:
+    - make install
+    - venv/bin/pyenv install $PYTHON_VERSIONS
+    - make test
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
       when: never
@@ -196,49 +233,6 @@ pytest:
         - "*.py"
         - "**/*.py"
       when: always
-
-# ----------------------------------------------------------------------------#
-
-coverage:
-  stage: test
-  interruptible: true
-  script:
-    - make install
-    - venv/bin/pytest --cov=enterpriseattack --cov-report=term-missing --cov-report=html --cov-config=.coveragerc tests
-  rules:
-    - when: always
-  allow_failure: true
-  coverage: '/TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
-
-# ----------------------------------------------------------------------------#
-
-py312:
-  stage: tox
-  image: python:3.12
-  script:
-    - pip install -r dev_requirements.txt
-    - tox -e py312 --parallel auto
-
-py311:
-  stage: tox
-  image: python:3.11
-  script:
-    - pip install -r dev_requirements.txt
-    - tox -e py311 --parallel auto
-
-py310:
-  stage: tox
-  image: python:3.10
-  script:
-    - pip install -r dev_requirements.txt
-    - tox -e py310 --parallel auto
-
-py39:
-  stage: tox
-  image: python:3.9
-  script:
-    - pip install -r dev_requirements.txt
-    - tox -e py39 --parallel auto
 
 # -----------------------------------------------------------------------------
 # GitLab & Pypi release using python-semantic-release
