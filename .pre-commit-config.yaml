@@ -29,7 +29,7 @@ repos:
     rev: 25.1.0
     hooks:
       - id: black
-        args: ['-S', '--line-length=79', '--diff']
+        args: ['-S', '--line-length=79', '--check', '--diff']
 
   - repo: https://github.com/pycqa/flake8
     rev: 7.3.0

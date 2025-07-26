@@ -1,12 +1,6 @@
 # ----------------------------------------------------------------------------#
 
-.PHONY: init
-.PHONY: install
-.PHONY: test
-.PHONY: cover
-.PHONY: clean
-.PHONY: build
-.PHONY: sbom
+.PHONY: init install test cover clean
 
 # ----------------------------------------------------------------------------#
 
@@ -33,7 +27,7 @@ install:
 	$(PRE_COMMIT) install --hook-type commit-msg
 
 test:
-	$(TOX) run-parallel --verbose
+	$(TOX) --verbose
 
 cover:
 	${PYTEST} -vv --cov=./enterpriseattack --cov-config=.coveragerc \
