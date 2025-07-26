@@ -125,6 +125,7 @@ isort:
   script:
     - make install
     - |
+      git fetch origin $CI_DEFAULT_BRANCH
       changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py' || true)
       if [ -n "$changed" ]; then
         echo "$changed" | xargs venv/bin/isort --check-only --diff
@@ -151,6 +152,7 @@ black:
   script:
     - make install
     - |
+      git fetch origin $CI_DEFAULT_BRANCH
       changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py' || true)
       if [ -n "$changed" ]; then
         echo "$changed" | xargs venv/bin/black -S --line-length=79 --check --diff
@@ -176,6 +178,8 @@ markdownlint:
   image: node:23
   interruptible: true
   script:
+    - apt-get update && apt-get install -y git
+    - git fetch origin $CI_DEFAULT_BRANCH
     - npm install -g markdownlint-cli
     - markdownlint $(git diff --name-only origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME...HEAD -- '*.md' || true)
   rules:
@@ -219,16 +223,19 @@ pyenv:
   stage: tox
   variables:
     PYENV_ROOT: "$HOME/.pyenv"
-    PATH: "$PYENV_ROOT/bin:$PATH"
     PYTHON_VERSIONS: 3.9 3.10 3.11 3.12 3.13
   before_script:
-    - make install
     - apt-get install curl
+    - export PYENV_ROOT="$HOME/.pyenv"
+    - export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
     - curl -fsSL https://pyenv.run | bash
-    - eval "$(pyenv init - bash)"
-  script:
+    - eval "$($PYENV_ROOT/bin/pyenv init --path)"
+    - eval "$($PYENV_ROOT/bin/pyenv init -)"
+    - for v in $PYTHON_VERSIONS; do pyenv install -s "$v"; done
+    - pyenv global $PYTHON_VERSIONS
+    - echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
     - make install
-    - venv/bin/pyenv install $PYTHON_VERSIONS
+  script:
     - make test
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /^chore\(release\): bump version/'
