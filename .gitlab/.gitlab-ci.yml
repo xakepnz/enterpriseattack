@@ -226,13 +226,14 @@ pyenv:
     PYTHON_VERSIONS: 3.9 3.10 3.11 3.12 3.13
   before_script:
     - apt-get install curl
-    - curl -fsSL https://pyenv.run | bash
     - export PYENV_ROOT="$HOME/.pyenv"
     - export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
+    - curl -fsSL https://pyenv.run | bash
     - eval "$($PYENV_ROOT/bin/pyenv init --path)"
     - eval "$($PYENV_ROOT/bin/pyenv init -)"
     - for v in $PYTHON_VERSIONS; do pyenv install -s "$v"; done
     - pyenv global $PYTHON_VERSIONS
+    - echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
     - make install
   script:
     - make test
