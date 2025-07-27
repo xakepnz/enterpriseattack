@@ -266,10 +266,10 @@ release:
     - git stash -u && git checkout main && git fetch --all
 
     # install release deps
-    - python3 -m venv venv
+    - python -m venv venv
     - . venv/bin/activate && \
-      python3 -m pip install -q . &&\
-      python3 -m pip install -q .[test,build,release] &&\
+      python -m pip install -q . &&\
+      python -m pip install -q .[test,build,release]
 
     # publish a new release (only if the commit msg matches)
     - venv/bin/semantic-release version && venv/bin/semantic-release publish
