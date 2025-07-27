@@ -15,7 +15,7 @@ import enterpriseattack
 
 def download(
     url: str, local_enterprise_json: str, **kwargs: Any
-) -> True | None:
+) -> bool | None:
     """
     Downloads the MITRE ATT&CK Dataset from https://github.com/mitre/cti.
 
