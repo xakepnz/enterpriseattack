@@ -267,9 +267,9 @@ release:
 
     # install release deps
     - python -m venv venv
-    - source venv/bin/activate && \
-      venv/bin/pip install -q . &&\
-      venv/bin/pip install -q .[test,build,release]
+    - source venv/bin/activate
+    - venv/bin/pip install -q .
+    - venv/bin/pip install -q ".[test,build,release]"
 
     # publish a new release (only if the commit msg matches)
     - venv/bin/semantic-release version && venv/bin/semantic-release publish
