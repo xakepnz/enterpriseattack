@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.0.2 (2025-07-27)
+
+### Bug Fixes
+
+- Drop support for python 3.9
+  ([`f9bef97`](https://gitlab.com/xakepnz/enterpriseattack/-/commit/f9bef971673f426d118f642fe2462c056b9024d7))
+
+
 ## v1.0.1 (2025-07-08)
 
 ### Bug Fixes

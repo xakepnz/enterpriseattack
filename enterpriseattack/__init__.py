@@ -8,7 +8,7 @@ from enterpriseattack import (campaign, component, data_source, group,
 
 # ----------------------------------------------------------------------------#
 
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 # ----------------------------------------------------------------------------#
 # enterpriseattack Attack class:
