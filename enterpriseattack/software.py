@@ -1,23 +1,49 @@
-# ----------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------
+
+from __future__ import annotations
 
 import logging
+from typing import Any, Dict
 
 import enterpriseattack
 
-# ----------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------
 # Software class:
-# ----------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------
 
 
 class Software:
-    def __init__(self, attack_objects, relationships, id_lookup, **kwargs):
+
+    # -------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        attack_objects: list,
+        relationships: Dict,
+        id_lookup: Dict,
+        **kwargs: Any,
+    ) -> Software:
+        """
+        Creates a Software Class object with all the relevant mappings.
+
+        Args:
+            - attack_objects: All the ATT&CK dataset objects
+            - relationships: The source/target relationship mappings
+            - id_lookup: Key/values of id's to objects
+            - kwargs: Object to pass in, to create a software cls obj from
+
+        Returns:
+            Software class object
+
+        Raises:
+            enterpriseattack.Error: When failing to return the to_json() method
+        """
         self.relationships = relationships
         self.id_lookup = id_lookup
         self.attack_objects = attack_objects
 
         self.id = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'external_id'
+            kwargs.get('external_references'), 'external_id'
         )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
@@ -28,8 +54,7 @@ class Software:
         self.type = kwargs.get('type')
         self.description = kwargs.get('description')
         self.url = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'url'
+            kwargs.get('external_references'), 'url'
         )
         self.references = enterpriseattack.utils.obtain_sources(
             kwargs.get('external_references')
@@ -39,67 +64,66 @@ class Software:
         self.revoked = kwargs.get('revoked')
         self.deprecated = kwargs.get('x_mitre_deprecated')
 
-    # ----------------------------------------------------------------------------#
-    # Access Techniques for each Software object:
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
     @property
-    def techniques(self):
+    def techniques(self) -> list:
+        """Property to list techniques of the software object"""
         from .technique import Technique
 
         techniques_ = []
 
         if self.relationships.get(self.mid):
             for target_id in self.relationships.get(self.mid):
-                if target_id.startswith('attack-pattern') \
-                    and not self.id_lookup.get(target_id).get(
-                        'x_mitre_is_subtechnique'
-                        ):
+                if target_id.startswith(
+                    'attack-pattern'
+                ) and not self.id_lookup.get(target_id).get(
+                    'x_mitre_is_subtechnique'
+                ):
                     techniques_.append(
                         Technique(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **self.id_lookup[target_id]
+                            **self.id_lookup[target_id],
                         )
                     )
 
         return techniques_
 
-    # ----------------------------------------------------------------------------#
-    # Access Sub Techniques for each Software object:
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
     @property
-    def sub_techniques(self):
+    def sub_techniques(self) -> list:
+        """Property to list subtechniques of the software object"""
         from .sub_technique import SubTechnique
 
         sub_techniques_ = []
 
         if self.relationships.get(self.mid):
             for target_id in self.relationships.get(self.mid):
-                if target_id.startswith('attack-pattern') \
-                    and self.id_lookup.get(target_id).get(
-                        'x_mitre_is_subtechnique'
-                        ):
+                if target_id.startswith(
+                    'attack-pattern'
+                ) and self.id_lookup.get(target_id).get(
+                    'x_mitre_is_subtechnique'
+                ):
                     if self.id_lookup.get(target_id):
                         sub_techniques_.append(
                             SubTechnique(
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[target_id]
+                                **self.id_lookup[target_id],
                             )
                         )
 
         return sub_techniques_
 
-    # ----------------------------------------------------------------------------#
-    # Access Tactics for each Software object:
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
     @property
-    def tactics(self):
+    def tactics(self) -> list:
+        """Property to list tactics of the software object"""
 
         tactics_ = []
 
@@ -109,12 +133,11 @@ class Software:
                     tactics_.append(tactic)
         return tactics_
 
-    # ----------------------------------------------------------------------------#
-    # Access Groups for each Software object:
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
     @property
-    def groups(self):
+    def groups(self) -> list:
+        """Property to list groups of the software object"""
         from .group import Group
 
         groups_ = []
@@ -128,16 +151,15 @@ class Software:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[target_id]
+                                **self.id_lookup[target_id],
                             )
                         )
         return groups_
 
-    # ----------------------------------------------------------------------------#
-    # Return a json dict of the object:
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
-    def to_json(self):
+    def to_json(self) -> Dict:
+        """Return a dict of the software object"""
         try:
             return {
                 "id": self.id,
@@ -159,7 +181,7 @@ class Software:
                 "tactics": [tactic.name for tactic in self.tactics],
                 "platforms": self.platforms,
                 "deprecated": self.deprecated,
-                "revoked": self.revoked
+                "revoked": self.revoked,
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')
@@ -167,10 +189,12 @@ class Software:
                 f'Failed to create json object, error was: {e}'
             )
 
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
     def __str__(self):
-        return f'{self.name} Mitre Att&ck Software'
+        """Return string value of software name"""
+        return f'{self.name} MITRE ATT&CK Software'
 
     def __repr__(self):
+        """Return raw software name"""
         return f'{self.__class__} {self.name}'
