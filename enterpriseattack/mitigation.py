@@ -1,23 +1,49 @@
-# ----------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------
+
+from __future__ import annotations
 
 import logging
+from typing import Any, Dict
 
 import enterpriseattack
 
-# ----------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------
 # Mitigation class:
-# ----------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------
 
 
 class Mitigation:
-    def __init__(self, attack_objects, relationships, id_lookup, **kwargs):
+
+    # -------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        attack_objects: list,
+        relationships: Dict,
+        id_lookup: Dict,
+        **kwargs: Any,
+    ) -> Mitigation:
+        """
+        Creates a Mitigation Class object with all the relevant mappings.
+
+        Args:
+            - attack_objects: All the ATT&CK dataset objects
+            - relationships: The source/target relationship mappings
+            - id_lookup: Key/values of id's to objects
+            - kwargs: Object to pass in, to create a mitigation cls obj from
+
+        Returns:
+            Mitigation class object
+
+        Raises:
+            enterpriseattack.Error: When failing to return the to_json() method
+        """
         self.relationships = relationships
         self.id_lookup = id_lookup
         self.attack_objects = attack_objects
 
         self.id = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'external_id'
+            kwargs.get('external_references'), 'external_id'
         )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
@@ -28,47 +54,44 @@ class Mitigation:
         self.type = kwargs.get('type')
         self.description = kwargs.get('description')
         self.url = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'url'
+            kwargs.get('external_references'), 'url'
         )
         self.revoked = kwargs.get('revoked')
         self.deprecated = kwargs.get('x_mitre_deprecated')
 
-    # ----------------------------------------------------------------------------#
-    # Access Techniques for each Mitigation object:
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
     @property
-    def techniques(self):
+    def techniques(self) -> list:
+        """Property to list techniques of the mitigation object"""
         from .technique import Technique
 
         techniques_ = []
 
         if self.relationships.get(self.mid):
             for target_id in self.relationships.get(self.mid):
-                if (
-                        target_id.startswith('attack-pattern')
-                        and not self.id_lookup[target_id].get(
-                            'x_mitre_is_subtechnique'
-                        )):
+                if target_id.startswith(
+                    'attack-pattern'
+                ) and not self.id_lookup[target_id].get(
+                    'x_mitre_is_subtechnique'
+                ):
                     if self.id_lookup.get(target_id):
                         techniques_.append(
                             Technique(
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[target_id]
+                                **self.id_lookup[target_id],
                             )
                         )
 
         return techniques_
 
-    # ----------------------------------------------------------------------------#
-    # Access Tactics for each Mitigation object:
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
     @property
-    def tactics(self):
+    def tactics(self) -> list:
+        """Property to list tactics of the mitigation object"""
 
         tactics_ = []
 
@@ -79,11 +102,10 @@ class Mitigation:
 
         return tactics_
 
-    # ----------------------------------------------------------------------------#
-    # Return a json dict of the object:
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
-    def to_json(self):
+    def to_json(self) -> Dict:
+        """Return a dict of the mitigation object"""
         try:
             return {
                 "id": self.id,
@@ -101,7 +123,7 @@ class Mitigation:
                 ],
                 "tactics": [tactic.name for tactic in self.tactics],
                 "deprecated": self.deprecated,
-                "revoked": self.revoked
+                "revoked": self.revoked,
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')
@@ -109,10 +131,12 @@ class Mitigation:
                 f'Failed to create json object, error was: {e}'
             )
 
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
-    def __str__(self):
-        return f'{self.name} Mitre Att&ck Mitigation'
+    def __str__(self) -> str:
+        """Return string value of mitigation name"""
+        return f'{self.name} MITRE ATT&CK Mitigation'
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        """Return raw mitigation name"""
         return f'{self.__class__} {self.name}'
