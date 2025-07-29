@@ -1,23 +1,49 @@
-# ----------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------
+
+from __future__ import annotations
 
 import logging
+from typing import Any, Dict
 
 import enterpriseattack
 
-# ----------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------
 # Technique class:
-# ----------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------
 
 
 class Technique:
-    def __init__(self, attack_objects, relationships, id_lookup, **kwargs):
+
+    # -------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        attack_objects: list,
+        relationships: Dict,
+        id_lookup: Dict,
+        **kwargs: Any,
+    ) -> Technique:
+        """
+        Creates a Technique Class object with all the relevant mappings.
+
+        Args:
+            - attack_objects: All the ATT&CK dataset objects
+            - relationships: The source/target relationship mappings
+            - id_lookup: Key/values of id's to objects
+            - kwargs: Object to pass in, to create a technique cls obj from
+
+        Returns:
+            Technique class object
+
+        Raises:
+            enterpriseattack.Error: When failing to return the to_json() method
+        """
         self.relationships = relationships
         self.id_lookup = id_lookup
         self.attack_objects = attack_objects
 
         self.id = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'external_id'
+            kwargs.get('external_references'), 'external_id'
         )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
@@ -28,8 +54,7 @@ class Technique:
         self.type = kwargs.get('type')
         self.description = kwargs.get('description')
         self.url = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'url'
+            kwargs.get('external_references'), 'url'
         )
         self.platforms = kwargs.get('x_mitre_platforms')
         self.permissions_required = kwargs.get('x_mitre_permissions_required')
@@ -42,12 +67,10 @@ class Technique:
         )
         self.kill_chain_phases = kwargs.get('kill_chain_phases')
 
-    # ----------------------------------------------------------------------------#
-    # Return a list of sub techniques to every Technique object:
-    # ----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------
 
     @property
-    def groups(self):
+    def groups(self) -> list:
         from .group import Group
 
         groups_ = []
@@ -61,17 +84,15 @@ class Technique:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[r_id]
+                                **self.id_lookup[r_id],
                             )
                         )
         return groups_
 
-    # ----------------------------------------------------------------------------#
-    # Return a list of sub techniques to every Technique object:
-    # ----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------
 
     @property
-    def sub_techniques(self):
+    def sub_techniques(self) -> list:
         from .sub_technique import SubTechnique
 
         sub_techniques_ = []
@@ -85,18 +106,16 @@ class Technique:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **self.id_lookup[r_]
+                                **self.id_lookup[r_],
                             )
                         )
 
         return sub_techniques_
 
-    # ----------------------------------------------------------------------------#
-    # Access Datasources for each Technique object:
-    # ----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------
 
     @property
-    def datasources(self):
+    def datasources(self) -> list:
         from .data_source import DataSource
 
         datasources_ = []
@@ -105,7 +124,8 @@ class Technique:
             for attack_obj in self.attack_objects['objects']:
                 if attack_obj.get('type') == 'x-mitre-data-source':
                     ds_ = [
-                        d_ for d_ in self.x_mitre_data_sources
+                        d_
+                        for d_ in self.x_mitre_data_sources
                         if attack_obj.get('name') in d_
                     ]
                     if ds_:
@@ -114,17 +134,15 @@ class Technique:
                                 self.attack_objects,
                                 self.relationships,
                                 self.id_lookup,
-                                **attack_obj
+                                **attack_obj,
                             )
                         )
         return datasources_
 
-    # ----------------------------------------------------------------------------#
-    # Access Components for each Technique object:
-    # ----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------
 
     @property
-    def components(self):
+    def components(self) -> list:
         from .component import Component
 
         components_ = []
@@ -136,18 +154,16 @@ class Technique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
         return components_
 
-    # ----------------------------------------------------------------------------#
-    # Access Tactics for each Technique object:
-    # ----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------
 
     @property
-    def tactics(self):
+    def tactics(self) -> list:
         from .tactic import Tactic
 
         tactics_ = []
@@ -155,22 +171,22 @@ class Technique:
         for attack_obj in self.attack_objects['objects']:
             if attack_obj.get('type') == 'x-mitre-tactic':
                 if enterpriseattack.utils.match_tactics(
-                        attack_obj.get('x_mitre_shortname'),
-                        self.kill_chain_phases):
+                    attack_obj.get('x_mitre_shortname'), self.kill_chain_phases
+                ):
                     tactics_.append(
                         Tactic(
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **attack_obj))
+                            **attack_obj,
+                        )
+                    )
         return tactics_
 
-    # ----------------------------------------------------------------------------#
-    # Access Mitigations for each Technique object:
-    # ----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------
 
     @property
-    def mitigations(self):
+    def mitigations(self) -> list:
         from .mitigation import Mitigation
 
         mitigations_ = []
@@ -182,18 +198,16 @@ class Technique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
         return mitigations_
 
-    # ----------------------------------------------------------------------------#
-    # Access Software for each Technique object:
-    # ----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------
 
     @property
-    def software(self):
+    def software(self) -> list:
         from .software import Software
 
         software_ = []
@@ -205,18 +219,16 @@ class Technique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
         return software_
 
-    # ----------------------------------------------------------------------------#
-    # Access Malware for each Technique object:
-    # ----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------
 
     @property
-    def malware(self):
+    def malware(self) -> list:
         from .software import Software
 
         malware_ = []
@@ -228,18 +240,16 @@ class Technique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
         return malware_
 
-    # ----------------------------------------------------------------------------#
-    # Access Tools for each Technique object:
-    # ----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------
 
     @property
-    def tools(self):
+    def tools(self) -> list:
         from .software import Software
 
         tools_ = []
@@ -251,17 +261,15 @@ class Technique:
                         self.attack_objects,
                         self.relationships,
                         self.id_lookup,
-                        **self.id_lookup[r_]
+                        **self.id_lookup[r_],
                     )
                 )
 
         return tools_
 
-    # ----------------------------------------------------------------------------#
-    # Return a json dict of the object:
-    # ----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------
 
-    def to_json(self):
+    def to_json(self) -> Dict:
         try:
             return {
                 "id": self.id,
@@ -294,7 +302,7 @@ class Technique:
                 "deprecated": self.deprecated,
                 "revoked": self.revoked,
                 "references": self.references,
-                "kill_chain_phases": self.kill_chain_phases
+                "kill_chain_phases": self.kill_chain_phases,
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')
@@ -302,10 +310,12 @@ class Technique:
                 f'Failed to create json object, error was: {e}'
             )
 
-    # ----------------------------------------------------------------------------#
+    # -----------------------------------------------------------------------------
 
     def __str__(self):
-        return f'{self.name} Mitre Att&ck Technique'
+        """Return string value of technique name"""
+        return f'{self.name} MITRE ATT&CK Technique'
 
     def __repr__(self):
+        """Return raw technique name"""
         return f'{self.__class__} {self.name}'
