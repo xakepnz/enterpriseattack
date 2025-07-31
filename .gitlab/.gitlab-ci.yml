@@ -128,7 +128,7 @@ isort:
       git fetch origin $CI_DEFAULT_BRANCH
       changed=$(git diff --name-only origin/$CI_DEFAULT_BRANCH...HEAD -- '*.py' || true)
       if [ -n "$changed" ]; then
-        echo "$changed" | xargs venv/bin/isort --check-only --diff
+        echo "$changed" | xargs venv/bin/isort --check-only --diff --profile black
       else
         echo "No Python files changed."
       fi
