@@ -1,22 +1,48 @@
-# ----------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------
+
+from __future__ import annotations
 
 import logging
+from typing import Any, Dict
 
 import enterpriseattack
 
-# ----------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------
 # DataSource class:
-# ----------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------
 
 
 class DataSource:
-    def __init__(self, attack_objects, relationships, id_lookup, **kwargs):
+
+    # -------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        attack_objects: list,
+        relationships: Dict,
+        id_lookup: Dict,
+        **kwargs: Any,
+    ) -> DataSource:
+        """
+        Creates a DataSource Class object with all the relevant mappings.
+
+        Args:
+            - attack_objects: All the ATT&CK dataset objects
+            - relationships: The source/target relationship mappings
+            - id_lookup: Key/values of id's to objects
+            - kwargs: Object to pass in, to create a datasource cls obj from
+
+        Returns:
+            DataSource class object
+
+        Raises:
+            enterpriseattack.Error: When failing to return the to_json() method
+        """
         self.relationships = relationships
         self.id_lookup = id_lookup
         self.attack_objects = attack_objects
         self.id = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'external_id'
+            kwargs.get('external_references'), 'external_id'
         )
         self.mid = kwargs.get('id')
         self.created = kwargs.get('created')
@@ -34,19 +60,17 @@ class DataSource:
             kwargs.get('external_references')
         )
         self.url = enterpriseattack.utils.expand_external(
-            kwargs.get('external_references'),
-            'url'
+            kwargs.get('external_references'), 'url'
         )
         self.contributors = kwargs.get('x_mitre_contributors')
         self.revoked = kwargs.get('revoked')
         self.deprecated = kwargs.get('x_mitre_deprecated')
 
-    # ----------------------------------------------------------------------------#
-    # Access Components for each Data Source object:
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
     @property
-    def components(self):
+    def components(self) -> list:
+        """Property to list components of the datasource"""
         from .component import Component
 
         components_ = []
@@ -59,18 +83,17 @@ class DataSource:
                             self.attack_objects,
                             self.relationships,
                             self.id_lookup,
-                            **self.id_lookup[r_]
+                            **self.id_lookup[r_],
                         )
                     )
 
         return components_
 
-    # ----------------------------------------------------------------------------#
-    # Access Techniques for each Data Source object:
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
     @property
-    def techniques(self):
+    def techniques(self) -> list:
+        """Property to list techniques of the datasource"""
         from .technique import Technique
 
         techniques_ = []
@@ -81,30 +104,29 @@ class DataSource:
                     if self.relationships.get(component.id):
                         for r_id in self.relationships.get(component.id):
                             if self.id_lookup.get(r_id):
-                                if (
-                                    self.id_lookup.get(r_id).get('type')
-                                        == 'attack-pattern'
-                                        and not self.id_lookup.get(r_id).get(
-                                            'x_mitre_is_subtechnique'
-                                            )
-                                        ):
+                                if self.id_lookup.get(r_id).get(
+                                    'type'
+                                ) == 'attack-pattern' and not self.id_lookup.get(  # noqa: E501
+                                    r_id
+                                ).get(
+                                    'x_mitre_is_subtechnique'
+                                ):
                                     techniques_.append(
                                         Technique(
                                             self.attack_objects,
                                             self.relationships,
                                             self.id_lookup,
-                                            **self.id_lookup[r_id]
+                                            **self.id_lookup[r_id],
                                         )
                                     )
 
         return techniques_
 
-    # ----------------------------------------------------------------------------#
-    # Access Sub Techniques for each Data Source object:
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
     @property
-    def sub_techniques(self):
+    def sub_techniques(self) -> list:
+        """Property to list sub_techniques of the data source"""
         from .sub_technique import SubTechnique
 
         sub_techniques_ = []
@@ -115,29 +137,27 @@ class DataSource:
                     if self.relationships.get(component.id):
                         for r_id in self.relationships.get(component.id):
                             if self.id_lookup.get(r_id):
-                                if (
-                                    self.id_lookup.get(r_id).get('type')
-                                        == 'attack-pattern'
-                                        and self.id_lookup.get(r_id).get(
-                                            'x_mitre_is_subtechnique'
-                                            )
-                                        ):
+                                if self.id_lookup.get(r_id).get(
+                                    'type'
+                                ) == 'attack-pattern' and self.id_lookup.get(
+                                    r_id
+                                ).get(
+                                    'x_mitre_is_subtechnique'
+                                ):
                                     sub_techniques_.append(
                                         SubTechnique(
                                             self.attack_objects,
                                             self.relationships,
                                             self.id_lookup,
-                                            **self.id_lookup[r_id]
+                                            **self.id_lookup[r_id],
                                         )
                                     )
 
         return sub_techniques_
 
-    # ----------------------------------------------------------------------------#
-    # Return a json dict of the object:
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
-    def to_json(self):
+    def to_json(self) -> Dict:
         try:
             return {
                 "id": self.id,
@@ -161,7 +181,7 @@ class DataSource:
                     component.name for component in self.components
                 ],
                 "deprecated": self.deprecated,
-                "revoked": self.revoked
+                "revoked": self.revoked,
             }
         except Exception as e:
             logging.error(f'Failed to jsonify object, error was: {e}')
@@ -169,10 +189,12 @@ class DataSource:
                 f'Failed to create json object, error was: {e}'
             )
 
-    # ----------------------------------------------------------------------------#
+    # -------------------------------------------------------------------------
 
-    def __str__(self):
-        return f'{self.name} Mitre Att&ck Data Source'
+    def __str__(self) -> str:
+        """Return string value of data source name"""
+        return f'{self.name} MITRE ATT&CK Data Source'
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        """Return raw data source name"""
         return f'{self.__class__} {self.name}'

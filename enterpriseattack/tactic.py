@@ -61,8 +61,6 @@ class Tactic:
         self.revoked = kwargs.get('revoked')
 
     # -----------------------------------------------------------------------------
-    # Return a list of techniques to every Tactic object:
-    # -----------------------------------------------------------------------------
 
     @property
     def techniques(self) -> list:
@@ -94,8 +92,6 @@ class Tactic:
         return techniques_
 
     # -----------------------------------------------------------------------------
-    # Return a list of sub-techniques to every Tactic object:
-    # -----------------------------------------------------------------------------
 
     @property
     def sub_techniques(self) -> list:
@@ -125,8 +121,6 @@ class Tactic:
                     )
         return sub_techniques_
 
-    # -----------------------------------------------------------------------------
-    # Return a json dict of the object:
     # -----------------------------------------------------------------------------
 
     def to_json(self) -> Dict:
