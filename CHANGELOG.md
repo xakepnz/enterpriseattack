@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.0.3 (2025-07-31)
+
+### Bug Fixes
+
+- Update setup.py to extract version & run black
+  ([`ddd383f`](https://gitlab.com/xakepnz/enterpriseattack/-/commit/ddd383f2961467e492daa31e9629c6bc79e435f4))
+
+
 ## v1.0.2 (2025-07-27)
 
 ### Bug Fixes
