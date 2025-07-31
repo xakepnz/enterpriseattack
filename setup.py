@@ -1,15 +1,16 @@
 import os
 import re
-from setuptools import setup, find_packages
 from io import open
 
+from setuptools import find_packages, setup
+
 with open(
-    os.path.join(
-        os.path.dirname(__file__),
-        'enterpriseattack',
-        '__init__.py'
-        )) as fp:
-    VERSION = re.match(r'.*__version__ = \'(.*?)\'', fp.read(), re.S).group(1)
+    os.path.join(os.path.dirname(__file__), 'enterpriseattack', '__init__.py')
+) as fp:
+    match = re.search(r"__version__ = ['\"]([^'\"]+)['\"]", fp.read())
+    if not match:
+        raise RuntimeError('Version string not found')
+    VERSION = match.group(1)
 
 with open('README.md', 'r', encoding='utf-8') as fp:
     readme = fp.read()
@@ -21,7 +22,7 @@ setup(
     version=VERSION,
     packages=find_packages(exclude=['tests*', 'docs*']),
     description='A lightweight Python module to interact with the '
-                'Mitre Att&ck Enterprise framework.',
+    'Mitre Att&ck Enterprise framework.',
     long_description=readme,
     long_description_content_type='text/markdown',
     url='https://gitlab.com/xakepnz/enterpriseattack',
@@ -30,13 +31,10 @@ setup(
         'att&ck enterprise',
         'enterpriseattack',
         'mitre framework',
-        'att&ck'
+        'att&ck',
     ],
     include_package_data=True,
-    install_requires=[
-        'ujson >= 3.0.0',
-        'requests >= 2.9.2'
-    ],
+    install_requires=['ujson >= 3.0.0', 'requests >= 2.9.2'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
@@ -50,6 +48,6 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
-        'Topic :: Software Development :: Libraries :: Python Modules'
-    ]
+        'Topic :: Software Development :: Libraries :: Python Modules',
+    ],
 )
