@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.0.4 (2025-11-24)
+
+### Bug Fixes
+
+- Hardcode ATT&CK v17.1 as default
+  ([`90e90d1`](https://gitlab.com/xakepnz/enterpriseattack/-/commit/90e90d14ee45e1c7059337d764731db74ab1cfcd))
+
+
 ## v1.0.3 (2025-07-31)
 
 ### Bug Fixes
