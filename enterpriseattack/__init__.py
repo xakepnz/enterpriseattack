@@ -34,8 +34,7 @@ class Attack:
     def __init__(
         self,
         enterprise_json: Optional[Union[str, Dict[str, Any]]] = None,
-        url: str = "https://raw.githubusercontent.com/mitre/cti/master/"
-        "enterprise-attack/enterprise-attack.json",
+        url: str = "https://github.com/mitre/cti/releases/download/ATT%26CK-v17.1/enterprise-attack.json",  # noqa: E501
         include_deprecated: bool = False,
         update: bool = False,
         mitre_version: str = "latest",
